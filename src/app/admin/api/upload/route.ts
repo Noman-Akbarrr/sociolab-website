@@ -18,6 +18,19 @@ const EXT: Record<string, string> = {
   "image/avif": "avif",
 };
 
+function getUploadRoot(): string {
+  return process.env.UPLOAD_DIR ?? path.join(process.cwd(), "public", "uploads");
+}
+
+async function storeVercelBlob(file: File, relative: string, name: string): Promise<string> {
+  const { put } = await import("@vercel/blob");
+  const blob = await put(`${relative}/${name}`, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
+  return blob.url;
+}
+
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
@@ -46,13 +59,22 @@ export async function POST(request: NextRequest) {
     String(now.getUTCFullYear()),
     String(now.getUTCMonth() + 1).padStart(2, "0"),
   );
-  const uploadRoot = process.env.UPLOAD_DIR ?? path.join(/* turbopackIgnore: true */ process.cwd(), "public", "uploads");
+
+  // Use Vercel Blob if token is available (production on Vercel)
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const name = `${crypto.randomBytes(8).toString("hex")}.${ext}`;
+    const url = await storeVercelBlob(file, relative, name);
+    return NextResponse.json({ ok: true, url });
+  }
+
+  // Local filesystem fallback (dev)
+  const uploadRoot = getUploadRoot();
   const dir = path.join(uploadRoot, relative);
   fs.mkdirSync(dir, { recursive: true });
 
   const name = `${crypto.randomBytes(8).toString("hex")}.${ext}`;
   const bytes = Buffer.from(await file.arrayBuffer());
-  fs.writeFileSync(path.join(/* turbopackIgnore: true */ dir, name), bytes);
+  fs.writeFileSync(path.join(dir, name), bytes);
 
   const url = `/uploads/${relative.split(path.sep).join("/")}/${name}`;
   return NextResponse.json({ ok: true, url });
