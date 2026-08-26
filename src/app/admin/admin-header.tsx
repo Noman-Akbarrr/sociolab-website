@@ -36,6 +36,12 @@ export function AdminHeader() {
             >
               Blog
             </a>
+            <a
+              href="/admin/crm"
+              className="text-xs font-semibold text-white/70 transition-colors hover:text-white"
+            >
+              CRM
+            </a>
           </nav>
           <a
             href="/"

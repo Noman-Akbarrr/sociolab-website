@@ -35,21 +35,25 @@ function writeFileDb(db: FileDb) {
 }
 
 function usesDb() {
-  return Boolean(process.env.DATABASE_URL);
+  return Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("user:pass@host"));
 }
 
 export async function getStoredPage(path: string): Promise<StoredPage | null> {
   if (usesDb()) {
-    const page = await prisma.page.findUnique({ where: { path } });
-    if (!page) return null;
-    return {
-      path: page.path,
-      title: page.title,
-      description: page.description,
-      data: page.data as Data,
-      published: page.published,
-      updatedAt: page.updatedAt.toISOString(),
-    };
+    try {
+      const page = await prisma.page.findUnique({ where: { path } });
+      if (!page) return null;
+      return {
+        path: page.path,
+        title: page.title,
+        description: page.description,
+        data: page.data as Data,
+        published: page.published,
+        updatedAt: page.updatedAt.toISOString(),
+      };
+    } catch (error) {
+      console.warn("Database query failed, falling back to file storage:", error);
+    }
   }
   const db = readFileDb();
   const page = db.pages[path];
@@ -59,15 +63,19 @@ export async function getStoredPage(path: string): Promise<StoredPage | null> {
 
 export async function listStoredPages(): Promise<StoredPage[]> {
   if (usesDb()) {
-    const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
-    return pages.map((page) => ({
-      path: page.path,
-      title: page.title,
-      description: page.description,
-      data: page.data as Data,
-      published: page.published,
-      updatedAt: page.updatedAt.toISOString(),
-    }));
+    try {
+      const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+      return pages.map((page) => ({
+        path: page.path,
+        title: page.title,
+        description: page.description,
+        data: page.data as Data,
+        published: page.published,
+        updatedAt: page.updatedAt.toISOString(),
+      }));
+    } catch (error) {
+      console.warn("Database query failed, falling back to file storage:", error);
+    }
   }
   const db = readFileDb();
   return Object.entries(db.pages)
@@ -84,23 +92,27 @@ export async function saveStoredPage(page: {
 }): Promise<StoredPage> {
   const updatedAt = new Date().toISOString();
   if (usesDb()) {
-    await prisma.page.upsert({
-      where: { path: page.path },
-      update: {
-        title: page.title,
-        description: page.description,
-        data: page.data,
-        published: page.published ?? true,
-      },
-      create: {
-        path: page.path,
-        title: page.title,
-        description: page.description,
-        data: page.data,
-        published: page.published ?? true,
-      },
-    });
-    return { ...page, published: page.published ?? true, updatedAt };
+    try {
+      await prisma.page.upsert({
+        where: { path: page.path },
+        update: {
+          title: page.title,
+          description: page.description,
+          data: page.data,
+          published: page.published ?? true,
+        },
+        create: {
+          path: page.path,
+          title: page.title,
+          description: page.description,
+          data: page.data,
+          published: page.published ?? true,
+        },
+      });
+      return { ...page, published: page.published ?? true, updatedAt };
+    } catch (error) {
+      console.warn("Database query failed, falling back to file storage:", error);
+    }
   }
   const db = readFileDb();
   db.pages[page.path] = {
@@ -116,8 +128,12 @@ export async function saveStoredPage(page: {
 
 export async function deleteStoredPage(path: string): Promise<void> {
   if (usesDb()) {
-    await prisma.page.delete({ where: { path } });
-    return;
+    try {
+      await prisma.page.delete({ where: { path } });
+      return;
+    } catch (error) {
+      console.warn("Database query failed, falling back to file storage:", error);
+    }
   }
   const db = readFileDb();
   delete db.pages[path];

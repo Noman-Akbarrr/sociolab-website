@@ -8,6 +8,11 @@ import { Marquee } from "@/components/marquee";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { ArrowUpRightIcon, CheckIcon, WhatsAppIcon } from "@/components/icons";
 import { ContactForm } from "@/components/editor/contact-form";
+import { CRMCaseGrid } from "@/components/editor/crm-case-grid";
+import { CRMTeamBlock } from "@/components/editor/crm-team-block";
+import { CRMServiceGrid } from "@/components/editor/crm-service-grid";
+import { CRMPricingBlock } from "@/components/editor/crm-pricing-block";
+import { CRMTestimonialBlock } from "@/components/editor/crm-testimonial-block";
 
 type BlockProps = {
   HeroBlock: Record<string, any>;
@@ -15,9 +20,12 @@ type BlockProps = {
   SectionBlock: Record<string, any>;
   CardGridBlock: Record<string, any>;
   ServiceGridBlock: Record<string, any>;
+  CRMServiceGrid: Record<string, any>;
   StepsBlock: Record<string, any>;
   CaseGridBlock: Record<string, any>;
+  CRMCaseGrid: Record<string, any>;
   TestimonialBlock: Record<string, any>;
+  CRMTestimonialBlock: Record<string, any>;
   FaqBlock: Record<string, any>;
   CtaBlock: Record<string, any>;
   StatementBlock: Record<string, any>;
@@ -30,7 +38,9 @@ type BlockProps = {
   StatsBlock: Record<string, any>;
   FeaturesBlock: Record<string, any>;
   PricingBlock: Record<string, any>;
+  CRMPricingBlock: Record<string, any>;
   TeamBlock: Record<string, any>;
+  CRMTeamBlock: Record<string, any>;
   GalleryBlock: Record<string, any>;
   ContactFormBlock: Record<string, any>;
   VideoBlock: Record<string, any>;
@@ -64,9 +74,9 @@ const config: Config<BlockProps> = {
   categories: {
     heroes: { title: "Heroes & openers", components: ["HeroBlock"] },
     blog: { title: "Blog sections", components: ["BlogHeroBlock", "QuoteBlock", "AuthorBlock", "TagsBlock"] },
-    sections: { title: "Page sections", components: ["SectionBlock", "TextBlock", "StepsBlock", "DeliverablesBlock", "CardGridBlock", "FeaturesBlock", "StatsBlock", "CaseGridBlock", "TestimonialBlock", "FaqBlock", "MarqueeBlock"] },
-    media: { title: "Media & layouts", components: ["ImageBlock", "GalleryBlock", "VideoBlock", "TwoColumnBlock", "TeamBlock"] },
-    conversion: { title: "Conversion & CTAs", components: ["CtaBlock", "ContactFormBlock", "PricingBlock", "CalloutBlock", "StatementBlock", "ServiceGridBlock", "LinkBlock"] },
+    sections: { title: "Page sections", components: ["SectionBlock", "TextBlock", "StepsBlock", "DeliverablesBlock", "CardGridBlock", "FeaturesBlock", "StatsBlock", "CaseGridBlock", "CRMCaseGrid", "TestimonialBlock", "CRMTestimonialBlock", "FaqBlock", "MarqueeBlock"] },
+    media: { title: "Media & layouts", components: ["ImageBlock", "GalleryBlock", "VideoBlock", "TwoColumnBlock", "TeamBlock", "CRMTeamBlock"] },
+    conversion: { title: "Conversion & CTAs", components: ["CtaBlock", "ContactFormBlock", "PricingBlock", "CRMPricingBlock", "CalloutBlock", "StatementBlock", "ServiceGridBlock", "CRMServiceGrid", "LinkBlock"] },
   },
 
   components: {
@@ -1614,6 +1624,111 @@ const config: Config<BlockProps> = {
             </Link>
           </div>
         </Section>
+      ),
+},
+    CRMCaseGrid: {
+      label: "Case Studies (CRM)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        caseStudyIds: {
+          type: "array",
+          arrayFields: { id: { type: "text" } },
+        },
+      },
+      defaultProps: {
+        eyebrow: "Proof, not promises",
+        title: "Work that speaks for itself",
+        subtitle: "",
+        caseStudyIds: [],
+      },
+      render: ({ eyebrow, title, subtitle, caseStudyIds = [] }) => (
+        <CRMCaseGrid eyebrow={eyebrow} title={title} subtitle={subtitle} caseStudyIds={caseStudyIds.map((c: any) => c.id)} />
+      ),
+    },
+    CRMTeamBlock: {
+      label: "Team (CRM)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        memberIds: {
+          type: "array",
+          arrayFields: { id: { type: "text" } },
+        },
+      },
+      defaultProps: {
+        eyebrow: "The team",
+        title: "The people behind the work",
+        subtitle: "",
+        memberIds: [],
+      },
+      render: ({ eyebrow, title, subtitle, memberIds = [] }) => (
+        <CRMTeamBlock eyebrow={eyebrow} title={title} subtitle={subtitle} memberIds={memberIds.map((m: any) => m.id)} />
+      ),
+    },
+    CRMServiceGrid: {
+      label: "Services (CRM)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        serviceIds: {
+          type: "array",
+          arrayFields: { id: { type: "text" } },
+        },
+      },
+      defaultProps: {
+        eyebrow: "What we do",
+        title: "Three capabilities. One goal: your growth.",
+        subtitle: "",
+        serviceIds: [],
+      },
+      render: ({ eyebrow, title, subtitle, serviceIds = [] }) => (
+        <CRMServiceGrid eyebrow={eyebrow} title={title} subtitle={subtitle} serviceIds={serviceIds.map((s: any) => s.id)} />
+      ),
+    },
+    CRMPricingBlock: {
+      label: "Pricing (CRM)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        note: { type: "textarea" },
+        serviceIds: {
+          type: "array",
+          arrayFields: { id: { type: "text" } },
+        },
+      },
+      defaultProps: {
+        eyebrow: "Simple pricing",
+        title: "Pick the engagement that fits",
+        subtitle: "",
+        note: "",
+        serviceIds: [],
+      },
+      render: ({ eyebrow, title, subtitle, note, serviceIds = [] }) => (
+        <CRMPricingBlock eyebrow={eyebrow} title={title} subtitle={subtitle} note={note} serviceIds={serviceIds.map((s: any) => s.id)} />
+      ),
+    },
+    CRMTestimonialBlock: {
+      label: "Testimonials (CRM)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        testimonialIds: {
+          type: "array",
+          arrayFields: { id: { type: "text" } },
+        },
+      },
+      defaultProps: {
+        eyebrow: "The feeling",
+        title: "Clients who felt the difference",
+        testimonialIds: [],
+      },
+      render: ({ eyebrow, title, testimonialIds = [] }) => (
+        <CRMTestimonialBlock eyebrow={eyebrow} title={title} testimonialIds={testimonialIds.map((t: any) => t.id)} />
       ),
     },
   },

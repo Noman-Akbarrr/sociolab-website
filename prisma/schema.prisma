@@ -23,6 +23,10 @@ model User {
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
   sessions               Session[]
+  ownedDeals             Deal[]         @relation("DealOwner")
+  assignedTasks          Task[]         @relation("TaskAssignee")
+  assignedTickets        Ticket[]       @relation("TicketAssignee")
+  activities             Activity[]
 }
 
 model Session {
@@ -63,17 +67,18 @@ model Post {
 }
 
 model CaseStudy {
-  id         String   @id @default(cuid())
-  slug       String   @unique
-  client     String
-  service    String
-  metric     String
-  result     String
-  data       Json
-  published  Boolean  @default(false)
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  client      String
+  service     String
+  metric      String
+  result      String
+  data        Json
+  published   Boolean  @default(false)
   publishedAt DateTime?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  testimonial Testimonial?
 }
 
 model NewsletterLead {
@@ -84,4 +89,249 @@ model NewsletterLead {
   createdAt DateTime @default(now())
 
   @@unique([email, source])
+}
+
+/* ============================ CRM MODELS ============================ */
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  domain      String?  @unique
+  industry    String?
+  size        String?
+  website     String?
+  linkedin    String?
+  notes       String?
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  contacts    Contact[]
+  deals       Deal[]
+  projects    Project[]
+  tickets     Ticket[]
+  activities  Activity[]
+}
+
+model Contact {
+  id          String   @id @default(cuid())
+  companyId   String?
+  company     Company? @relation(fields: [companyId], references: [id])
+  firstName   String
+  lastName    String
+  email       String   @unique
+  phone       String?
+  title       String?
+  role        String?  // "decision-maker", "champion", "influencer"
+  source      String?  // "referral", "cold-outbound", "inbound", "event"
+  status      String   @default("active") // "active", "unsubscribed", "bounced"
+  tags        String[]
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deals       DealContact[]
+  activities  Activity[]
+  tickets     Ticket[]
+}
+
+model Deal {
+  id            String   @id @default(cuid())
+  title         String
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id])
+  value         Int      // in cents
+  currency      String   @default("USD")
+  stageId       String
+  stage         PipelineStage @relation(fields: [stageId], references: [id])
+  probability   Int      @default(10)
+  expectedClose DateTime?
+  closedAt      DateTime?
+  lostReason    String?
+  ownerId       String
+  owner         User     @relation("DealOwner", fields: [ownerId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  contacts      DealContact[]
+  activities    Activity[]
+  projects      Project[]
+}
+
+model DealContact {
+  id        String @id @default(cuid())
+  dealId    String
+  deal      Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  contactId String
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  role      String // "primary", "cc", "introducer"
+  @@unique([dealId, contactId])
+}
+
+model PipelineStage {
+  id        String   @id @default(cuid())
+  name      String   @unique // "new", "qualified", "proposal", "negotiation", "won", "lost"
+  label     String
+  order     Int
+  color     String
+  isClosed  Boolean  @default(false)
+  isWon     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  deals     Deal[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  dealId      String?  @unique
+  deal        Deal?    @relation(fields: [dealId], references: [id])
+  status      String   @default("kickoff") // "kickoff", "active", "paused", "done", "archived"
+  startDate   DateTime?
+  endDate     DateTime?
+  budget      Int?
+  currency    String   @default("USD")
+  billingType String   @default("fixed") // "fixed", "retainer", "time-materials"
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tasks       Task[]
+  invoices    Invoice[]
+  activities  Activity[]
+  testimonial Testimonial?
+  tickets     Ticket[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String   @default("todo") // "todo", "in-progress", "review", "done"
+  priority    Int      @default(0)
+  assigneeId  String?
+  assignee    User?    @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  activities  Activity[]
+}
+
+model Ticket {
+  id          String   @id @default(cuid())
+  number      String   @unique // "SOC-1234"
+  subject     String
+  description String
+  status      String   @default("open") // "open", "waiting-client", "in-progress", "resolved", "closed"
+  priority    String   @default("medium") // "low", "medium", "high", "urgent"
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  contactId   String?
+  contact     Contact? @relation(fields: [contactId], references: [id])
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id])
+  assigneeId  String?
+  assignee    User?    @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  resolvedAt  DateTime?
+  closedAt    DateTime?
+  messages    TicketMessage[]
+  activities  Activity[]
+}
+
+model TicketMessage {
+  id        String   @id @default(cuid())
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId  String
+  authorType String  // "user" | "contact"
+  body      String
+  internal  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id         String   @id @default(cuid())
+  type       String   // "note", "call", "email", "meeting", "task-created", "deal-stage-changed", etc.
+  subject    String
+  body       String?
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  dealId     String?
+  deal       Deal?    @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  companyId  String?
+  company    Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contactId  String?
+  contact    Contact? @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  projectId  String?
+  project    Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  ticketId   String?
+  ticket     Ticket?  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  taskId     String?
+  task       Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model Invoice {
+  id        String   @id @default(cuid())
+  number    String   @unique // "INV-2026-001"
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  amount    Int      // cents
+  currency  String   @default("USD")
+  status    String   @default("draft") // "draft", "sent", "paid", "overdue", "void"
+  dueDate   DateTime
+  paidAt    DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  photo     String?
+  linkedin  String?
+  twitter   String?
+  email     String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  shortDesc   String?
+  href        String?
+  price       Int?     // in cents
+  period      String?  // "/month", "/project"
+  featured    Boolean  @default(false)
+  features    String[] // JSON array of feature strings
+  icon        String?  // icon name or emoji
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id           String       @id @default(cuid())
+  quote        String
+  name         String
+  role         String
+  company      String?
+  photo        String?
+  approved     Boolean      @default(false)
+  caseStudyId  String?      @unique
+  caseStudy    CaseStudy?   @relation(fields: [caseStudyId], references: [id])
+  projectId    String?      @unique
+  project      Project?     @relation(fields: [projectId], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
