@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -13,30 +13,35 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const company = await prisma.company.findUnique({
-    where: { id },
-    include: {
-      contacts: { orderBy: { createdAt: "desc" } },
-      deals: {
-        include: { stage: true },
-        orderBy: { createdAt: "desc" },
-      },
-      projects: { orderBy: { createdAt: "desc" } },
-      tickets: {
-        include: { assignee: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-      },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      _count: { select: { deals: true, projects: true, contacts: true, tickets: true } },
-    },
-  });
-
+  const db = store.__readDb();
+  const company = db.companies.find((c: any) => c.id === id);
   if (!company) return NextResponse.json({ error: "Not found." }, { status: 404 });
-  return NextResponse.json({ company });
+
+  const enriched = {
+    ...company,
+    contacts: db.contacts.filter((c: any) => c.companyId === id),
+    deals: db.deals.filter((d: any) => d.companyId === id).map((d: any) => ({
+      ...d,
+      stage: db.pipelineStages.find((s: any) => s.id === d.stageId) || { id: d.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
+    })),
+    projects: db.projects.filter((p: any) => p.companyId === id),
+    tickets: db.tickets.filter((t: any) => t.companyId === id).map((t: any) => ({
+      ...t,
+      assignee: t.assigneeId ? { id: t.assigneeId, name: "Admin" } : null,
+    })),
+    activities: db.activities.filter((a: any) => a.companyId === id).map((a: any) => ({
+      ...a,
+      user: { id: a.userId, name: "Admin" },
+    })).sort((a: any, b: any) => (b.createdAt || "").localeCompare(a.createdAt || "")).slice(0, 50),
+    _count: {
+      deals: db.deals.filter((d: any) => d.companyId === id).length,
+      projects: db.projects.filter((p: any) => p.companyId === id).length,
+      contacts: db.contacts.filter((c: any) => c.companyId === id).length,
+      tickets: db.tickets.filter((t: any) => t.companyId === id).length,
+    },
+  };
+
+  return NextResponse.json({ company: enriched });
 }
 
 export async function PATCH(
@@ -63,19 +68,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const company = await prisma.company.update({
-    where: { id },
-    data: body,
-  });
+  const company = store.updateCompany(id, body);
+  if (!company) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  await prisma.activity.create({
-    data: {
-      type: "company-updated",
-      subject: `Updated company ${company.name}`,
-      userId: user.id,
-      companyId: company.id,
-    },
-  });
+  store.createActivity({
+    type: "company-updated",
+    subject: `Updated company ${company.name}`,
+    companyId: company.id,
+  }, user.id);
 
   return NextResponse.json({ company });
 }
@@ -88,6 +88,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await prisma.company.delete({ where: { id } });
+  store.deleteCompany(id);
   return NextResponse.json({ ok: true });
 }

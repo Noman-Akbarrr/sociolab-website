@@ -1,37 +1,16 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const metadata = {
   title: "Deal | Sociolab Admin",
   robots: { index: false, follow: false },
 };
 
-async function getDeal(id: string) {
-  return prisma.deal.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      stage: true,
-      owner: { select: { id: true, name: true } },
-      contacts: { include: { contact: true } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      projects: { orderBy: { createdAt: "desc" } },
-    },
-  });
-}
-
-async function getStages() {
-  return prisma.pipelineStage.findMany({ orderBy: { order: "asc" } });
-}
-
 export default async function DealDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [deal, stages] = await Promise.all([getDeal(id), getStages()]);
+  const deal = store.getDeal(id);
+  const stages = store.getStages();
 
   if (!deal) notFound();
 

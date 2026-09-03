@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -11,10 +11,8 @@ export async function GET(request: NextRequest) {
 
   const activeOnly = request.nextUrl.searchParams.get("active") === "true";
 
-  const members = await prisma.teamMember.findMany({
-    where: activeOnly ? { active: true } : {},
-    orderBy: { order: "asc" },
-  });
+  let members = store.getTeamMembers();
+  if (activeOnly) members = members.filter((m: any) => m.active !== false);
 
   return NextResponse.json({ members });
 }
@@ -44,18 +42,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Name and role required." }, { status: 400 });
   }
 
-  const member = await prisma.teamMember.create({
-    data: {
-      name: body.name,
-      role: body.role,
-      bio: body.bio,
-      photo: body.photo,
-      linkedin: body.linkedin,
-      twitter: body.twitter,
-      email: body.email,
-      order: body.order || 0,
-      active: body.active ?? true,
-    },
+  const member = store.createTeamMember({
+    name: body.name,
+    role: body.role,
+    bio: body.bio,
+    photo: body.photo,
+    linkedin: body.linkedin,
+    twitter: body.twitter,
+    email: body.email,
+    order: body.order || 0,
+    active: body.active ?? true,
   });
 
   return NextResponse.json({ member });

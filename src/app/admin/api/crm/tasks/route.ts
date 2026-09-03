@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -12,30 +12,9 @@ export async function GET(request: NextRequest) {
   const projectId = request.nextUrl.searchParams.get("projectId") || "";
   const assigneeId = request.nextUrl.searchParams.get("assigneeId") || "";
   const status = request.nextUrl.searchParams.get("status") || "";
-  const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
-  const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
-  const skip = (page - 1) * limit;
 
-  const where: any = {};
-  if (projectId) where.projectId = projectId;
-  if (assigneeId) where.assigneeId = assigneeId;
-  if (status) where.status = status;
-
-  const [tasks, total] = await Promise.all([
-    prisma.task.findMany({
-      where,
-      orderBy: [{ status: "asc" }, { priority: "desc" }, { dueDate: "asc" }],
-      skip,
-      take: limit,
-      include: {
-        project: { select: { id: true, name: true, companyId: true } },
-        assignee: { select: { id: true, name: true } },
-      },
-    }),
-    prisma.task.count({ where }),
-  ]);
-
-  return NextResponse.json({ tasks, total, page, totalPages: Math.ceil(total / limit) });
+  const tasks = store.getTasks({ projectId, assigneeId, status });
+  return NextResponse.json({ tasks, total: tasks.length });
 }
 
 export async function POST(request: NextRequest) {
@@ -61,28 +40,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Project ID and title required." }, { status: 400 });
   }
 
-  const task = await prisma.task.create({
-    data: {
-      projectId: body.projectId,
-      title: body.title,
-      description: body.description,
-      status: body.status || "todo",
-      priority: body.priority || 0,
-      assigneeId: body.assigneeId,
-      dueDate: body.dueDate ? new Date(body.dueDate) : null,
-    },
-    include: { project: true, assignee: true },
+  const task = store.createTask({
+    projectId: body.projectId,
+    title: body.title,
+    description: body.description,
+    status: body.status || "todo",
+    priority: body.priority || 0,
+    assigneeId: body.assigneeId,
+    dueDate: body.dueDate || null,
   });
 
-  await prisma.activity.create({
-    data: {
-      type: "task-created",
-      subject: `Created task "${task.title}"`,
-      userId: user.id,
-      taskId: task.id,
-      projectId: task.projectId,
-    },
-  });
+  store.createActivity({
+    type: "task-created",
+    subject: `Created task "${task.title}"`,
+    taskId: task.id,
+    projectId: task.projectId,
+  }, user.id);
 
   return NextResponse.json({ task });
 }

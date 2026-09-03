@@ -2,45 +2,54 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const metadata = {
   title: "Company | Sociolab CRM",
   robots: { index: false, follow: false },
 };
 
-async function getCompany(id: string) {
-  return prisma.company.findUnique({
-    where: { id },
-    include: {
-      contacts: { orderBy: { createdAt: "desc" } },
-      deals: { include: { stage: true }, orderBy: { createdAt: "desc" } },
-      projects: { orderBy: { createdAt: "desc" } },
-      tickets: { include: { assignee: { select: { id: true, name: true } } }, orderBy: { createdAt: "desc" } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-    },
-  });
-}
-
 export default async function CompanyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const company = await getCompany(id);
+  const db = store.__readDb();
+  const company = db.companies.find((c: any) => c.id === id);
 
   if (!company) notFound();
 
+  const contacts = db.contacts.filter((c: any) => c.companyId === company.id).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const deals = db.deals
+    .filter((d: any) => d.companyId === company.id)
+    .map((d: any) => ({ ...d, stage: db.pipelineStages.find((s: any) => s.id === d.stageId) }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const projects = db.projects
+    .filter((p: any) => p.companyId === company.id)
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const tickets = db.tickets
+    .filter((t: any) => t.companyId === company.id)
+    .map((t: any) => ({
+      ...t,
+      assignee: t.assigneeId ? db.teamMembers.find((m: any) => m.id === t.assigneeId) : null,
+      _count: { messages: db.ticketMessages.filter((m: any) => m.ticketId === t.id).length },
+    }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const activities = db.activities
+    .filter((a: any) => a.companyId === company.id)
+    .map((a: any) => ({
+      ...a,
+      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
+    }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 50);
+
   const formatCurrency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 
-  const openDeals = company.deals.filter(d => !d.stage.isClosed);
-  const wonDeals = company.deals.filter(d => d.stage.isWon);
-  const pipelineValue = openDeals.reduce((sum, d) => sum + d.value, 0);
-  const wonValue = wonDeals.reduce((sum, d) => sum + d.value, 0);
+  const openDeals = deals.filter((d: any) => !d.stage?.isClosed);
+  const wonDeals = deals.filter((d: any) => d.stage?.isWon);
+  const pipelineValue = openDeals.reduce((sum: number, d: any) => sum + d.value, 0);
+  const wonValue = wonDeals.reduce((sum: number, d: any) => sum + d.value, 0);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8">
@@ -83,13 +92,13 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
         <div className="rounded-[3px] border border-line bg-white p-5">
           <span className="text-xs text-ink/50">Active Projects</span>
-          <div className="font-display text-2xl font-semibold text-blue-600">{company.projects.filter(p => p.status === "active").length}</div>
-          <span className="text-xs text-ink/50">{company.projects.length} total</span>
+          <div className="font-display text-2xl font-semibold text-blue-600">{projects.filter((p: any) => p.status === "active").length}</div>
+          <span className="text-xs text-ink/50">{projects.length} total</span>
         </div>
         <div className="rounded-[3px] border border-line bg-white p-5">
           <span className="text-xs text-ink/50">Open Tickets</span>
-          <div className="font-display text-2xl font-semibold text-orange-600">{company.tickets.filter(t => ["open", "waiting-client", "in-progress"].includes(t.status)).length}</div>
-          <span className="text-xs text-ink/50">{company.tickets.length} total</span>
+          <div className="font-display text-2xl font-semibold text-orange-600">{tickets.filter((t: any) => ["open", "waiting-client", "in-progress"].includes(t.status)).length}</div>
+          <span className="text-xs text-ink/50">{tickets.length} total</span>
         </div>
       </div>
 
@@ -99,14 +108,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           {/* Contacts */}
           <div className="rounded-[3px] border border-line bg-white">
             <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Contacts ({company.contacts.length})</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">Contacts ({contacts.length})</h2>
               <Link href="/admin/crm/contacts/new" className="text-xs font-semibold text-brand hover:underline">+ Add</Link>
             </div>
             <div className="divide-y divide-line">
-              {company.contacts.length === 0 ? (
+              {contacts.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No contacts yet.</p>
               ) : (
-                company.contacts.map((contact: any) => (
+                contacts.map((contact: any) => (
                   <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
                     <div className="flex min-w-0 flex-col gap-1">
                       <span className="font-display text-sm font-semibold text-ink">{contact.firstName} {contact.lastName}</span>
@@ -127,14 +136,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           {/* Deals */}
           <div className="rounded-[3px] border border-line bg-white">
             <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Deals ({company.deals.length})</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">Deals ({deals.length})</h2>
               <Link href={`/admin/crm/deals?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
             <div className="divide-y divide-line">
-              {company.deals.length === 0 ? (
+              {deals.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No deals yet.</p>
               ) : (
-                company.deals.map((deal: any) => (
+                deals.map((deal: any) => (
                   <Link key={deal.id} href={`/admin/crm/deals/${deal.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
                     <div className="flex min-w-0 flex-col gap-1">
                       <span className="truncate font-display text-sm font-semibold text-ink">{deal.title}</span>
@@ -142,9 +151,9 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
                         <span>{formatCurrency(deal.value)}</span>
                         <span>·</span>
                         <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${
-                          deal.stage.isWon ? "bg-green-100 text-green-700" : deal.stage.isClosed ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
-                        }`} style={{ backgroundColor: `${deal.stage.color}20`, color: deal.stage.color }}>
-                          {deal.stage.label}
+                          deal.stage?.isWon ? "bg-green-100 text-green-700" : deal.stage?.isClosed ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
+                        }`} style={{ backgroundColor: `${deal.stage?.color}20`, color: deal.stage?.color }}>
+                          {deal.stage?.label}
                         </span>
                       </div>
                     </div>
@@ -157,21 +166,20 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           {/* Projects */}
           <div className="rounded-[3px] border border-line bg-white">
             <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Projects ({company.projects.length})</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">Projects ({projects.length})</h2>
               <Link href={`/admin/crm/projects?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
             <div className="divide-y divide-line">
-              {company.projects.length === 0 ? (
+              {projects.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No projects yet.</p>
               ) : (
-                company.projects.map((project: any) => (
+                projects.map((project: any) => (
                   <Link key={project.id} href={`/admin/crm/projects/${project.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
                     <div className="flex min-w-0 flex-col gap-1">
                       <span className="truncate font-display text-sm font-semibold text-ink">{project.name}</span>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
                         <span>{project.status}</span>
                         {project.budget && <span>{formatCurrency(project.budget)}</span>}
-                        <span>{project._count.tasks} tasks</span>
                       </div>
                     </div>
                   </Link>
@@ -183,14 +191,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           {/* Tickets */}
           <div className="rounded-[3px] border border-line bg-white">
             <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Tickets ({company.tickets.length})</h2>
+              <h2 className="font-display text-lg font-semibold text-ink">Tickets ({tickets.length})</h2>
               <Link href={`/admin/crm/tickets?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
             <div className="divide-y divide-line">
-              {company.tickets.length === 0 ? (
+              {tickets.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No tickets yet.</p>
               ) : (
-                company.tickets.map((ticket: any) => (
+                tickets.map((ticket: any) => (
                   <Link key={ticket.id} href={`/admin/crm/tickets/${ticket.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
                     <div className="flex min-w-0 flex-col gap-1">
                       <div className="flex items-center gap-2">
@@ -216,10 +224,10 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <h2 className="font-display text-lg font-semibold text-ink">Recent Activity</h2>
             </div>
             <div className="divide-y divide-line">
-              {company.activities.length === 0 ? (
+              {activities.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
               ) : (
-                company.activities.map((activity: any) => (
+                activities.map((activity: any) => (
                   <div key={activity.id} className="flex flex-col gap-1 p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">

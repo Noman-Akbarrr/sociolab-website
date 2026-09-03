@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -15,32 +15,21 @@ export async function GET(request: NextRequest) {
   const assigneeId = request.nextUrl.searchParams.get("assigneeId") || "";
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
-  const skip = (page - 1) * limit;
 
-  const where: any = {};
-  if (status) where.status = status;
-  if (companyId) where.companyId = companyId;
-  if (projectId) where.projectId = projectId;
-  if (assigneeId) where.assigneeId = assigneeId;
+  const result = store.getTickets({ companyId, status, page, limit });
 
-  const [tickets, total] = await Promise.all([
-    prisma.ticket.findMany({
-      where,
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
-      skip,
-      take: limit,
-      include: {
-        company: { select: { id: true, name: true } },
-        contact: { select: { id: true, firstName: true, lastName: true, email: true } },
-        project: { select: { id: true, name: true } },
-        assignee: { select: { id: true, name: true } },
-        _count: { select: { messages: true } },
-      },
-    }),
-    prisma.ticket.count({ where }),
-  ]);
+  // Enrich with relations
+  const db = store.__readDb();
+  const enriched = result.tickets.map((t: any) => ({
+    ...t,
+    company: db.companies.find((c: any) => c.id === t.companyId) || { id: t.companyId, name: "Unknown" },
+    contact: t.contactId ? db.contacts.find((c: any) => c.id === t.contactId) || { id: t.contactId, firstName: "Unknown", lastName: "", email: "" } : null,
+    project: t.projectId ? db.projects.find((p: any) => p.id === t.projectId) || { id: t.projectId, name: "Unknown" } : null,
+    assignee: t.assigneeId ? { id: t.assigneeId, name: "Admin" } : null,
+    _count: { messages: db.ticketMessages.filter((m: any) => m.ticketId === t.id).length },
+  }));
 
-  return NextResponse.json({ tickets, total, page, totalPages: Math.ceil(total / limit) });
+  return NextResponse.json({ tickets: enriched, total: result.total, page: result.page, totalPages: result.totalPages });
 }
 
 export async function POST(request: NextRequest) {
@@ -66,33 +55,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Subject, description, and company required." }, { status: 400 });
   }
 
-  // Generate ticket number
-  const count = await prisma.ticket.count();
-  const number = `SOC-${String(count + 1).padStart(4, "0")}`;
-
-  const ticket = await prisma.ticket.create({
-    data: {
-      number,
-      subject: body.subject,
-      description: body.description,
-      companyId: body.companyId,
-      contactId: body.contactId,
-      projectId: body.projectId,
-      priority: body.priority || "medium",
-      assigneeId: body.assigneeId,
-    },
-    include: { company: true, contact: true, project: true, assignee: true },
+  const ticket = store.createTicket({
+    subject: body.subject,
+    description: body.description,
+    companyId: body.companyId,
+    contactId: body.contactId,
+    projectId: body.projectId,
+    priority: body.priority || "medium",
+    assigneeId: body.assigneeId,
   });
 
-  await prisma.activity.create({
-    data: {
-      type: "ticket-created",
-      subject: `Created ticket ${ticket.number}: ${ticket.subject}`,
-      userId: user.id,
-      ticketId: ticket.id,
-      companyId: ticket.companyId,
-    },
-  });
+  store.createActivity({
+    type: "ticket-created",
+    subject: `Created ticket ${ticket.number}: ${ticket.subject}`,
+    ticketId: ticket.id,
+    companyId: ticket.companyId,
+  }, user.id);
 
   return NextResponse.json({ ticket });
 }

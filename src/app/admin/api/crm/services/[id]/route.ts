@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -33,10 +33,8 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const service = await prisma.service.update({
-    where: { id },
-    data: body,
-  });
+  const service = store.updateService(id, body);
+  if (!service) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   return NextResponse.json({ service });
 }
@@ -49,6 +47,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await prisma.service.delete({ where: { id } });
+  store.deleteService(id);
   return NextResponse.json({ ok: true });
 }

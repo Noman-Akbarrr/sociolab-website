@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -11,10 +11,8 @@ export async function GET(request: NextRequest) {
 
   const activeOnly = request.nextUrl.searchParams.get("active") === "true";
 
-  const services = await prisma.service.findMany({
-    where: activeOnly ? { active: true } : {},
-    orderBy: { order: "asc" },
-  });
+  let services = store.getServices();
+  if (activeOnly) services = services.filter((s: any) => s.active !== false);
 
   return NextResponse.json({ services });
 }
@@ -47,21 +45,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Name, slug, and description required." }, { status: 400 });
   }
 
-  const service = await prisma.service.create({
-    data: {
-      name: body.name,
-      slug: body.slug,
-      description: body.description,
-      shortDesc: body.shortDesc,
-      href: body.href,
-      price: body.price,
-      period: body.period,
-      featured: body.featured || false,
-      features: body.features || [],
-      icon: body.icon,
-      order: body.order || 0,
-      active: body.active ?? true,
-    },
+  const service = store.createService({
+    name: body.name,
+    slug: body.slug,
+    description: body.description,
+    shortDesc: body.shortDesc,
+    href: body.href,
+    price: body.price,
+    period: body.period,
+    featured: body.featured || false,
+    features: body.features || [],
+    icon: body.icon,
+    order: body.order || 0,
+    active: body.active ?? true,
   });
 
   return NextResponse.json({ service });

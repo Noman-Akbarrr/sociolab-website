@@ -2,54 +2,53 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const metadata = {
   title: "Project | Sociolab CRM",
   robots: { index: false, follow: false },
 };
 
-async function getProject(id: string) {
-  return prisma.project.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      deal: { include: { stage: true } },
-      tasks: {
-        include: { assignee: { select: { id: true, name: true } } },
-        orderBy: [{ status: "asc" }, { priority: "desc" }, { dueDate: "asc" }],
-      },
-      invoices: { orderBy: { createdAt: "desc" } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      testimonial: true,
-    },
-  });
-}
-
-async function getTeamMembers() {
-  return prisma.teamMember.findMany({ where: { active: true }, orderBy: { order: "asc" } });
-}
-
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const [project, teamMembers] = await Promise.all([getProject(id), getTeamMembers()]);
+  const project = store.getProject(id);
+  const teamMembers = store.getTeamMembers();
+  const db = store.__readDb();
 
   if (!project) notFound();
+
+  const company = db.companies.find((c: any) => c.id === project.companyId);
+  const deal = project.dealId ? db.deals.find((d: any) => d.id === project.dealId) : null;
+  const dealStage = deal ? db.pipelineStages.find((s: any) => s.id === deal.stageId) : null;
+
+  const projectTasks = db.tasks
+    .filter((t: any) => t.projectId === project.id)
+    .map((t: any) => ({
+      ...t,
+      assignee: t.assigneeId ? db.teamMembers.find((m: any) => m.id === t.assigneeId) : null,
+    }));
+
+  const projectActivities = db.activities
+    .filter((a: any) => a.projectId === project.id)
+    .map((a: any) => ({
+      ...a,
+      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
+    }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 50);
+
+  const testimonial = db.testimonials.find((t: any) => t.projectId === project.id) || null;
 
   const formatCurrency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 
   const tasksByStatus = {
-    todo: project.tasks.filter(t => t.status === "todo"),
-    "in-progress": project.tasks.filter(t => t.status === "in-progress"),
-    review: project.tasks.filter(t => t.status === "review"),
-    done: project.tasks.filter(t => t.status === "done"),
+    todo: projectTasks.filter((t: any) => t.status === "todo"),
+    "in-progress": projectTasks.filter((t: any) => t.status === "in-progress"),
+    review: projectTasks.filter((t: any) => t.status === "review"),
+    done: projectTasks.filter((t: any) => t.status === "done"),
   };
 
   const statusColors: Record<string, string> = {
@@ -82,15 +81,17 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
       {/* Project Header */}
       <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <Link href={`/admin/crm/companies/${project.company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
-            {project.company.name}
-          </Link>
+          {company && (
+            <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
+              {company.name}
+            </Link>
+          )}
           <div className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
             <span>Budget: <span className="font-semibold text-brand">{formatCurrency(project.budget || 0)}</span></span>
             <span>Type: <span className="font-semibold">{project.billingType}</span></span>
             {project.startDate && <span>Start: <span className="font-semibold">{new Date(project.startDate).toLocaleDateString()}</span></span>}
             {project.endDate && <span>End: <span className="font-semibold">{new Date(project.endDate).toLocaleDateString()}</span></span>}
-            {project.deal && <span>From Deal: <Link href={`/admin/crm/deals/${project.deal.id}`} className="font-semibold text-brand hover:underline">{project.deal.title}</Link></span>}
+            {deal && <span>From Deal: <Link href={`/admin/crm/deals/${deal.id}`} className="font-semibold text-brand hover:underline">{deal.title}</Link></span>}
           </div>
         </div>
       </div>
@@ -166,11 +167,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               )}
               <div>
                 <dt className="text-ink/50">Tasks</dt>
-                <dd className="font-medium">{project.tasks.length} total, {tasksByStatus.done.length} done</dd>
-              </div>
-              <div>
-                <dt className="text-ink/50">Invoices</dt>
-                <dd className="font-medium">{project.invoices.length}</dd>
+                <dd className="font-medium">{projectTasks.length} total, {tasksByStatus.done.length} done</dd>
               </div>
             </dl>
           </div>
@@ -183,36 +180,12 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          {/* Invoices */}
-          {project.invoices.length > 0 && (
-            <div className="rounded-[3px] border border-line bg-white p-5">
-              <h3 className="font-display text-sm font-semibold text-ink mb-4">Invoices</h3>
-              <div className="space-y-3">
-                {project.invoices.map((inv: any) => (
-                  <div key={inv.id} className="flex items-center justify-between text-sm">
-                    <div>
-                      <span className="font-semibold">{inv.number}</span>
-                      <span className="text-ink/50 ml-2">{formatCurrency(inv.amount)}</span>
-                    </div>
-                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ${
-                      inv.status === "paid" ? "bg-green-100 text-green-700" :
-                      inv.status === "overdue" ? "bg-red-100 text-red-700" :
-                      "bg-yellow-100 text-yellow-700"
-                    }`}>
-                      {inv.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Testimonial */}
-          {project.testimonial && (
+          {testimonial && (
             <div className="rounded-[3px] border border-line bg-white p-5">
               <h3 className="font-display text-sm font-semibold text-ink mb-4">Testimonial</h3>
-              <blockquote className="font-display text-base font-medium leading-snug text-ink">&ldquo;{project.testimonial.quote}&rdquo;</blockquote>
-              <figcaption className="mt-2 text-sm text-ink/60">— {project.testimonial.name}, {project.testimonial.role}</figcaption>
+              <blockquote className="font-display text-base font-medium leading-snug text-ink">&ldquo;{testimonial.quote}&rdquo;</blockquote>
+              <figcaption className="mt-2 text-sm text-ink/60">— {testimonial.name}, {testimonial.role}</figcaption>
             </div>
           )}
 

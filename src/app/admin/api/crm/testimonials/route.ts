@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -11,14 +11,8 @@ export async function GET(request: NextRequest) {
 
   const approvedOnly = request.nextUrl.searchParams.get("approved") === "true";
 
-  const testimonials = await prisma.testimonial.findMany({
-    where: approvedOnly ? { approved: true } : {},
-    orderBy: { createdAt: "desc" },
-    include: {
-      caseStudy: { select: { id: true, client: true, slug: true } },
-      project: { select: { id: true, name: true } },
-    },
-  });
+  let testimonials = store.getTestimonials();
+  if (approvedOnly) testimonials = testimonials.filter((t: any) => t.approved);
 
   return NextResponse.json({ testimonials });
 }
@@ -47,17 +41,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Quote, name, and role required." }, { status: 400 });
   }
 
-  const testimonial = await prisma.testimonial.create({
-    data: {
-      quote: body.quote,
-      name: body.name,
-      role: body.role,
-      company: body.company,
-      photo: body.photo,
-      approved: body.approved || false,
-      caseStudyId: body.caseStudyId,
-      projectId: body.projectId,
-    },
+  const testimonial = store.createTestimonial({
+    quote: body.quote,
+    name: body.name,
+    role: body.role,
+    company: body.company,
+    photo: body.photo,
+    approved: body.approved || false,
+    caseStudyId: body.caseStudyId,
+    projectId: body.projectId,
   });
 
   return NextResponse.json({ testimonial });

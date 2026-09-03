@@ -2,45 +2,39 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const metadata = {
   title: "Ticket | Sociolab CRM",
   robots: { index: false, follow: false },
 };
 
-async function getTicket(id: string) {
-  return prisma.ticket.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      contact: true,
-      project: true,
-      assignee: { select: { id: true, name: true } },
-      messages: {
-        orderBy: { createdAt: "asc" },
-      },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-    },
-  });
-}
-
-async function getTeamMembers() {
-  return prisma.teamMember.findMany({ where: { active: true }, orderBy: { order: "asc" } });
-}
-
 export default async function TicketDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const [ticket, teamMembers] = await Promise.all([getTicket(id), getTeamMembers()]);
+  const ticket = store.getTicket(id);
+  const teamMembers = store.getTeamMembers();
+  const db = store.__readDb();
 
   if (!ticket) notFound();
+
+  const company = db.companies.find((c: any) => c.id === ticket.companyId);
+  const contact = ticket.contactId ? db.contacts.find((c: any) => c.id === ticket.contactId) : null;
+  const project = ticket.projectId ? db.projects.find((p: any) => p.id === ticket.projectId) : null;
+  const assignee = ticket.assigneeId ? db.teamMembers.find((m: any) => m.id === ticket.assigneeId) : null;
+  const messages = db.ticketMessages
+    .filter((m: any) => m.ticketId === ticket.id)
+    .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  const activities = db.activities
+    .filter((a: any) => a.ticketId === ticket.id)
+    .map((a: any) => ({
+      ...a,
+      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
+    }))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 50);
 
   const statusColors: Record<string, string> = {
     open: "bg-red-100 text-red-700",
@@ -95,15 +89,17 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
       {/* Ticket Header */}
       <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <Link href={`/admin/crm/companies/${ticket.company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
-            {ticket.company.name}
-          </Link>
+          {company && (
+            <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
+              {company.name}
+            </Link>
+          )}
           <div className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
-            {ticket.contact && <span>Contact: <span className="font-medium">{ticket.contact.firstName} {ticket.contact.lastName}</span></span>}
-            {ticket.project && <span>Project: <Link href={`/admin/crm/projects/${ticket.project.id}`} className="font-medium text-brand hover:underline">{ticket.project.name}</Link></span>}
+            {contact && <span>Contact: <span className="font-medium">{contact.firstName} {contact.lastName}</span></span>}
+            {project && <span>Project: <Link href={`/admin/crm/projects/${project.id}`} className="font-medium text-brand hover:underline">{project.name}</Link></span>}
             <span>Priority: <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ${priorityColors[ticket.priority]}`}>{ticket.priority}</span></span>
             <span>Status: <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${statusColors[ticket.status]}`}>{ticket.status.replace("-", " ")}</span></span>
-            {ticket.assignee && <span>Assignee: <span className="font-medium">{ticket.assignee.name}</span></span>}
+            {assignee && <span>Assignee: <span className="font-medium">{assignee.name}</span></span>}
             <span>Created: <span className="font-medium">{new Date(ticket.createdAt).toLocaleDateString()}</span></span>
             {ticket.resolvedAt && <span>Resolved: <span className="font-medium">{new Date(ticket.resolvedAt).toLocaleDateString()}</span></span>}
             {ticket.closedAt && <span>Closed: <span className="font-medium">{new Date(ticket.closedAt).toLocaleDateString()}</span></span>}
@@ -132,7 +128,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
             <h2 className="font-display text-lg font-semibold text-ink">Conversation</h2>
           </div>
           <div className="divide-y divide-line">
-            {ticket.messages.map((msg: any) => (
+            {messages.map((msg: any) => (
               <div key={msg.id} className={`flex flex-col gap-2 p-5 ${msg.internal ? "bg-amber-50 border-l-4 border-amber-400" : ""}`}>
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
@@ -166,10 +162,10 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
             <h2 className="font-display text-lg font-semibold text-ink">Activity</h2>
           </div>
           <div className="divide-y divide-line">
-            {ticket.activities.length === 0 ? (
+            {activities.length === 0 ? (
               <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
             ) : (
-              ticket.activities.map((activity: any) => (
+              activities.map((activity: any) => (
                 <div key={activity.id} className="flex flex-col gap-1 p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex min-w-0 flex-col gap-1">

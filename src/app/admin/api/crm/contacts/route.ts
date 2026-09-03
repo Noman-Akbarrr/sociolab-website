@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -13,34 +13,21 @@ export async function GET(request: NextRequest) {
   const companyId = request.nextUrl.searchParams.get("companyId") || "";
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
-  const skip = (page - 1) * limit;
 
-  const where: any = {};
-  if (search) {
-    where.OR = [
-      { firstName: { contains: search, mode: "insensitive" } },
-      { lastName: { contains: search, mode: "insensitive" } },
-      { email: { contains: search, mode: "insensitive" } },
-      { title: { contains: search, mode: "insensitive" } },
-    ];
-  }
-  if (companyId) where.companyId = companyId;
+  const result = store.getContacts({ companyId, search, page, limit });
 
-  const [contacts, total] = await Promise.all([
-    prisma.contact.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-      include: {
-        company: { select: { id: true, name: true } },
-        _count: { select: { deals: true, tickets: true } },
-      },
-    }),
-    prisma.contact.count({ where }),
-  ]);
+  // Enrich with company and counts
+  const db = store.__readDb();
+  const enriched = result.contacts.map((c: any) => ({
+    ...c,
+    company: db.companies.find((co: any) => co.id === c.companyId) || { id: c.companyId, name: "Unknown" },
+    _count: {
+      deals: db.deals.filter((d: any) => d.contactIds?.includes(c.id)).length,
+      tickets: db.tickets.filter((t: any) => t.contactId === c.id).length,
+    },
+  }));
 
-  return NextResponse.json({ contacts, total, page, totalPages: Math.ceil(total / limit) });
+  return NextResponse.json({ contacts: enriched, total: result.total, page: result.page, totalPages: result.totalPages });
 }
 
 export async function POST(request: NextRequest) {
@@ -69,30 +56,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "First name, last name, and email required." }, { status: 400 });
   }
 
-  const contact = await prisma.contact.create({
-    data: {
-      companyId: body.companyId,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
-      phone: body.phone,
-      title: body.title,
-      role: body.role,
-      source: body.source,
-      tags: body.tags || [],
-      notes: body.notes,
-    },
+  const contact = store.createContact({
+    companyId: body.companyId,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    email: body.email,
+    phone: body.phone,
+    title: body.title,
+    role: body.role,
+    source: body.source,
+    tags: body.tags || [],
+    notes: body.notes,
   });
 
-  await prisma.activity.create({
-    data: {
-      type: "contact-created",
-      subject: `Created contact ${contact.firstName} ${contact.lastName}`,
-      userId: user.id,
-      contactId: contact.id,
-      companyId: contact.companyId,
-    },
-  });
+  store.createActivity({
+    type: "contact-created",
+    subject: `Created contact ${contact.firstName} ${contact.lastName}`,
+    contactId: contact.id,
+    companyId: contact.companyId,
+  }, user.id);
 
   return NextResponse.json({ contact });
 }

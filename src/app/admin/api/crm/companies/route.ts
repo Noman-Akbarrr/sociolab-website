@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -12,32 +12,29 @@ export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("search") || "";
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
-  const skip = (page - 1) * limit;
 
-  const where = search
-    ? {
-        OR: [
-          { name: { contains: search, mode: "insensitive" as const } },
-          { domain: { contains: search, mode: "insensitive" as const } },
-          { email: { contains: search, mode: "insensitive" as const } },
-        ],
-      }
-    : {};
+  const result = store.getCompanies({ search, page, limit });
+  const db = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb() : null;
 
-  const [companies, total] = await Promise.all([
-    prisma.company.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-      include: {
-        _count: { select: { deals: true, projects: true, contacts: true, tickets: true } },
+  // Add counts
+  const companiesWithCounts = result.companies.map((c: any) => {
+    const allCompanies = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().companies : [];
+    const allDeals = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().deals : [];
+    const allContacts = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().contacts : [];
+    const allTickets = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().tickets : [];
+    const allProjects = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().projects : [];
+    return {
+      ...c,
+      _count: {
+        deals: allDeals.filter((d: any) => d.companyId === c.id).length,
+        projects: allProjects.filter((p: any) => p.companyId === c.id).length,
+        contacts: allContacts.filter((ct: any) => ct.companyId === c.id).length,
+        tickets: allTickets.filter((t: any) => t.companyId === c.id).length,
       },
-    }),
-    prisma.company.count({ where }),
-  ]);
+    };
+  });
 
-  return NextResponse.json({ companies, total, page, totalPages: Math.ceil(total / limit) });
+  return NextResponse.json({ companies: companiesWithCounts, total: result.total, page: result.page, totalPages: result.totalPages });
 }
 
 export async function POST(request: NextRequest) {
@@ -62,27 +59,22 @@ export async function POST(request: NextRequest) {
 
   if (!body.name) return NextResponse.json({ error: "Name required." }, { status: 400 });
 
-  const company = await prisma.company.create({
-    data: {
-      name: body.name,
-      domain: body.domain,
-      industry: body.industry,
-      size: body.size,
-      website: body.website,
-      linkedin: body.linkedin,
-      notes: body.notes,
-      tags: body.tags || [],
-    },
+  const company = store.createCompany({
+    name: body.name,
+    domain: body.domain,
+    industry: body.industry,
+    size: body.size,
+    website: body.website,
+    linkedin: body.linkedin,
+    notes: body.notes,
+    tags: body.tags || [],
   });
 
-  await prisma.activity.create({
-    data: {
-      type: "company-created",
-      subject: `Created company ${company.name}`,
-      userId: user.id,
-      companyId: company.id,
-    },
-  });
+  store.createActivity({
+    type: "company-created",
+    subject: `Created company ${company.name}`,
+    companyId: company.id,
+  }, user.id);
 
   return NextResponse.json({ company });
 }

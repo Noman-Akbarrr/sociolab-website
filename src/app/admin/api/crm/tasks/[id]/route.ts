@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -27,32 +27,22 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = await prisma.task.findUnique({ where: { id } });
-  if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
-
   const updateData: any = { ...body };
-  if (body.dueDate !== undefined) updateData.dueDate = body.dueDate ? new Date(body.dueDate) : null;
-  if (body.status === "done" && existing.status !== "done") {
-    updateData.completedAt = new Date();
+  if (body.status === "done") {
+    updateData.completedAt = new Date().toISOString();
   } else if (body.status && body.status !== "done") {
     updateData.completedAt = null;
   }
 
-  const task = await prisma.task.update({
-    where: { id },
-    data: updateData,
-    include: { project: true, assignee: true },
-  });
+  const task = store.updateTask(id, updateData);
+  if (!task) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  await prisma.activity.create({
-    data: {
-      type: "task-updated",
-      subject: `Updated task "${task.title}"`,
-      userId: user.id,
-      taskId: task.id,
-      projectId: task.projectId,
-    },
-  });
+  store.createActivity({
+    type: "task-updated",
+    subject: `Updated task "${task.title}"`,
+    taskId: task.id,
+    projectId: task.projectId,
+  }, user.id);
 
   return NextResponse.json({ task });
 }
@@ -65,6 +55,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await prisma.task.delete({ where: { id } });
+  store.deleteTask(id);
   return NextResponse.json({ ok: true });
 }

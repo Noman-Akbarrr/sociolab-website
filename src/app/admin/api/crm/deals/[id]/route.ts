@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -13,22 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const deal = await prisma.deal.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      stage: true,
-      owner: { select: { id: true, name: true } },
-      contacts: { include: { contact: true } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      projects: { orderBy: { createdAt: "desc" } },
-    },
-  });
-
+  const deal = store.getDeal(id);
   if (!deal) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ deal });
 }
@@ -57,73 +42,50 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = await prisma.deal.findUnique({ where: { id }, include: { stage: true } });
+  const existing = store.getDeal(id);
   if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const updateData: any = { ...body };
-  if (body.expectedClose !== undefined) {
-    updateData.expectedClose = body.expectedClose ? new Date(body.expectedClose) : null;
-  }
 
   // Handle stage change
   if (body.stageId && body.stageId !== existing.stageId) {
-    const newStage = await prisma.pipelineStage.findUnique({ where: { id: body.stageId } });
+    const stages = store.getStages();
+    const newStage = stages.find((s: any) => s.id === body.stageId);
     if (!newStage) return NextResponse.json({ error: "Invalid stage." }, { status: 400 });
 
     updateData.stageId = body.stageId;
-    updateData.probability = newStage.isWon ? 100 : newStage.isClosed ? 0 : (body.probability || newStage.isWon ? 100 : 10);
-    if (newStage.isWon) updateData.closedAt = new Date();
-    if (newStage.isClosed && !newStage.isWon) updateData.closedAt = new Date();
+    updateData.probability = newStage.isWon ? 100 : newStage.isClosed ? 0 : (body.probability || 10);
+    if (newStage.isWon) updateData.closedAt = new Date().toISOString();
+    if (newStage.isClosed && !newStage.isWon) updateData.closedAt = new Date().toISOString();
+
+    store.createActivity({
+      type: "deal-stage-changed",
+      subject: `Deal moved from "${existing.stage.label}" to "${newStage.label}"`,
+      body: `Deal "${existing.title}" stage changed`,
+      dealId: id,
+      companyId: existing.companyId,
+    }, user.id);
   }
 
-  const deal = await prisma.deal.update({
-    where: { id },
-    data: updateData,
-    include: { company: true, stage: true, owner: true },
-  });
-
-  // Log stage change activity
-  if (body.stageId && body.stageId !== existing.stageId) {
-    await prisma.activity.create({
-      data: {
-        type: "deal-stage-changed",
-        subject: `Deal moved from "${existing.stage.label}" to "${deal.stage.label}"`,
-        body: `Deal "${deal.title}" stage changed`,
-        userId: user.id,
-        dealId: deal.id,
-        companyId: deal.companyId,
-      },
-    });
-  }
-
-  // Update contacts if provided
-  if (body.contactIds) {
-    await prisma.dealContact.deleteMany({ where: { dealId: id } });
-    if (body.contactIds.length > 0) {
-      await prisma.dealContact.createMany({
-        data: body.contactIds.map((cid) => ({ dealId: id, contactId: cid, role: "primary" })),
-      });
-    }
-  }
+  const deal = store.updateDeal(id, updateData);
+  if (!deal) return NextResponse.json({ error: "Failed to update." }, { status: 500 });
 
   // Auto-create project when deal won
   if (body.stageId) {
-    const newStage = await prisma.pipelineStage.findUnique({ where: { id: body.stageId } });
-    if (newStage?.isWon && !existing.stage.isWon) {
-      const existingProject = await prisma.project.findFirst({ where: { dealId: id } });
-      if (!existingProject) {
-        await prisma.project.create({
-          data: {
-            name: deal.title,
-            companyId: deal.companyId,
-            dealId: deal.id,
-            status: "kickoff",
-            budget: deal.value || 0,
-            currency: deal.currency,
-            billingType: "fixed",
-          },
-        });
-      }
+    const stages = store.getStages();
+    const newStage = stages.find((s: any) => s.id === body.stageId);
+    const db = store.__readDb();
+    const existingProject = db.projects.find((p: any) => p.dealId === id);
+    if (newStage?.isWon && !existing.stage.isWon && !existingProject) {
+      store.createProject({
+        name: existing.title,
+        companyId: existing.companyId,
+        dealId: id,
+        status: "kickoff",
+        budget: existing.value || 0,
+        currency: existing.currency,
+        billingType: "fixed",
+      });
     }
   }
 
@@ -138,6 +100,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await prisma.deal.delete({ where: { id } });
+  store.deleteDeal(id);
   return NextResponse.json({ ok: true });
 }

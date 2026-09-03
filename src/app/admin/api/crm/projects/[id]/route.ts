@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -13,25 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const project = await prisma.project.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      deal: { include: { stage: true } },
-      tasks: {
-        include: { assignee: { select: { id: true, name: true } } },
-        orderBy: [{ status: "asc" }, { priority: "desc" }, { dueDate: "asc" }],
-      },
-      invoices: { orderBy: { createdAt: "desc" } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      testimonial: true,
-    },
-  });
-
+  const project = store.getProject(id);
   if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ project });
 }
@@ -60,25 +42,15 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const updateData: any = { ...body };
-  if (body.startDate !== undefined) updateData.startDate = body.startDate ? new Date(body.startDate) : null;
-  if (body.endDate !== undefined) updateData.endDate = body.endDate ? new Date(body.endDate) : null;
+  const project = store.updateProject(id, body);
+  if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  const project = await prisma.project.update({
-    where: { id },
-    data: updateData,
-    include: { company: true, deal: true },
-  });
-
-  await prisma.activity.create({
-    data: {
-      type: "project-updated",
-      subject: `Updated project "${project.name}"`,
-      userId: user.id,
-      projectId: project.id,
-      companyId: project.companyId,
-    },
-  });
+  store.createActivity({
+    type: "project-updated",
+    subject: `Updated project "${project.name}"`,
+    projectId: project.id,
+    companyId: project.companyId,
+  }, user.id);
 
   return NextResponse.json({ project });
 }
@@ -91,6 +63,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await prisma.project.delete({ where: { id } });
+  store.deleteProject(id);
   return NextResponse.json({ ok: true });
 }

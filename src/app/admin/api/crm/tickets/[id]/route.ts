@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -13,24 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const ticket = await prisma.ticket.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      contact: true,
-      project: true,
-      assignee: { select: { id: true, name: true } },
-      messages: {
-        orderBy: { createdAt: "asc" },
-      },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-    },
-  });
-
+  const ticket = store.getTicket(id);
   if (!ticket) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ ticket });
 }
@@ -55,32 +38,26 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = await prisma.ticket.findUnique({ where: { id } });
+  const existing = store.__readDb().tickets.find((t: any) => t.id === id);
   if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const updateData: any = { ...body };
   if (body.status === "resolved" && existing.status !== "resolved") {
-    updateData.resolvedAt = new Date();
+    updateData.resolvedAt = new Date().toISOString();
   }
   if (body.status === "closed" && existing.status !== "closed") {
-    updateData.closedAt = new Date();
+    updateData.closedAt = new Date().toISOString();
   }
 
-  const ticket = await prisma.ticket.update({
-    where: { id },
-    data: updateData,
-    include: { company: true, contact: true, project: true, assignee: true },
-  });
+  const ticket = store.updateTicket(id, updateData);
+  if (!ticket) return NextResponse.json({ error: "Failed." }, { status: 500 });
 
-  await prisma.activity.create({
-    data: {
-      type: "ticket-updated",
-      subject: `Updated ticket ${ticket.number}: ${ticket.subject}`,
-      userId: user.id,
-      ticketId: ticket.id,
-      companyId: ticket.companyId,
-    },
-  });
+  store.createActivity({
+    type: "ticket-updated",
+    subject: `Updated ticket ${ticket.number}: ${ticket.subject}`,
+    ticketId: ticket.id,
+    companyId: ticket.companyId,
+  }, user.id);
 
   return NextResponse.json({ ticket });
 }
@@ -105,34 +82,44 @@ export async function POST(
 
   if (!body.body) return NextResponse.json({ error: "Message body required." }, { status: 400 });
 
-  const message = await prisma.ticketMessage.create({
-    data: {
-      ticketId: id,
-      authorId: user.id,
-      authorType: "user",
-      body: body.body,
-      internal: body.internal || false,
-    },
+  const message = store.createTicketMessage({
+    ticketId: id,
+    authorId: user.id,
+    authorType: "user",
+    body: body.body,
+    internal: body.internal || false,
   });
 
   // Update ticket status if it was open
-  const ticket = await prisma.ticket.findUnique({ where: { id } });
+  const ticket = store.__readDb().tickets.find((t: any) => t.id === id);
   if (ticket && ticket.status === "open") {
-    await prisma.ticket.update({
-      where: { id },
-      data: { status: "in-progress" },
-    });
+    store.updateTicket(id, { status: "in-progress" });
   }
 
-  await prisma.activity.create({
-    data: {
-      type: "ticket-message",
-      subject: `Added message to ticket ${ticket?.number || id}`,
-      userId: user.id,
-      ticketId: id,
-      companyId: ticket?.companyId,
-    },
-  });
+  store.createActivity({
+    type: "ticket-message",
+    subject: `Added message to ticket ${ticket?.number || id}`,
+    ticketId: id,
+    companyId: ticket?.companyId,
+  }, user.id);
 
   return NextResponse.json({ message });
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getCurrentUser(request);
+  if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+
+  const { id } = await params;
+  const db = store.__readDb();
+  db.tickets = db.tickets.filter((t: any) => t.id !== id);
+  require("fs").writeFileSync(
+    require("path").join(process.cwd(), ".puck", "crm.json"),
+    JSON.stringify(db, null, 2),
+    "utf-8"
+  );
+  return NextResponse.json({ ok: true });
 }

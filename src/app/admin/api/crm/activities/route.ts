@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
@@ -16,27 +16,9 @@ export async function GET(request: NextRequest) {
   const ticketId = request.nextUrl.searchParams.get("ticketId") || "";
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
-  const skip = (page - 1) * limit;
 
-  const where: any = {};
-  if (dealId) where.dealId = dealId;
-  if (companyId) where.companyId = companyId;
-  if (contactId) where.contactId = contactId;
-  if (projectId) where.projectId = projectId;
-  if (ticketId) where.ticketId = ticketId;
-
-  const [activities, total] = await Promise.all([
-    prisma.activity.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-      include: { user: { select: { id: true, name: true } } },
-    }),
-    prisma.activity.count({ where }),
-  ]);
-
-  return NextResponse.json({ activities, total, page, totalPages: Math.ceil(total / limit) });
+  const result = store.getActivities({ dealId, companyId, projectId, ticketId, page, limit });
+  return NextResponse.json(result);
 }
 
 export async function POST(request: NextRequest) {
@@ -63,20 +45,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Type and subject required." }, { status: 400 });
   }
 
-  const activity = await prisma.activity.create({
-    data: {
-      type: body.type,
-      subject: body.subject,
-      body: body.body,
-      userId: user.id,
-      dealId: body.dealId,
-      companyId: body.companyId,
-      contactId: body.contactId,
-      projectId: body.projectId,
-      ticketId: body.ticketId,
-    },
-    include: { user: { select: { id: true, name: true } } },
-  });
+  const activity = store.createActivity({
+    type: body.type,
+    subject: body.subject,
+    body: body.body,
+    dealId: body.dealId,
+    companyId: body.companyId,
+    contactId: body.contactId,
+    projectId: body.projectId,
+    ticketId: body.ticketId,
+  }, user.id);
 
   return NextResponse.json({ activity });
 }

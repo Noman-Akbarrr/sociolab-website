@@ -1,3 +1,4 @@
+import * as store from "@/lib/crm-store";
 import { PipelineClient } from "@/components/admin/crm/PipelineClient";
 
 export const metadata = {
@@ -5,18 +6,14 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-async function getPipelineData() {
-  const res = await fetch("/admin/api/crm/deals?limit=200", { cache: "no-store" });
-  return res.json();
-}
-
-async function getStages() {
-  const res = await fetch("/admin/api/crm/pipeline-stages", { cache: "no-store" });
-  return res.json();
-}
-
 export default async function PipelinePage() {
-  const [data, stagesData] = await Promise.all([getPipelineData(), getStages()]);
+  const result = store.getDeals({});
+  const stages = store.getStages();
+
+  const dealsByStage = stages.map((stage: any) => ({
+    stage,
+    deals: result.deals.filter((d: any) => d.stageId === stage.id),
+  }));
 
   return (
     <div className="px-8 py-10">
@@ -25,8 +22,8 @@ export default async function PipelinePage() {
         <p className="mt-1 text-sm text-ink/50">Drag and drop deals between stages.</p>
       </div>
       <PipelineClient
-        initialDealsByStage={data.dealsByStage}
-        initialStages={stagesData.stages}
+        initialDealsByStage={dealsByStage}
+        initialStages={stages}
       />
     </div>
   );

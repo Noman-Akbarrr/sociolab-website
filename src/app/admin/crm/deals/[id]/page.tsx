@@ -2,47 +2,44 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import { prisma } from "@/lib/prisma";
+import * as store from "@/lib/crm-store";
 
 export const metadata = {
   title: "Deal | Sociolab CRM",
   robots: { index: false, follow: false },
 };
 
-async function getDeal(id: string) {
-  return prisma.deal.findUnique({
-    where: { id },
-    include: {
-      company: true,
-      stage: true,
-      owner: { select: { id: true, name: true } },
-      contacts: { include: { contact: true } },
-      activities: {
-        include: { user: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-      },
-      projects: { orderBy: { createdAt: "desc" } },
-    },
-  });
-}
-
-async function getStages() {
-  return prisma.pipelineStage.findMany({ orderBy: { order: "asc" } });
-}
-
-async function getCompanyContacts(companyId: string) {
-  return prisma.contact.findMany({ where: { companyId }, orderBy: { createdAt: "desc" } });
-}
-
 export default async function DealDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const [deal, stages, contacts] = await Promise.all([getDeal(id), getStages(), getCompanyContacts((await getDeal(id))?.companyId || "")]);
+  const deal = store.getDeal(id);
+  const stages = store.getStages();
+  const db = store.__readDb();
+  const contacts = deal?.companyId
+    ? db.contacts.filter((c: any) => c.companyId === deal.companyId)
+    : [];
 
   if (!deal) notFound();
+
+  const company = db.companies.find((c: any) => c.id === deal.companyId);
+  const stage = db.pipelineStages.find((s: any) => s.id === deal.stageId);
+  const owner = db.teamMembers.find((m: any) => m.id === deal.ownerId);
+  const dealContacts = db.contacts
+    .filter((c: any) => c.companyId === deal.companyId)
+    .slice(0, 10);
+  const dealActivities = db.activities
+    .filter((a: any) => a.dealId === deal.id)
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 50)
+    .map((a: any) => ({
+      ...a,
+      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
+    }));
+  const dealProjects = db.projects
+    .filter((p: any) => p.dealId === deal.id)
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const formatCurrency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 
@@ -73,14 +70,16 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
           <div className="flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <Link href={`/admin/crm/companies/${deal.company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
-                  {deal.company.name}
-                </Link>
+                {company && (
+                  <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
+                    {company.name}
+                  </Link>
+                )}
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink/50">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${
-                    deal.stage.isWon ? "bg-green-100 text-green-700" : deal.stage.isClosed ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
-                  }`} style={{ backgroundColor: `${deal.stage.color}20`, color: deal.stage.color }}>
-                    {deal.stage.label}
+                    stage?.isWon ? "bg-green-100 text-green-700" : stage?.isClosed ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
+                  }`} style={{ backgroundColor: `${stage?.color}20`, color: stage?.color }}>
+                    {stage?.label}
                   </span>
                   <span>Value: <span className="font-semibold text-brand">{formatCurrency(deal.value)}</span></span>
                   <span>Probability: <span className="font-semibold">{deal.probability}%</span></span>
@@ -89,20 +88,20 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
                 </div>
               </div>
               <div className="text-right text-sm text-ink/50">
-                <div>Owner: {deal.owner.name}</div>
+                <div>Owner: {owner?.name || "Unknown"}</div>
                 <div>Created: {new Date(deal.createdAt).toLocaleDateString()}</div>
               </div>
             </div>
 
             {/* Contacts */}
-            {deal.contacts.length > 0 && (
+            {dealContacts.length > 0 && (
               <div className="pt-4 border-t border-line">
                 <h3 className="font-display text-sm font-semibold text-ink mb-2">Contacts</h3>
                 <div className="flex flex-wrap gap-2">
-                  {deal.contacts.map((dc: any) => (
-                    <Link key={dc.contact.id} href={`/admin/crm/contacts/${dc.contact.id}`} className="inline-flex items-center gap-1 rounded-full bg-mist px-3 py-1 text-sm text-ink hover:bg-mist/80">
-                      {dc.contact.firstName} {dc.contact.lastName}
-                      {dc.contact.email && <span className="text-ink/50">({dc.contact.email})</span>}
+                  {dealContacts.map((contact: any) => (
+                    <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="inline-flex items-center gap-1 rounded-full bg-mist px-3 py-1 text-sm text-ink hover:bg-mist/80">
+                      {contact.firstName} {contact.lastName}
+                      {contact.email && <span className="text-ink/50">({contact.email})</span>}
                     </Link>
                   ))}
                 </div>
@@ -116,10 +115,10 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
               <h2 className="font-display text-lg font-semibold text-ink">Activity</h2>
             </div>
             <div className="divide-y divide-line">
-              {deal.activities.length === 0 ? (
+              {dealActivities.length === 0 ? (
                 <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
               ) : (
-                deal.activities.map((activity: any) => (
+                dealActivities.map((activity: any) => (
                   <div key={activity.id} className="flex flex-col gap-1 p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">
@@ -180,13 +179,13 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
               <Link href={`/admin/crm/deals/${deal.id}/edit`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-mist">
                 Edit Deal
               </Link>
-              {deal.projects.length === 0 && deal.stage.isWon && (
+              {dealProjects.length === 0 && stage?.isWon && (
                 <button onClick={async () => { await fetch(`/admin/api/crm/projects`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: deal.title, companyId: deal.companyId, dealId: deal.id, budget: deal.value }) }); window.location.reload(); }} className="rounded-[3px] bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700">
                   Convert to Project
                 </button>
               )}
-              {deal.projects.length > 0 && (
-                <Link href={`/admin/crm/projects/${deal.projects[0].id}`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-mist">
+              {dealProjects.length > 0 && (
+                <Link href={`/admin/crm/projects/${dealProjects[0].id}`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-mist">
                   View Project
                 </Link>
               )}
