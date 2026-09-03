@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "node ./node_modules/next/dist/bin/next dev",
-    "build": "node ./node_modules/prisma/build/index.js generate && node ./node_modules/next/dist/bin/next build",
+    "build": "node ./node_modules/next/dist/bin/next build",
     "build:vercel": "node ./node_modules/next/dist/bin/next build",
     "start": "node ./node_modules/next/dist/bin/next start",
     "lint": "eslint",
-    "postinstall": "node ./node_modules/prisma/build/index.js generate",
+    "postinstall": "echo skipping prisma generate (committed)",
     "db:seed": "node ./node_modules/tsx/dist/cli.mjs prisma/seed-crm.ts",
     "db:push": "node ./node_modules/prisma/build/index.js db push",
     "db:migrate": "node ./node_modules/prisma/build/index.js migrate dev"
