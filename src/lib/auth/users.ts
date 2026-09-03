@@ -37,7 +37,7 @@ function writeAuthFile(db: AuthFile) {
 }
 
 function usesDb() {
-  return Boolean(process.env.DATABASE_URL);
+  return Boolean(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes("user:pass@host"));
 }
 
 function fromPrisma(user: {

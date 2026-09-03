@@ -11,10 +11,16 @@ export default async function LoginPage() {
   const configured = users.length > 0;
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-md flex-col justify-center px-5 py-16">
+    <div className="w-full max-w-md px-5">
+      <div className="mb-8 flex items-center gap-3">
+        <span className="w-10 h-10 rounded-lg bg-brand text-ink flex items-center justify-center font-display font-bold text-lg">
+          S
+        </span>
+        <span className="font-display text-xl font-semibold">Sociolab</span>
+      </div>
       <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Sign in</h1>
       <p className="mt-2 text-sm text-ink/60">
-        Internal team access only. Authorized personnel only.
+        Internal team access only.
       </p>
 
       {configured ? (
@@ -25,11 +31,8 @@ export default async function LoginPage() {
             No admin yet
           </p>
           <p className="mt-3 text-sm leading-relaxed text-ink/70">
-            Create the first admin before signing in:
+            Create the first admin before signing in.
           </p>
-          <pre className="mt-4 overflow-x-auto rounded-[3px] bg-ink p-4 font-mono text-xs text-white">
-            {`node scripts/create-admin.mjs`}
-          </pre>
         </div>
       )}
     </div>

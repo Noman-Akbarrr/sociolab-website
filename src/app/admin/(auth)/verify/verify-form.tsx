@@ -68,7 +68,7 @@ export function VerifyForm() {
         disabled={loading}
         className="mt-2 rounded-[3px] bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
       >
-        {loading ? "Verifying…" : "Verify"}
+        {loading ? "Verifying..." : "Verify"}
       </button>
     </form>
   );

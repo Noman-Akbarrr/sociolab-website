@@ -1,0 +1,1783 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\Tab & Tech\Documents\Work stuff\Sociolab\Sociolab website> npm run build
+
+> sociolab@0.1.0 build
+> node ./node_modules/prisma/build/index.js generate && node ./node_modules/next/dist/bin/next build
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (7.9.1) to .\src\generated\prisma in 341ms
+
+▲ Next.js 16.3.1 (Turbopack)
+- Environments: .env
+✓ Running next.config.ts took 326ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 37.3s
+✓ Finished TypeScript in 5.1s
+  Collecting page data using 3 workers  ...Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async j (src\app\[[...puckPath]]\page.tsx:12:17)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+✓ Collecting page data using 3 workers in 3.8s
+  Generating static pages using 3 workers (21/52)  [  ==]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (22/52)  [   =]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (22/52)  [    ]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (27/52)  [   =]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async h (src\lib\pages-store.ts:67:21)
+    at async l (src\lib\pages.ts:49:18)
+    at async o (src\app\sitemap.ts:8:17)
+    at async s (src\app\sitemap--route-entry.js:14:18)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async h (src\lib\pages-store.ts:67:21)
+        at async l (src\lib\pages.ts:49:18)
+        at async o (src\app\sitemap.ts:8:17)
+        at async s (src\app\sitemap--route-entry.js:14:18)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (28/52)  [  ==]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async l (src\app\resources\page.tsx:18:17)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async l (src\app\resources\page.tsx:18:17)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (38/52)  [ ===]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (42/52)  [    ]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (47/52)  [ ===]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (47/52)  [  ==]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+  Generating static pages using 3 workers (50/52)  [  ==]Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findMany()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async k (src\lib\pages-store.ts:67:21)
+    at async h (src\lib\pages.ts:49:18)
+    at async i (src\lib\pages.ts:89:17)
+    at async m (src\app\layout.tsx:69:20)
+  65 |   if (usesDb()) {
+  66 |     try {
+> 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+     |                     ^
+  68 |       return pages.map((page) => ({
+  69 |         path: page.path,
+  70 |         title: page.title, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at async k (src\lib\pages-store.ts:67:21)
+        at async h (src\lib\pages.ts:49:18)
+        at async i (src\lib\pages.ts:89:17)
+        at async m (src\app\layout.tsx:69:20)
+      65 |   if (usesDb()) {
+      66 |     try {
+    > 67 |       const pages = await prisma.page.findMany({ orderBy: { updatedAt: "desc" } });
+         |                     ^
+      68 |       return pages.map((page) => ({
+      69 |         path: page.path,
+      70 |         title: page.title, {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async l (src\app\[[...puckPath]]\page.tsx:46:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+Database query failed, falling back to file storage: Error [PrismaClientKnownRequestError]:
+Invalid `prisma.page.findUnique()` invocation:
+
+
+Database error. Code: `XX000`. Message: `(ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found`
+    at async j (src\lib\pages-store.ts:44:20)
+    at async g (src\lib\pages.ts:19:18)
+    at async Module.k [as generateMetadata] (src\app\[[...puckPath]]\page.tsx:26:16)
+  42 |   if (usesDb()) {
+  43 |     try {
+> 44 |       const page = await prisma.page.findUnique({ where: { path } });
+     |                    ^
+  45 |       if (!page) return null;
+  46 |       return {
+  47 |         path: page.path, {
+  code: 'P2039',
+  meta: {
+    modelName: 'Page',
+    driverAdapterError: Error [DriverAdapterError]: (ENOTFOUND) tenant/user postgres.bfkgvnlqedjxnougadnp not found
+        at ignore-listed frames {
+      [cause]: [Object]
+    }
+  },
+  clientVersion: '7.9.1'
+}
+✓ Generating static pages using 3 workers (52/52) in 5.1s
+Turbopack build encountered 2 warnings:
+./src/app/admin/api/upload/route.ts:72:15
+Warning: Dynamic filesystem access causes tracing of the whole project
+  70 |   // Local filesystem fallback (dev)
+  71 |   const uploadRoot = getUploadRoot();
+> 72 |   const dir = path.join(uploadRoot, relative);
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  73 |   fs.mkdirSync(dir, { recursive: true });
+  74 |
+  75 |   const name = `${crypto.randomBytes(8).toString("hex")}.${ext}`;
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  App Route:
+    ./src/app/admin/api/upload/route.ts
+    ./src/app/admin/api/upload/route.ts
+
+
+./src/app/admin/api/upload/route.ts:77:20
+Warning: Dynamic filesystem access causes tracing of the whole project
+  75 |   const name = `${crypto.randomBytes(8).toString("hex")}.${ext}`;
+  76 |   const bytes = Buffer.from(await file.arrayBuffer());
+> 77 |   fs.writeFileSync(path.join(dir, name), bytes);
+     |                    ^^^^^^^^^^^^^^^^^^^^
+  78 |
+  79 |   const url = `/uploads/${relative.split(path.sep).join("/")}/${name}`;
+  80 |   return NextResponse.json({ ok: true, url });
+
+Static analysis determined that this filesystem access causes the whole project to be traced and included in the output.
+This is usually unintentional and leads to all source files (including the public folder) to be deployed as part of the server code.
+This can slow down deployments or lead to failures when size limits are exceeded.
+To resolve this, you can
+- make sure the path is statically scoped to some subfolder, for example path.join(process.cwd(), 'data', bar), or
+- only use them in development, or
+- opt out by adding an ignore comment to the highlighted call: path.join(/*turbopackIgnore: true*/ ...), or
+- remove them.
+
+Import trace:
+  App Route:
+    ./src/app/admin/api/upload/route.ts
+    ./src/app/admin/api/upload/route.ts
+
+
+✓ Finalizing page optimization in 3.2s
+
+Route (app)                              Revalidate  Expire
+┌ ○ /_not-found
+├   /[[...puckPath]]
+│ ├ ● /resources/new-page                        1m      1y
+│ ├ ● /                                          1m      1y
+│ ├ ● /services/social-media-management          1m      1y
+│ └ ● [+14 more paths]
+├ ƒ /admin
+├ ƒ /admin/api/auth/2fa/setup
+├ ƒ /admin/api/auth/bootstrap
+├ ƒ /admin/api/auth/login
+├ ƒ /admin/api/auth/logout
+├ ƒ /admin/api/auth/status
+├ ƒ /admin/api/auth/verify
+├ ƒ /admin/api/crm/activities
+├ ƒ /admin/api/crm/companies
+├ ƒ /admin/api/crm/companies/[id]
+├ ƒ /admin/api/crm/contacts
+├ ƒ /admin/api/crm/contacts/[id]
+├ ƒ /admin/api/crm/deals
+├ ƒ /admin/api/crm/deals/[id]
+├ ƒ /admin/api/crm/leads
+├ ƒ /admin/api/crm/pipeline-stages
+├ ƒ /admin/api/crm/projects
+├ ƒ /admin/api/crm/projects/[id]
+├ ƒ /admin/api/crm/services
+├ ƒ /admin/api/crm/services/[id]
+├ ƒ /admin/api/crm/tasks
+├ ƒ /admin/api/crm/tasks/[id]
+├ ƒ /admin/api/crm/team-members
+├ ƒ /admin/api/crm/team-members/[id]
+├ ƒ /admin/api/crm/testimonials
+├ ƒ /admin/api/crm/testimonials/[id]
+├ ƒ /admin/api/crm/tickets
+├ ƒ /admin/api/crm/tickets/[id]
+├ ƒ /admin/api/page
+├ ƒ /admin/api/upload
+├ ƒ /admin/blog
+├ ƒ /admin/crm
+├ ƒ /admin/crm/activity
+├ ƒ /admin/crm/companies
+├ ƒ /admin/crm/companies/[id]
+├ ƒ /admin/crm/deals
+├ ƒ /admin/crm/deals/[id]
+├ ƒ /admin/crm/pipeline
+├ ƒ /admin/crm/projects
+├ ƒ /admin/crm/projects/[id]
+├ ƒ /admin/crm/tasks
+├ ƒ /admin/crm/tickets
+├ ƒ /admin/crm/tickets/[id]
+├ ƒ /admin/edit/[[...puckPath]]
+├ ƒ /admin/login
+├ ƒ /admin/verify
+├ ƒ /api/crm/case-studies
+├ ƒ /api/crm/services
+├ ƒ /api/crm/team-members
+├ ƒ /api/crm/testimonials
+├ ƒ /api/newsletter
+├ ƒ /api/track/wa
+├ ○ /icon.jpg
+├ ƒ /indexnow
+├ ○ /llms                                        1h      1y
+├ ○ /llms-full                                   1h      1y
+├ ○ /opengraph-image
+├ ○ /resources                                   1m      1y
+├ ○ /robots.txt
+└ ○ /sitemap.xml                                 1h      1y
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+PS C:\Users\Tab & Tech\Documents\Work stuff\Sociolab\Sociolab website>

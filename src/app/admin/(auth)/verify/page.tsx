@@ -7,7 +7,13 @@ import { VerifyForm } from "./verify-form";
 
 export default function VerifyPage() {
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] w-full max-w-md flex-col justify-center px-5 py-16">
+    <div className="w-full max-w-md px-5">
+      <div className="mb-8 flex items-center gap-3">
+        <span className="w-10 h-10 rounded-lg bg-brand text-ink flex items-center justify-center font-display font-bold text-lg">
+          S
+        </span>
+        <span className="font-display text-xl font-semibold">Sociolab</span>
+      </div>
       <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
         Two-step verification
       </h1>

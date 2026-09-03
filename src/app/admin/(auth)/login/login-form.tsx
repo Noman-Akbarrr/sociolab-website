@@ -70,7 +70,7 @@ export function LoginForm() {
         disabled={loading}
         className="mt-2 rounded-[3px] bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
       >
-        {loading ? "Signing in…" : "Sign in"}
+        {loading ? "Signing in..." : "Sign in"}
       </button>
     </form>
   );
