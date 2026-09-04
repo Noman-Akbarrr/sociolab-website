@@ -1,5 +1,6 @@
 import { listUsers } from "@/lib/auth/users";
 import { LoginForm } from "./login-form";
+import { CreateAdminForm } from "./create-admin-form";
 
 export const metadata = {
   title: "Sign in | Sociolab",
@@ -26,14 +27,17 @@ export default async function LoginPage() {
       {configured ? (
         <LoginForm />
       ) : (
-        <div className="mt-8 rounded-[3px] border border-line bg-white p-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand">
-            No admin yet
-          </p>
-          <p className="mt-3 text-sm leading-relaxed text-ink/70">
-            Create the first admin before signing in.
-          </p>
-        </div>
+        <>
+          <div className="mt-6 rounded-[3px] border border-line bg-white p-6">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand">
+              No admin yet
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-ink/70">
+              Create the first admin account to get started.
+            </p>
+          </div>
+          <CreateAdminForm />
+        </>
       )}
     </div>
   );
