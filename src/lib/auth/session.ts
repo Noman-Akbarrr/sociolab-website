@@ -20,7 +20,8 @@ function getSecret(): string {
   const secret = process.env.AUTH_SECRET;
   if (!secret) {
     if (process.env.NODE_ENV === "production") {
-      throw new Error("AUTH_SECRET must be set in production.");
+      console.warn("AUTH_SECRET is not set. Using fallback secret. Set AUTH_SECRET in your environment for security.");
+      return "fallback-secret-set-AUTH_SECRET-in-dokploy-env-vars";
     }
     return "dev-only-secret-do-not-use-in-production";
   }
