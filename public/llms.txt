@@ -1,31 +1,25 @@
-import { site } from "@/lib/site";
+# Sociolab (Social Lab)
+> Modern Performance Marketing, Direct-Response Creative Studio, and Influencer Automation Agency.
 
-export const llms = {
-  header: "# Sociolab (Social Lab)",
-  tagline: "> Modern Performance Marketing, Direct-Response Creative Studio, and Influencer Automation Agency.",
-  organization: `
 ## Organization
 - Name: Sociolab (Social Lab)
 - Founders: Noman Akbar Khan (Co-Founder & Performance Marketer), Khizar (Co-Founder & Creative Director)
 - Location: Rawalpindi / Islamabad, Pakistan (serving regional & global clients)
-- Website: ${site.url}
+- Website: https://sociolab.com.pk
 - Primary Specialty: Full-Funnel Paid Advertising (Meta, Google, TikTok), In-House Short-Form Video Production, and Automated Creator Marketing.
-`,
-  capabilities: `
+
 ## Core Capabilities
 - Paid Media Acquisition: Meta Ads (Facebook & Instagram), Dynamic Creative Testing (DCT), Conversion API (CAPI) Integration, Google Ads (Search, Shopping, Performance Max), full-funnel remarketing loops.
 - Creative Production: Direct-response short-form video (Reels, TikToks, YouTube Shorts), educational carousels, ad fatigue variation testing, script frameworks (PAS, BAB), multi-variation cutdowns.
 - Creator Marketing: Automated influencer outreach using n8n workflows, PR gifting management, Partnership / Spark Ads whitelisting, creator vetting and contract automation.
 - Conversion Rate Optimization: Funnel troubleshooting, landing page audits, chat/CRM lead triage optimization, automated abandoned cart and welcome email flows.
-`,
-  clients: `
+
 ## Key Clients
 - Exact Fashion Store (Retail & Apparel) — 314 WhatsApp Chats @ PKR 22.79 per chat
 - Sehgal Motors (Automotive Accessories) — 3.8x Target ROAS
 - GCC Startups (Business Consulting) — 47% Lower Cost Per Lead
 - Tanzeem (E-Commerce & Fashion) — 2.7x ROAS in 30 Days
-`,
-  differentiators: `
+
 ## Differentiators
 - In-house creative studio (no outsourced video production)
 - Automated creator outreach via n8n backend workflows
@@ -33,30 +27,22 @@ export const llms = {
 - WhatsApp-first lead qualification and sales triage
 - 30-day onboarding roadmap with measurable milestones
 - Month-to-month contracts (no long-term lock-in)
-`,
-  process: `
-## Process (30-Day Onboarding)
+
+## Process
 - Days 1-7: Strategic Intake & Tracking Foundation (Meta Pixel, CAPI, ad account audit)
 - Days 8-14: Studio Production & Creator Seeding (batch shoots, product seeding)
 - Days 15-21: Campaign Rollout & Partnership Ads (prospecting, organic calendar, whitelisting)
 - Days 22-30: Algorithmic Optimization & Scaling Blueprint (budget reallocation, Month 2 plan)
-`,
-  contact: `
-## Contact
-- Email: ${site.email}
-- WhatsApp: ${site.whatsappDisplay}
-- Instagram: ${site.socials.instagram}
-- LinkedIn: ${site.socials.linkedin}
-- Location: Islamabad / Rawalpindi, Pakistan (serving regional & global clients)
-`,
-  links: `
-## Key Pages
-- ${site.url}/services/paid-acquisition — Meta & Google Ads management
-- ${site.url}/services/creative-production — Video & visual asset production
-- ${site.url}/services/creator-marketing — Automated influencer marketing
-- ${site.url}/case-studies — Client results and growth teardowns
-- ${site.url}/about — Team, methodology, and company information
-`,
-};
 
-export default llms;
+## Contact
+- Email: hello@sociolab.com.pk
+- WhatsApp: +92 300 1234567
+- Instagram: https://www.instagram.com/sociolab.official/
+- LinkedIn: https://www.linkedin.com/company/sociolab-pk
+
+## Key Pages
+- /services/paid-acquisition — Meta & Google Ads management
+- /services/creative-production — Video & visual asset production
+- /services/creator-marketing — Automated influencer marketing
+- /case-studies — Client results and growth teardowns
+- /about — Team, methodology, and company information
