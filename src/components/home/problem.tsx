@@ -1,44 +1,83 @@
-import { Section, SectionHeading } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
+import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 
-const pains = [
+const problems = [
   {
-    title: "You post every day. Nothing happens.",
-    body: "You're showing up, but the algorithm doesn't care. Effort without a strategy is just noise.",
+    index: "01",
+    label: "The Deliverable Trap",
+    title: "Posting Content for the Sake of Posting",
+    description:
+      "Most agencies sell you '12 Reels and 8 Carousels a month' like a factory. They fulfill their checklist, but your bank account doesn't grow. Volume without direct-response strategy is just expensive feed clutter.",
   },
   {
-    title: "Your competitors are everywhere. You're invisible.",
-    body: "The brand that wins attention wins the customer. Right now, that's not you.",
+    index: "02",
+    label: "The Attribution Disconnect",
+    title: "Ad Spend Disconnected from Real Sales",
+    description:
+      "Media buyers run generic traffic campaigns while your post-click operations bleed revenue. Without custom Conversion APIs, server-side tracking, and chat/landing page sales triage, high ad spend results in low profit.",
   },
   {
-    title: "Your agency sends reports, not results.",
-    body: "Vanity metrics in a pretty deck. You paid for growth and got a monthly PDF.",
+    index: "03",
+    label: "Creative Burnout & Ad Fatigue",
+    title: "Recycling Boring, Uninspired Creatives",
+    description:
+      "Meta's algorithm demands rapid creative testing. Relying on basic Canva templates causes ad fatigue within weeks. You need a dedicated production engine pumping fresh hooks, authentic UGC, and dynamic angles into your campaigns.",
   },
 ];
 
 export function Problem() {
   return (
-    <Section className="bg-mist">
-      <SectionHeading
-        eyebrow="Sound familiar?"
-        title="Posting isn't growing."
-        subtitle="If any of these feel like you, that's exactly why you're here."
-      />
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {pains.map((pain, i) => (
-          <Reveal key={pain.title} delay={i * 0.08}>
-            <div className="flex h-full flex-col gap-3 rounded-[3px] border border-line bg-white p-7">
-              <span className="font-display text-2xl font-semibold text-brand">
-                {String(i + 1).padStart(2, "0")}
+    <section className="bg-[#090D16]">
+      <Section>
+        <Reveal>
+          <div className="max-w-3xl mb-16">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
+              The Bottleneck
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-white leading-[1.1]">
+              Why Most Marketing Retainers Fail to Generate Revenue
+            </h2>
+          </div>
+        </Reveal>
+
+        <div className="grid gap-0 md:grid-cols-3 md:gap-0">
+          {problems.map((item, i) => (
+            <Reveal key={item.index} delay={i * 0.08}>
+              <div className="flex flex-col py-10 md:px-8 md:py-0 md:border-r border-[#1E293B] last:border-r-0 last:border-b md:border-b-0 border-b">
+                <div className="mb-6">
+                  <span className="font-mono text-sm font-bold text-[#FF5500]">
+                    {item.index}
+                  </span>
+                  <span className="font-mono text-sm text-[#94A3B8] ml-2">
+                    / {item.label.toUpperCase()}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-3 leading-snug">
+                  {item.title}
+                </h3>
+                <p className="text-[15px] leading-relaxed text-[#94A3B8]">
+                  {item.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── Transition Callout ───────────────────── */}
+      <div className="border-t border-[#1E293B]">
+        <Container className="py-8 sm:py-10">
+          <Reveal>
+            <p className="text-center text-base sm:text-lg font-medium text-white max-w-3xl mx-auto leading-relaxed">
+              Sociolab was built to solve this exact gap.{" "}
+              <span className="text-[#FF5500]">
+                We unify creative studio production with algorithmic performance media.
               </span>
-              <h3 className="font-display text-lg font-semibold leading-snug text-ink">
-                {pain.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-ink/65">{pain.body}</p>
-            </div>
+            </p>
           </Reveal>
-        ))}
+        </Container>
       </div>
-    </Section>
+    </section>
   );
 }
