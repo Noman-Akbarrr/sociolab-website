@@ -28,9 +28,11 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
   return (
     <>
       {/* Hero */}
-      <section className="bg-white">
+      <section className="bg-[#090D16]">
         <Container className="pt-14 pb-16 sm:pt-20 sm:pb-24">
-          <Eyebrow>{content.eyebrow}</Eyebrow>
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500]">
+            {content.eyebrow}
+          </p>
           <h1 className="mt-5 max-w-4xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
             {content.h1}
           </h1>

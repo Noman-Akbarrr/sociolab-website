@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { listPages } from "@/lib/pages";
@@ -26,54 +25,60 @@ export default async function ResourcesPage() {
     .reverse();
 
   return (
-    <>
-      <section className="bg-white">
-        <Container className="pt-16 pb-16 sm:pt-24 sm:pb-24">
-          <Eyebrow>Resources</Eyebrow>
-          <h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-            Trends, tactics, and honest notes.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink/70">
-            What&apos;s working, what&apos;s fading, and how to use both. Written by the team that
-            ships this stuff daily — no recycled agency filler.
-          </p>
-        </Container>
-      </section>
+    <main className="bg-[#090D16] min-h-screen">
+      {/* ── Hero ────────────────────────────────────── */}
+      <Container className="pt-20 pb-12 sm:pt-28 sm:pb-16">
+        <Reveal>
+          <div className="max-w-4xl">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
+              Resources
+            </p>
+            <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl">
+              Trends, tactics, and honest notes.
+            </h1>
+            <p className="mt-7 max-w-[720px] text-lg leading-relaxed text-[#CBD5E1] sm:text-xl">
+              What&apos;s working, what&apos;s fading, and how to use both. Written by the team that
+              ships this stuff daily — no recycled agency filler.
+            </p>
+          </div>
+        </Reveal>
+      </Container>
 
-      <section className="bg-mist">
+      {/* ── Posts Grid ──────────────────────────────── */}
+      <div className="border-t border-[#1E293B]">
         <Container className="py-16">
           {posts.length ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post, i) => (
                 <Reveal key={post.path} delay={i * 0.05}>
                   <Link
                     href={post.path}
-                    className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border border-line bg-white p-7 transition-colors hover:border-brand"
+                    className="group flex h-full flex-col justify-between gap-8 rounded-lg border border-[#1E293B] bg-[#111827] p-7 transition-all duration-200 hover:border-[#FF5500]/40"
                   >
                     <div className="flex flex-col gap-4">
-                      <div className="flex items-center gap-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-ink/50">
-                        <span className="text-brand">Article</span>
+                      <div className="flex items-center gap-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
+                        <span className="accent-tint text-[10px]">Article</span>
                         <span aria-hidden="true">·</span>
                         <span>{post.updatedAt ? new Date(post.updatedAt).toLocaleDateString() : "New"}</span>
                       </div>
-                      <h2 className="font-display text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-brand">
+                      <h2 className="text-lg font-bold leading-snug text-white transition-colors group-hover:text-[#FF5500]">
                         {post.title}
                       </h2>
-                      <p className="text-sm leading-relaxed text-ink/65">{post.description}</p>
+                      <p className="text-sm leading-relaxed text-[#94A3B8]">{post.description}</p>
                     </div>
-                    <span className="flex items-center justify-between text-sm font-bold text-ink">
+                    <span className="flex items-center justify-between text-sm font-semibold text-[#CBD5E1]">
                       Read post
-                      <ArrowUpRightIcon className="size-4 text-ink/40 transition-all group-hover:text-brand group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      <ArrowUpRightIcon className="size-4 text-[#64748B] transition-all group-hover:text-[#FF5500] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </span>
                   </Link>
                 </Reveal>
               ))}
             </div>
           ) : (
-            <p className="text-ink/60">Posts coming soon.</p>
+            <p className="text-[#94A3B8]">Posts coming soon.</p>
           )}
         </Container>
-      </section>
-    </>
+      </div>
+    </main>
   );
 }
