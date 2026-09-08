@@ -13,6 +13,10 @@ import { CRMTeamBlock } from "@/components/editor/crm-team-block";
 import { CRMServiceGrid } from "@/components/editor/crm-service-grid";
 import { CRMPricingBlock } from "@/components/editor/crm-pricing-block";
 import { CRMTestimonialBlock } from "@/components/editor/crm-testimonial-block";
+import { AsymmetricSplit } from "@/components/editor/pattern-a-split";
+import { DividerList } from "@/components/editor/pattern-b-dividers";
+import { StatStrip } from "@/components/editor/pattern-c-stats";
+import { ComparisonTable } from "@/components/editor/pattern-d-table";
 
 type BlockProps = {
   HeroBlock: Record<string, any>;
@@ -48,6 +52,10 @@ type BlockProps = {
   QuoteBlock: Record<string, any>;
   AuthorBlock: Record<string, any>;
   TagsBlock: Record<string, any>;
+  AsymmetricSplit: Record<string, any>;
+  DividerList: Record<string, any>;
+  StatStrip: Record<string, any>;
+  ComparisonTable: Record<string, any>;
 };
 
 function videoEmbed(src: string) {
@@ -75,6 +83,7 @@ const config: Config<BlockProps> = {
     heroes: { title: "Heroes & openers", components: ["HeroBlock"] },
     blog: { title: "Blog sections", components: ["BlogHeroBlock", "QuoteBlock", "AuthorBlock", "TagsBlock"] },
     sections: { title: "Page sections", components: ["SectionBlock", "TextBlock", "StepsBlock", "DeliverablesBlock", "CardGridBlock", "FeaturesBlock", "StatsBlock", "CaseGridBlock", "CRMCaseGrid", "TestimonialBlock", "CRMTestimonialBlock", "FaqBlock", "MarqueeBlock"] },
+    layouts: { title: "Non-card layouts", components: ["AsymmetricSplit", "DividerList", "StatStrip", "ComparisonTable"] },
     media: { title: "Media & layouts", components: ["ImageBlock", "GalleryBlock", "VideoBlock", "TwoColumnBlock", "TeamBlock", "CRMTeamBlock"] },
     conversion: { title: "Conversion & CTAs", components: ["CtaBlock", "ContactFormBlock", "PricingBlock", "CRMPricingBlock", "CalloutBlock", "StatementBlock", "ServiceGridBlock", "CRMServiceGrid", "LinkBlock"] },
   },
@@ -1730,6 +1739,120 @@ const config: Config<BlockProps> = {
       render: ({ eyebrow, title, testimonialIds = [] }) => (
         <CRMTestimonialBlock eyebrow={eyebrow} title={title} testimonialIds={testimonialIds.map((t: any) => t.id)} />
       ),
+    },
+    AsymmetricSplit: {
+      label: "Split layout (A)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        items: {
+          type: "array",
+          arrayFields: {
+            eyebrow: { type: "text" },
+            title: { type: "text" },
+            description: { type: "textarea" },
+            metric: { type: "text" },
+            metricLabel: { type: "text" },
+          },
+        },
+      },
+      defaultProps: {
+        eyebrow: "How we work",
+        title: "Built for performance, not presentations",
+        subtitle: "Every decision is measured against one question: does this drive measurable growth?",
+        items: [
+          { eyebrow: "Discovery", title: "Audit & strategy sprint", description: "We map your current funnel, identify waste, and build a 90-day acquisition plan.", metric: "14", metricLabel: "day audit" },
+          { eyebrow: "Execution", title: "Launch & iterate", description: "Creative goes live within weeks. We test 10+ variations per week to find winners.", metric: "10+", metricLabel: "tests per week" },
+          { eyebrow: "Scale", title: "Double down on what works", description: "Winning ads get budget. Losers get cut. Your CAC drops, your revenue climbs.", metric: "3x", metricLabel: "avg ROAS" },
+        ],
+      },
+      render: ({ eyebrow, title, subtitle, items = [] }) => <AsymmetricSplit eyebrow={eyebrow} title={title} subtitle={subtitle} items={items} />,
+    },
+    DividerList: {
+      label: "Divider list (B)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        items: {
+          type: "array",
+          arrayFields: {
+            title: { type: "text" },
+            description: { type: "textarea" },
+            tags: { type: "text" },
+            href: { type: "text" },
+          },
+        },
+      },
+      defaultProps: {
+        eyebrow: "Services",
+        title: "What we deliver",
+        subtitle: "Full-funnel performance — from first impression to final conversion.",
+        items: [
+          { title: "Meta Ads Management", description: "End-to-end campaign management across Facebook and Instagram. From creative briefs to budget allocation.", tags: ["Performance", "DTC", "B2B"], href: "/services/meta-ads" },
+          { title: "Google Ads Management", description: "Search, Shopping, and YouTube campaigns engineered for high-intent capture and efficient cost-per-acquisition.", tags: ["Search", "Shopping", "YouTube"], href: "/services/google-ads" },
+          { title: "Direct-Response Creative", description: "In-house video production and ad creative designed to stop the scroll and drive action.", tags: ["Video", "UGC", "Creative Strategy"], href: "/services/creative-production" },
+          { title: "Creator Marketing", description: "Automated influencer seeding and partnership programs that generate authentic content at scale.", tags: ["Influencers", "UGC", "Seeding"], href: "/services/creator-marketing" },
+        ],
+      },
+      render: ({ eyebrow, title, subtitle, items = [] }) => <DividerList eyebrow={eyebrow} title={title} subtitle={subtitle} items={items} />,
+    },
+    StatStrip: {
+      label: "Stat strip (C)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        stats: {
+          type: "array",
+          arrayFields: {
+            value: { type: "text" },
+            label: { type: "text" },
+            sublabel: { type: "text" },
+          },
+        },
+      },
+      defaultProps: {
+        eyebrow: "By the numbers",
+        title: "Results that compound",
+        stats: [
+          { value: "50", label: "Brands scaled", sublabel: "DTC & B2B" },
+          { value: "30M", label: "Revenue generated", sublabel: "Across clients" },
+          { value: "3x", label: "Average ROAS", sublabel: "Return on ad spend" },
+          { value: "98", label: "Percent open rate", sublabel: "WhatsApp campaigns" },
+        ],
+      },
+      render: ({ eyebrow, title, stats = [] }) => <StatStrip eyebrow={eyebrow} title={title} stats={stats} />,
+    },
+    ComparisonTable: {
+      label: "Comparison table (D)",
+      fields: {
+        eyebrow: { type: "text" },
+        title: { type: "textarea" },
+        subtitle: { type: "textarea" },
+        rows: {
+          type: "array",
+          arrayFields: {
+            feature: { type: "text" },
+            typical: { type: "text" },
+            sociolab: { type: "text" },
+          },
+        },
+      },
+      defaultProps: {
+        eyebrow: "Why us",
+        title: "Not another agency",
+        subtitle: "We replaced the old model with something that actually works.",
+        rows: [
+          { feature: "Reporting", typical: "Monthly PDF reports", sociolab: "Real-time dashboard + weekly calls" },
+          { feature: "Creative testing", typical: "1–2 ad variations per month", sociolab: "10+ variations per week" },
+          { feature: "Contract lock-in", typical: "12-month minimum", sociolab: "Month-to-month, cancel anytime" },
+          { feature: "Team access", typical: "Account manager middleman", sociolab: "Direct access to strategists" },
+          { feature: "WhatsApp integration", typical: "Not offered", sociolab: "Native WhatsApp-first lead flow" },
+          { feature: "Reporting cadence", typical: "Monthly PDF", sociolab: "Real-time + weekly syncs" },
+        ],
+      },
+      render: ({ eyebrow, title, subtitle, rows = [] }) => <ComparisonTable eyebrow={eyebrow} title={title} subtitle={subtitle} rows={rows} />,
     },
   },
 };
