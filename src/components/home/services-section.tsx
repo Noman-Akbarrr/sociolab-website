@@ -1,57 +1,125 @@
-import Link from "next/link";
-import { Section, SectionHeading } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
+import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { ArrowUpRightIcon } from "@/components/icons";
 
-const services = [
+const pillars = [
   {
-    title: "Social Media Management",
-    href: "/services/social-media-management",
-    body: "Content that trends, communities that engage, and a feed that sells — managed end to end.",
+    index: "01",
+    eyebrow: "Paid Acquisition",
+    title: "Algorithmic Meta & Google Ad Management",
+    bullets: [
+      "Dynamic Creative Testing (DCT) architecture to isolate winning angles rapidly.",
+      "Server-side Meta Conversion API (CAPI) & GA4 custom event tracking to prevent signal loss.",
+      "Full-funnel budget scaling: Top-of-funnel prospecting down to high-intent retargeting loops.",
+    ],
   },
   {
-    title: "Digital Marketing",
-    href: "/services/digital-marketing",
-    body: "Ads, SEO, and campaigns that turn attention into customers you can actually measure.",
+    index: "02",
+    eyebrow: "Creative Studio",
+    title: "Short-Form Video & Visual Assets Engineered to Convert",
+    bullets: [
+      "Scripted hooks, problem-solution angles, and platform-native pacing for TikTok & Reels.",
+      "Educational carousels and high-impact statics designed for swipe-through and click-through rates.",
+      "Multi-variation cutdowns tested weekly to actively fight creative ad fatigue.",
+    ],
   },
   {
-    title: "Web Development",
-    href: "/services/web-development",
-    body: "Fast, beautiful, conversion-built websites that make your brand credible and keep it growing.",
+    index: "03",
+    eyebrow: "Creator Marketing",
+    title: "Systematized Influencer Partnerships & PR Seeding",
+    bullets: [
+      "Automated creator discovery and personalized outreach powered by custom n8n backend workflows.",
+      "Vetted creator rosters aligned strictly with your brand ICP and target customer demographics.",
+      "Partnership / Spark Ads whitelisting: running paid ads directly through creator handles for maximum trust.",
+    ],
+  },
+  {
+    index: "04",
+    eyebrow: "Revenue Operations",
+    title: "Post-Click Conversion & Lead Triage Optimization",
+    bullets: [
+      "Landing page and Shopify store conversion rate optimization (CRO) audits.",
+      "Retention marketing: automated abandoned cart and welcome email flows.",
+      "Lead handling protocols: diagnosing response time bottlenecks in WhatsApp/CRM pipelines to maximize order confirmations.",
+    ],
   },
 ];
 
 export function ServicesSection() {
   return (
-    <Section className="bg-mist">
-      <SectionHeading
-        eyebrow="What we do"
-        title="Three capabilities. One goal: your growth."
-        subtitle="Pick where you need us. Or don't — we're built to take the whole thing."
-      />
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {services.map((service, i) => (
-          <Reveal key={service.href} delay={i * 0.08}>
-            <Link
-              href={service.href}
-              className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-ink bg-white p-7 transition-all duration-200 hover:bg-brand hover:border-brand"
-            >
-              <div className="flex flex-col gap-3">
-                <h3 className="font-display text-xl font-semibold leading-snug text-ink transition-colors group-hover:text-white">
-                  {service.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-ink/65 transition-colors group-hover:text-white/85">
-                  {service.body}
-                </p>
+    <section className="bg-[#090D16]">
+      <Section>
+        <Reveal>
+          <div className="max-w-3xl mb-16">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
+              Our Capabilities
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-white leading-[1.1]">
+              An Integrated Engine for Predictable Acquisition
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-[#94A3B8] max-w-2xl">
+              No silos. No outsourced handoffs. We run every critical layer required to
+              scale your customer base.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="flex flex-col gap-0">
+          {pillars.map((pillar, i) => (
+            <Reveal key={pillar.index} delay={i * 0.06}>
+              <div
+                className={`grid gap-8 py-12 border-[#1E293B] md:grid-cols-[1fr_1.2fr] ${
+                  i !== pillars.length - 1 ? "border-b" : ""
+                } ${i % 2 === 0 ? "" : "md:direction-rtl"}`}
+                style={i % 2 !== 0 ? { direction: "rtl" } : undefined}
+              >
+                {/* Left / alternating right */}
+                <div style={i % 2 !== 0 ? { direction: "ltr" } : undefined}>
+                  <div className="flex items-baseline gap-3 mb-4">
+                    <span className="font-mono text-sm font-bold text-[#FF5500]">
+                      {pillar.index}
+                    </span>
+                    <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">
+                      {pillar.eyebrow}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white leading-snug">
+                    {pillar.title}
+                  </h3>
+                </div>
+
+                {/* Right / alternating left */}
+                <ul
+                  className="flex flex-col gap-4"
+                  style={i % 2 !== 0 ? { direction: "ltr" } : undefined}
+                >
+                  {pillar.bullets.map((bullet, j) => (
+                    <li key={j} className="flex items-start gap-3">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="size-5 text-[#FF5500] mt-0.5 shrink-0"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M5 13l4 4L19 7"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <span className="text-[15px] leading-relaxed text-[#CBD5E1]">
+                        {bullet}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand transition-colors group-hover:text-white">
-                Learn more
-                <ArrowUpRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+    </section>
   );
 }
