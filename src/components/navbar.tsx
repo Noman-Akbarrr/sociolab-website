@@ -4,31 +4,36 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
-import { CloseIcon, MenuIcon, WhatsAppIcon, ArrowUpRightIcon } from "@/components/icons";
+import { CloseIcon, MenuIcon, WhatsAppIcon } from "@/components/icons";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 
-const services = [
+const capabilities = [
   {
-    title: "Social Media Management",
-    href: "/services/social-media-management",
-    blurb: "Content that trends, communities that engage, a feed that sells.",
+    title: "Paid Media Acquisition",
+    href: "/services/meta-ads",
+    blurb: "Meta & Google ads engineered for profitable scale.",
   },
   {
-    title: "Digital Marketing",
-    href: "/services/digital-marketing",
-    blurb: "Ads, SEO, and campaigns that turn attention into customers.",
+    title: "Direct-Response Creative",
+    href: "/services/creative-production",
+    blurb: "In-house video production that stops the scroll.",
   },
   {
-    title: "Web Development",
-    href: "/services/web-development",
-    blurb: "Fast, beautiful, conversion-built websites that make you credible.",
+    title: "Automated Creator Marketing",
+    href: "/services/creator-marketing",
+    blurb: "Influencer seeding programs that generate content at scale.",
+  },
+  {
+    title: "Retention & CRO",
+    href: "/services/retention-cro",
+    blurb: "Post-click optimization that maximizes every visitor.",
   },
 ];
 
 const nav = [
-  { label: "About", href: "/about" },
-  { label: "Method", href: "/method" },
   { label: "Work", href: "/work" },
+  { label: "Methodology", href: "/about#methodology" },
+  { label: "About", href: "/about" },
 ];
 
 export type NavPost = {
@@ -37,23 +42,9 @@ export type NavPost = {
   updatedAt: string;
 };
 
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label={`${site.name} — home`}>
-      <span className="grid size-9 place-items-center rounded-[4px] bg-brand font-display text-base font-bold text-white">
-        S
-      </span>
-      <span className="font-display text-lg font-semibold tracking-tight text-ink">
-        {site.name}
-      </span>
-    </Link>
-  );
-}
-
 export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
   const [open, setOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [capabilitiesOpen, setCapabilitiesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
@@ -66,40 +57,50 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
 
   useEffect(() => {
     setOpen(false);
-    setServicesOpen(false);
-    setResourcesOpen(false);
+    setCapabilitiesOpen(false);
   }, [pathname]);
 
   const isActive = (href: string) => pathname === href;
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b transition-colors ${
-        scrolled ? "border-line bg-white/90 backdrop-blur-md" : "border-transparent bg-white"
+      className={`sticky top-0 z-50 border-b transition-all duration-200 ${
+        scrolled
+          ? "border-[#1E293B] bg-[#090D16]/80 backdrop-blur-md"
+          : "border-transparent bg-[#090D16]/60 backdrop-blur-sm"
       }`}
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
-        <Logo />
+        {/* ── Wordmark ─────────────────────────────── */}
+        <Link href="/" className="flex items-center gap-2" aria-label={`${site.name} — home`}>
+          <span className="font-display text-lg font-bold tracking-tight text-white">
+            {site.name}
+            <span className="text-[#FF5500]">.</span>
+          </span>
+        </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
-          {/* Services dropdown */}
+        {/* ── Desktop nav ──────────────────────────── */}
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+          {/* Capabilities dropdown */}
           <div
             className="relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseEnter={() => setCapabilitiesOpen(true)}
+            onMouseLeave={() => setCapabilitiesOpen(false)}
           >
             <button
               type="button"
-              onClick={() => setServicesOpen((v) => !v)}
-              aria-expanded={servicesOpen}
-              className={`flex items-center gap-1 text-sm font-semibold transition-colors ${
-                pathname.startsWith("/services") ? "text-brand" : "text-ink hover:text-brand"
+              onClick={() => setCapabilitiesOpen((v) => !v)}
+              aria-expanded={capabilitiesOpen}
+              className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                pathname.startsWith("/services")
+                  ? "text-[#FF5500]"
+                  : "text-[#CBD5E1] hover:text-white"
               }`}
             >
-              Services
+              Capabilities
               <svg
                 viewBox="0 0 24 24"
-                className={`size-3.5 transition-transform ${servicesOpen ? "rotate-180" : ""}`}
+                className={`size-3 transition-transform ${capabilitiesOpen ? "rotate-180" : ""}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2.5"
@@ -108,23 +109,25 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
                 <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            {servicesOpen && (
-              <div className="absolute left-1/2 top-full w-[420px] -translate-x-1/2 pt-4">
-                <div className="rounded-md border border-line bg-white p-3 shadow-2xl shadow-ink/10">
-                  {services.map((s) => (
+            {capabilitiesOpen && (
+              <div className="absolute left-1/2 top-full w-[440px] -translate-x-1/2 pt-3">
+                <div className="rounded-lg border border-[#1E293B] bg-[#111827] p-2 shadow-2xl shadow-black/40">
+                  {capabilities.map((c) => (
                     <Link
-                      key={s.href}
-                      href={s.href}
-                      className="group flex flex-col gap-1 rounded-[3px] px-4 py-3 transition-colors hover:bg-mist"
+                      key={c.href}
+                      href={c.href}
+                      className="group flex flex-col gap-1 rounded-lg px-4 py-3 transition-colors hover:bg-[#1E293B]/50"
                     >
                       <span
-                        className={`text-sm font-bold ${
-                          isActive(s.href) ? "text-brand" : "text-ink group-hover:text-brand"
+                        className={`text-sm font-semibold ${
+                          isActive(c.href)
+                            ? "text-[#FF5500]"
+                            : "text-white group-hover:text-[#FF5500]"
                         }`}
                       >
-                        {s.title}
+                        {c.title}
                       </span>
-                      <span className="text-xs text-ink/60">{s.blurb}</span>
+                      <span className="text-xs text-[#94A3B8]">{c.blurb}</span>
                     </Link>
                   ))}
                 </div>
@@ -136,94 +139,39 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-semibold transition-colors ${
-                isActive(item.href) ? "text-brand" : "text-ink hover:text-brand"
+              className={`text-sm font-medium transition-colors ${
+                isActive(item.href)
+                  ? "text-[#FF5500]"
+                  : "text-[#CBD5E1] hover:text-white"
               }`}
             >
               {item.label}
             </Link>
           ))}
-
-          {/* Resources dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setResourcesOpen(true)}
-            onMouseLeave={() => setResourcesOpen(false)}
-          >
-            <button
-              type="button"
-              onClick={() => setResourcesOpen((v) => !v)}
-              aria-expanded={resourcesOpen}
-              className={`flex items-center gap-1 text-sm font-semibold transition-colors ${
-                pathname.startsWith("/resources") ? "text-brand" : "text-ink hover:text-brand"
-              }`}
-            >
-              Resources
-              <svg
-                viewBox="0 0 24 24"
-                className={`size-3.5 transition-transform ${resourcesOpen ? "rotate-180" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                aria-hidden="true"
-              >
-                <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            {resourcesOpen && (
-              <div className="absolute left-1/2 top-full w-[340px] -translate-x-1/2 pt-4">
-                <div className="rounded-md border border-line bg-white p-3 shadow-2xl shadow-ink/10">
-                  <Link
-                    href="/resources"
-                    className="group flex items-center justify-between rounded-[3px] px-4 py-3 transition-colors hover:bg-mist"
-                  >
-                    <span className="text-sm font-bold text-ink group-hover:text-brand">
-                      All resources
-                    </span>
-                    <ArrowUpRightIcon className="size-4 text-ink/40 transition-all group-hover:text-brand group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </Link>
-                  <div className="mx-4 mb-1 mt-1 h-px bg-line" />
-                  <p className="px-4 pb-1 pt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-ink/50">
-                    Latest posts
-                  </p>
-                  {posts.length ? (
-                    posts.map((p) => (
-                      <Link
-                        key={p.path}
-                        href={p.path}
-                        className="group flex flex-col gap-0.5 rounded-[3px] px-4 py-2.5 transition-colors hover:bg-mist"
-                      >
-                        <span className="text-sm font-semibold text-ink group-hover:text-brand">
-                          {p.title}
-                        </span>
-                        <span className="text-xs text-ink/55">
-                          {p.updatedAt ? new Date(p.updatedAt).toLocaleDateString() : "New"}
-                        </span>
-                      </Link>
-                    ))
-                  ) : (
-                    <p className="px-4 py-2 text-sm text-ink/55">Posts coming soon.</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
         </nav>
 
-        <div className="hidden lg:block">
+        {/* ── Desktop CTAs ─────────────────────────── */}
+        <div className="hidden items-center gap-4 lg:flex">
           <WhatsAppLink
             cta="nav"
-            className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
+            className="inline-flex items-center gap-2 text-sm font-medium text-[#CBD5E1] transition-colors hover:text-white"
           >
-            <WhatsAppIcon className="size-4" />
-            Chat on WhatsApp
+            <WhatsAppIcon className="size-4 text-[#25D366]" />
+            Direct Chat
           </WhatsAppLink>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#FF5500] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00] hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#FF5500]"
+          >
+            Request Growth Audit
+          </Link>
         </div>
 
+        {/* ── Mobile menu toggle ───────────────────── */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="grid size-10 place-items-center rounded-[3px] text-ink lg:hidden"
+          className="grid size-10 place-items-center rounded-lg text-white lg:hidden"
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
         >
@@ -231,57 +179,58 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
         </button>
       </div>
 
+      {/* ── Mobile drawer ─────────────────────────── */}
       {open && (
-        <div className="border-t border-line bg-white lg:hidden">
-          <nav className="mx-auto flex w-full max-w-6xl flex-col px-5 py-4 sm:px-8" aria-label="Mobile">
-            <p className="px-1 pb-2 pt-1 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-brand">
-              Services
+        <div className="fixed inset-0 top-16 z-50 flex flex-col bg-[#090D16] lg:hidden">
+          <nav className="flex-1 overflow-y-auto px-5 py-6 sm:px-8" aria-label="Mobile">
+            {/* Capabilities section */}
+            <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
+              Capabilities
             </p>
-            {services.map((s) => (
+            {capabilities.map((c) => (
               <Link
-                key={s.href}
-                href={s.href}
-                className="rounded-[3px] px-1 py-2.5 text-base font-semibold text-ink"
+                key={c.href}
+                href={c.href}
+                className="flex flex-col gap-0.5 border-b border-[#1E293B] py-3.5 text-base font-semibold text-white last:border-b-0"
               >
-                {s.title}
+                {c.title}
+                <span className="text-xs font-normal text-[#94A3B8]">{c.blurb}</span>
               </Link>
             ))}
-<p className="px-1 pb-2 pt-1 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-brand">
-              Resources
+
+            {/* Other links */}
+            <p className="mb-3 mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
+              Company
             </p>
-            <Link
-              href="/resources"
-              className="flex items-center justify-between rounded-[3px] px-1 py-2.5 text-base font-semibold text-ink"
-            >
-              All resources
-              <ArrowUpRightIcon className="size-4 text-ink/40" />
-            </Link>
-            {posts.map((p) => (
-              <Link
-                key={p.path}
-                href={p.path}
-                className="rounded-[3px] px-1 py-2.5 text-base font-semibold text-ink"
-              >
-                {p.title}
-              </Link>
-            ))}
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-[3px] px-1 py-2.5 text-base font-semibold text-ink"
+                className="block border-b border-[#1E293B] py-3.5 text-base font-semibold text-white last:border-b-0"
               >
                 {item.label}
               </Link>
             ))}
-            <WhatsAppLink
-              cta="nav-mobile"
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-[3px] bg-brand px-5 py-3.5 text-sm font-bold text-white"
-            >
-              <WhatsAppIcon className="size-4" />
-              Chat on WhatsApp
-            </WhatsAppLink>
           </nav>
+
+          {/* Bottom action row */}
+          <div className="border-t border-[#1E293B] px-5 py-4 sm:px-8">
+            <div className="flex flex-col gap-3">
+              <WhatsAppLink
+                cta="nav-mobile"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#374151] bg-[#1F2937] px-5 py-3 text-sm font-semibold text-[#F9FAFB] transition-all hover:border-[#25D366] hover:bg-[rgba(37,211,102,0.08)]"
+              >
+                <WhatsAppIcon className="size-5 text-[#25D366]" />
+                Chat on WhatsApp
+              </WhatsAppLink>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF5500] px-5 py-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00]"
+              >
+                Request Growth Audit
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </header>
