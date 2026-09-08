@@ -19,7 +19,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} className={`py-16 sm:py-24 ${className}`}>
+    <section id={id} className={`section-spacing ${className}`}>
       <Container>{children}</Container>
     </section>
   );
@@ -40,19 +40,17 @@ export function SectionHeading({
 }) {
   const alignCls = align === "center" ? "text-center items-center" : "text-left items-start";
   return (
-    <div className={`flex flex-col gap-4 ${alignCls} max-w-3xl`}>
+    <div className={`flex flex-col gap-5 ${alignCls} max-w-3xl`}>
       {eyebrow ? (
         dark ? (
-          <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-brand-bright">
-            {eyebrow}
-          </p>
+          <span className="accent-tint">{eyebrow}</span>
         ) : (
           <Eyebrow>{eyebrow}</Eyebrow>
         )
       ) : null}
       <h2
-        className={`font-display text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl md:text-5xl ${
-          dark ? "text-white" : "text-ink"
+        className={`font-display text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl ${
+          dark ? "text-white" : "text-white"
         }`}
       >
         {title}
@@ -60,7 +58,7 @@ export function SectionHeading({
       {subtitle ? (
         <p
           className={`max-w-2xl text-lg leading-relaxed ${
-            dark ? "text-white/70" : "text-ink/70"
+            dark ? "text-muted" : "text-muted"
           }`}
         >
           {subtitle}

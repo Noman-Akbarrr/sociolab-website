@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
-import { Manrope, Space_Grotesk, Unbounded } from "next/font/google";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { site } from "@/lib/site";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import { SiteChrome } from "@/components/site-chrome";
 import { listResourcePosts } from "@/lib/pages";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
   display: "swap",
-});
-
-const unbounded = Unbounded({
-  variable: "--font-unbounded",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -90,7 +84,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const navPosts = await listResourcePosts(4);
 
   return (
-    <html lang="en" className={`${manrope.variable} ${unbounded.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${plusJakarta.variable} ${spaceGrotesk.variable}`}>
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#0F172A" />
