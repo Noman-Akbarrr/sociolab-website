@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { Data } from "@puckeditor/core";
 import { getPageData, listPages } from "@/lib/pages";
+import { site } from "@/lib/site";
 import { PuckRenderClient } from "./client";
 import { JsonLd } from "@/components/json-ld";
 
@@ -33,6 +34,9 @@ export async function generateMetadata({
     title: props.title || "Sociolab",
     description: props.description,
     robots: isLegal ? { index: false, follow: false } : undefined,
+    alternates: {
+      canonical: `${site.url}${path}`,
+    },
   };
 }
 
@@ -52,7 +56,7 @@ export default async function PuckPage({
   return (
     <>
       <PuckRenderClient data={data as Data} />
-      <JsonLd puckPath={puckPath} />
+      <JsonLd path={path} />
     </>
   );
 }

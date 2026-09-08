@@ -1,14 +1,10 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 
-export function JsonLd({ puckPath }: { puckPath?: string[] }) {
-  const pathname = usePathname();
-  const pathParts = (puckPath || []).filter((p) => p);
+export function JsonLd({ path }: { path: string }) {
+  const pathParts = path.split("/").filter(Boolean);
   const isRoot = pathParts.length === 0;
+  const isService = path.startsWith("/services/");
 
-  // Build Organization schema (site-wide)
   const org = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -29,17 +25,13 @@ export function JsonLd({ puckPath }: { puckPath?: string[] }) {
     },
   };
 
-  // Build service schema for service pages
-  const isService = pathname.startsWith("/services/");
-
-  // Build breadcrumb for nested pages
   const breadcrumb = pathParts.length
     ? [
         {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: `${site.url}`,
+          item: site.url,
         },
         ...pathParts.map((part, i) => ({
           "@type": "ListItem",
@@ -53,46 +45,34 @@ export function JsonLd({ puckPath }: { puckPath?: string[] }) {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: `${site.url}`,
+          item: site.url,
         },
       ];
 
-  // Choose which schema to output
-  if (isRoot) {
-    return (
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(org, null, 2) }}
-      />
-    );
-  }
+  let schema: object;
 
-  if (isService) {
-    const serviceName = pathname.replace("/services/", "").replace(/-/g, " ");
-    const serviceSchema = {
+  if (isRoot) {
+    schema = org;
+  } else if (isService) {
+    const serviceName = path.replace("/services/", "").replace(/-/g, " ");
+    schema = {
       ...org,
       "@type": "Service",
       name: serviceName,
     };
-    return (
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema, null, 2) }}
-      />
-    );
+  } else {
+    schema = {
+      ...org,
+      "@type": "Blog",
+      url: site.url,
+      description: site.tagline,
+    };
   }
 
-  // Default: BlogPosting or generic
-  const blogSchema = {
-    ...org,
-    "@type": "Blog",
-    url: site.url,
-    description: site.tagline,
-  };
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema, null, 2) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema, null, 2) }}
     />
   );
 }

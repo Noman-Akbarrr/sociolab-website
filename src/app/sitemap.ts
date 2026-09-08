@@ -4,6 +4,16 @@ import { listPages } from "@/lib/pages";
 
 export const revalidate = 3600;
 
+const CORE_PATHS = new Set([
+  "/",
+  "/services/paid-acquisition",
+  "/services/creative-production",
+  "/services/creator-marketing",
+  "/case-studies",
+  "/about",
+  "/contact",
+]);
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages = await listPages();
 
@@ -18,17 +28,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((p) => ({
       url: `${site.url}${p.path}`,
       lastModified: p.updatedAt ? new Date(p.updatedAt) : new Date(),
-      changeFrequency:
-        p.path === "/"
-          ? ("weekly" as const)
-          : p.path.startsWith("/resources/")
-            ? ("monthly" as const)
-            : ("monthly" as const),
-      priority:
-        p.path === "/"
-          ? 1
-          : p.path.startsWith("/resources/")
-            ? 0.6
-            : 0.8,
+      changeFrequency: CORE_PATHS.has(p.path)
+        ? ("weekly" as const)
+        : p.path.startsWith("/resources/")
+          ? ("monthly" as const)
+          : ("weekly" as const),
+      priority: p.path === "/" ? 1 : CORE_PATHS.has(p.path) ? 0.9 : 0.7,
     }));
 }

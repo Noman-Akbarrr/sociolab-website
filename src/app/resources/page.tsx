@@ -5,11 +5,15 @@ import { Eyebrow } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { ArrowUpRightIcon } from "@/components/icons";
 import { listPages } from "@/lib/pages";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Resources — Trends, Tactics, and Growth Notes",
   description:
     "Practical thinking on trend-native content, WhatsApp marketing, and building brands that grow on purpose — from the Sociolab team.",
+  alternates: {
+    canonical: `${site.url}/resources`,
+  },
 };
 
 export const revalidate = 60;
