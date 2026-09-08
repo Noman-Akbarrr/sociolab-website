@@ -28,32 +28,47 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Sociolab — Trend-Native GTM Team",
-    template: "%s | Sociolab",
+    default: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
+    template: "%s | Sociolab — Performance Media & Creative Growth Agency",
   },
   description:
-    "We're the growth team for ambitious brands — producing content, running your social, marketing you, and building your web presence. One team, from trend to WhatsApp.",
+    "Sociolab scales direct-to-consumer and B2B brands through performance Meta & Google ads, in-house direct-response video production, and automated creator seeding.",
   keywords: [
+    "performance marketing agency Pakistan",
+    "paid media agency",
+    "direct-response creative studio",
+    "Meta ads agency",
+    "Google ads agency",
+    "DTC brand growth",
+    "B2B lead generation",
+    "video production for ads",
+    "creator marketing agency",
     "social media marketing agency Pakistan",
-    "digital marketing agency Pakistan",
-    "web development company Pakistan",
-    "trend native agency",
-    "GTM team",
-    "WhatsApp marketing",
   ],
   openGraph: {
     type: "website",
     locale: "en_PK",
     url: site.url,
     siteName: site.name,
-    title: "Sociolab — Trend-Native GTM Team",
+    title: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
     description:
-      "Social, marketing, and web — one team, from trend to WhatsApp. We turn attention into customers.",
+      "Eliminate wasted ad spend. We engineer predictable acquisition funnels using data-driven paid advertising, high-converting short-form video, and creator partnerships.",
+    images: [
+      {
+        url: `${site.url}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Sociolab — Performance Media & Creative Growth Agency",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sociolab — Trend-Native GTM Team",
-    description: "One team, from trend to WhatsApp.",
+    title: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
+    description:
+      "Eliminate wasted ad spend. We engineer predictable acquisition funnels using data-driven paid advertising, high-converting short-form video, and creator partnerships.",
+    images: [`${site.url}/opengraph-image`],
   },
   robots: {
     index: true,
@@ -76,6 +91,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${manrope.variable} ${unbounded.variable} ${spaceGrotesk.variable}`}>
+      <head>
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#0F172A" />
+      </head>
       <body className="flex min-h-full flex-col bg-paper text-ink">
         <AnalyticsProvider>
           <a
