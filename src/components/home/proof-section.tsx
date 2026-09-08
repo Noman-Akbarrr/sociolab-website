@@ -1,63 +1,133 @@
 import Link from "next/link";
-import { Section, SectionHeading } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
+import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { ArrowUpRightIcon } from "@/components/icons";
 
-// TODO: replace with real Sociolab case studies before launch
-const cases = [
-  {
-    client: "Client name",
-    service: "Social Media Management",
-    metric: "2.4x",
-    result: "more qualified enquiries in 4 months",
-    href: "/work",
-  },
-  {
-    client: "Client name",
-    service: "Digital Marketing",
-    metric: "-38%",
-    result: "cost per lead on paid campaigns",
-    href: "/work",
-  },
-  {
-    client: "Client name",
-    service: "Web Development",
-    metric: "+61%",
-    result: "conversion rate after rebuild",
-    href: "/work",
-  },
+const meta = [
+  { label: "Client", value: "Exact Fashion Store" },
+  { label: "Industry", value: "Apparel & Retail" },
+  { label: "Channel", value: "Meta Ads (IG & FB)" },
+  { label: "Timeline", value: "Independence Day Campaign" },
+];
+
+const metrics = [
+  { value: "314", label: "Verified Customer WhatsApp Chats" },
+  { value: "PKR 22.79", label: "Average Cost Per Inquiring Customer" },
+  { value: "PKR 12.67", label: "Cost Per Link Click (CPC)" },
+  { value: "30,772", label: "Targeted Impressions Delivered on a PKR 7,157 Budget" },
 ];
 
 export function ProofSection() {
   return (
-    <Section>
-      <SectionHeading
-        eyebrow="Proof, not promises"
-        title="Work that speaks for itself"
-        subtitle="Real brands, real numbers. The receipts live on our work page."
-      />
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
-        {cases.map((c, i) => (
-          <Reveal key={c.client + i} delay={i * 0.08}>
-            <Link
-              href={c.href}
-              className="group flex h-full flex-col justify-between gap-10 rounded-[3px] border border-line bg-white p-7 transition-colors hover:border-brand"
-            >
-              <div className="flex flex-col gap-4">
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink/50">
-                  {c.service}
-                </p>
-                <p className="font-display text-4xl font-semibold text-brand">{c.metric}</p>
-                <p className="text-sm leading-relaxed text-ink/70">{c.result}</p>
+    <section className="bg-[#090D16]">
+      <Section>
+        <Reveal>
+          <div className="max-w-3xl mb-16">
+            <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
+              Proven Execution
+            </p>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-white leading-[1.1]">
+              How We Unlocked 314 High-Intent Buyer Conversations at PKR 22.79 Each
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-[#94A3B8] max-w-2xl">
+              A transparent teardown of paid acquisition, creative testing, and operational
+              bottlenecks.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <div className="rounded-lg border border-[#1E293B] bg-[#111827] overflow-hidden">
+            {/* ── Meta bar ──────────────────────────── */}
+            <div className="flex flex-wrap gap-x-8 gap-y-3 border-b border-[#1E293B] px-8 py-5">
+              {meta.map((m) => (
+                <div key={m.label} className="flex items-baseline gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">
+                    {m.label}:
+                  </span>
+                  <span className="text-sm font-medium text-white">{m.value}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* ── Body ──────────────────────────────── */}
+            <div className="grid gap-10 p-8 md:grid-cols-[1.1fr_0.9fr]">
+              {/* Left: Strategy & Execution */}
+              <div className="flex flex-col gap-8">
+                <div>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#FF5500] mb-3">
+                    The Challenge
+                  </p>
+                  <p className="text-[15px] leading-relaxed text-[#CBD5E1]">
+                    The client needed an immediate influx of ready-to-buy customers for their
+                    seasonal collection without inflating acquisition costs.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#FF5500] mb-3">
+                    The Solution
+                  </p>
+                  <p className="text-[15px] leading-relaxed text-[#CBD5E1]">
+                    Deployed a dynamic creative testing matrix pairing multi-outfit catalog
+                    carousels with product-focused short-form video hooks.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#FF5500] mb-3">
+                    The Operational Diagnosis
+                  </p>
+                  <p className="text-[15px] leading-relaxed text-[#CBD5E1]">
+                    Generated 314 customer conversations at PKR 22.79 per chat. Identified that
+                    sales drop-offs occurred in post-click handling (delayed WhatsApp response
+                    times), leading to our implementation of structured sales triage protocols.
+                  </p>
+                </div>
               </div>
-              <span className="flex items-center justify-between text-sm font-bold text-ink">
-                {c.client}
-                <ArrowUpRightIcon className="size-4 text-ink/40 transition-colors group-hover:text-brand" />
-              </span>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
-    </Section>
+
+              {/* Right: Metric Grid */}
+              <div className="grid grid-cols-2 gap-6">
+                {metrics.map((m, i) => (
+                  <div key={i} className="flex flex-col">
+                    <span className="text-3xl font-extrabold text-white leading-none">
+                      {m.value}
+                      <span className="text-[#FF5500]">.</span>
+                    </span>
+                    <span className="mt-2 text-xs font-medium uppercase tracking-wide text-[#94A3B8] leading-snug">
+                      {m.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Bottom CTA ────────────────────────── */}
+            <div className="border-t border-[#1E293B] px-8 py-5">
+              <Link
+                href="/work"
+                className="inline-flex items-center gap-2 rounded-lg border border-[#334155] bg-transparent px-5 py-2.5 text-sm font-semibold text-[#F8FAFC] transition-all duration-150 hover:border-[#FF5500] hover:bg-[rgba(255,85,0,0.05)] hover:text-[#FF5500]"
+              >
+                Read Full Performance &amp; Operations Report
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="size-4"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 12h14m-6-6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+    </section>
   );
 }
