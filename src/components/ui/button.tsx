@@ -1,19 +1,27 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
-import { ArrowRightIcon } from "@/components/icons";
+import { ArrowRightIcon, WhatsAppIcon } from "@/components/icons";
 
-type Variant = "primary" | "dark" | "outline" | "ghost";
+type Variant = "primary" | "secondary" | "whatsapp" | "ghost";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-[3px] px-6 py-3 text-sm font-bold tracking-tight transition-all duration-200 disabled:opacity-50 select-none";
+  "inline-flex items-center justify-center gap-2 rounded-lg px-7 py-3.5 text-[15px] font-semibold transition-all duration-150 disabled:opacity-50 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#FF5500]";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-brand text-white hover:bg-brand-dark hover:translate-y-[-1px] active:translate-y-[1px]",
-  dark: "bg-ink text-white hover:bg-ink-soft hover:translate-y-[-1px] active:translate-y-[1px]",
-  outline:
-    "border-2 border-ink text-ink hover:bg-ink hover:text-white active:translate-y-[1px]",
-  ghost: "text-ink hover:text-brand",
+  primary: [
+    "bg-[#FF5500] text-white",
+    "hover:bg-[#E04B00] hover:-translate-y-0.5",
+    "active:translate-y-0",
+  ].join(" "),
+  secondary: [
+    "bg-transparent border border-[#334155] text-[#F8FAFC]",
+    "hover:border-[#FF5500] hover:bg-[rgba(255,85,0,0.05)] hover:text-[#FF5500]",
+  ].join(" "),
+  whatsapp: [
+    "bg-[#1F2937] border border-[#374151] text-[#F9FAFB]",
+    "hover:border-[#25D366] hover:bg-[rgba(37,211,102,0.08)]",
+  ].join(" "),
+  ghost: "text-[#F8FAFC] hover:text-[#FF5500]",
 };
 
 type ButtonProps = {
@@ -32,6 +40,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const cls = `${base} ${variants[variant]} ${className}`;
+
   if (href) {
     const external = href.startsWith("http");
     if (external) {
@@ -53,6 +62,34 @@ export function Button({
     <button className={cls} {...(props as ComponentProps<"button">)}>
       {children}
       {icon && <ArrowRightIcon className="size-4 shrink-0" />}
+    </button>
+  );
+}
+
+export function WhatsAppButton({
+  href,
+  children,
+  className = "",
+  ...props
+}: {
+  href?: string;
+  children: ReactNode;
+  className?: string;
+} & Omit<ComponentProps<"a">, "href">) {
+  const cls = `${base} ${variants.whatsapp} ${className}`;
+
+  if (href) {
+    return (
+      <a href={href} className={cls} target="_blank" rel="noopener noreferrer" {...props}>
+        <WhatsAppIcon className="size-5 shrink-0" />
+        {children}
+      </a>
+    );
+  }
+  return (
+    <button className={cls} {...(props as ComponentProps<"button">)}>
+      <WhatsAppIcon className="size-5 shrink-0" />
+      {children}
     </button>
   );
 }
