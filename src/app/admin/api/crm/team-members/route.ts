@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   const activeOnly = request.nextUrl.searchParams.get("active") === "true";
 
-  let members = store.getTeamMembers();
+  let members = await store.getTeamMembers();
   if (activeOnly) members = members.filter((m: any) => m.active !== false);
 
   return NextResponse.json({ members });
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Name and role required." }, { status: 400 });
   }
 
-  const member = store.createTeamMember({
+  const member = await store.createTeamMember({
     name: body.name,
     role: body.role,
     bio: body.bio,

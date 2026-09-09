@@ -33,7 +33,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const service = store.updateService(id, body);
+  const service = await store.updateService(id, body);
   if (!service) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   return NextResponse.json({ service });
@@ -47,6 +47,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteService(id);
+  await store.deleteService(id);
   return NextResponse.json({ ok: true });
 }

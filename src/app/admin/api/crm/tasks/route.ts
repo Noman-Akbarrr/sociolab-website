@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   const assigneeId = request.nextUrl.searchParams.get("assigneeId") || "";
   const status = request.nextUrl.searchParams.get("status") || "";
 
-  const tasks = store.getTasks({ projectId, assigneeId, status });
+  const tasks = await store.getTasks({ projectId, assigneeId, status });
   return NextResponse.json({ tasks, total: tasks.length });
 }
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Project ID and title required." }, { status: 400 });
   }
 
-  const task = store.createTask({
+  const task = await store.createTask({
     projectId: body.projectId,
     title: body.title,
     description: body.description,
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     dueDate: body.dueDate || null,
   });
 
-  store.createActivity({
+  await store.createActivity({
     type: "task-created",
     subject: `Created task "${task.title}"`,
     taskId: task.id,

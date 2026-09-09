@@ -13,27 +13,35 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const contact = store.getContact(id);
+  const contact = await store.getContact(id);
   if (!contact) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  const db = store.__readDb();
+  const [company, dealContacts, tickets, activities] = await Promise.all([
+    contact.companyId ? store.db.company.findUnique({ where: { id: contact.companyId } }).catch(() => null) : null,
+    store.db.dealContact.findMany({ where: { contactId: id }, include: { deal: true } }),
+    store.db.ticket.findMany({ where: { contactId: id } }),
+    store.db.activity.findMany({ where: { contactId: id }, orderBy: { createdAt: "desc" }, take: 50 }),
+  ]);
+
+  const deals = await Promise.all(dealContacts.map(async (dc: any) => ({
+    deal: {
+      ...dc.deal,
+      stage: await store.db.pipelineStage.findUnique({ where: { id: dc.deal.stageId } }).catch(() => null) || { id: dc.deal.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
+    },
+  })));
+
   const enriched = {
     ...contact,
-    company: db.companies.find((c: any) => c.id === contact.companyId) || { id: contact.companyId, name: "Unknown" },
-    deals: db.deals.filter((d: any) => d.contactIds?.includes(id)).map((d: any) => ({
-      deal: {
-        ...d,
-        stage: db.pipelineStages.find((s: any) => s.id === d.stageId) || { id: d.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
-      },
-    })),
-    tickets: db.tickets.filter((t: any) => t.contactId === id).map((t: any) => ({
+    company: company || { id: contact.companyId, name: "Unknown" },
+    deals,
+    tickets: tickets.map((t: any) => ({
       ...t,
       assignee: t.assigneeId ? { id: t.assigneeId, name: "Admin" } : null,
     })),
-    activities: db.activities.filter((a: any) => a.contactId === id).map((a: any) => ({
+    activities: activities.map((a: any) => ({
       ...a,
       user: { id: a.userId, name: "Admin" },
-    })).sort((a: any, b: any) => (b.createdAt || "").localeCompare(a.createdAt || "")).slice(0, 50),
+    })),
   };
 
   return NextResponse.json({ contact: enriched });
@@ -66,10 +74,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const contact = store.updateContact(id, body);
+  const contact = await store.updateContact(id, body);
   if (!contact) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  store.createActivity({
+  await store.createActivity({
     type: "contact-updated",
     subject: `Updated contact ${contact.firstName} ${contact.lastName}`,
     contactId: contact.id,
@@ -87,6 +95,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteContact(id);
+  await store.deleteContact(id);
   return NextResponse.json({ ok: true });
 }

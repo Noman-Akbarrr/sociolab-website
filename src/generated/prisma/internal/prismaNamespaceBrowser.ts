@@ -57,6 +57,7 @@ export const ModelName = {
   Post: 'Post',
   CaseStudy: 'CaseStudy',
   NewsletterLead: 'NewsletterLead',
+  Pipeline: 'Pipeline',
   Company: 'Company',
   Contact: 'Contact',
   Deal: 'Deal',
@@ -179,6 +180,18 @@ export const NewsletterLeadScalarFieldEnum = {
 export type NewsletterLeadScalarFieldEnum = (typeof NewsletterLeadScalarFieldEnum)[keyof typeof NewsletterLeadScalarFieldEnum]
 
 
+export const PipelineScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PipelineScalarFieldEnum = (typeof PipelineScalarFieldEnum)[keyof typeof PipelineScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -220,6 +233,7 @@ export const DealScalarFieldEnum = {
   id: 'id',
   title: 'title',
   companyId: 'companyId',
+  pipelineId: 'pipelineId',
   value: 'value',
   currency: 'currency',
   stageId: 'stageId',
@@ -228,6 +242,16 @@ export const DealScalarFieldEnum = {
   closedAt: 'closedAt',
   lostReason: 'lostReason',
   ownerId: 'ownerId',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  city: 'city',
+  country: 'country',
+  source: 'source',
+  dealType: 'dealType',
+  priority: 'priority',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -247,6 +271,7 @@ export type DealContactScalarFieldEnum = (typeof DealContactScalarFieldEnum)[key
 
 export const PipelineStageScalarFieldEnum = {
   id: 'id',
+  pipelineId: 'pipelineId',
   name: 'name',
   label: 'label',
   order: 'order',

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import * as store from "@/lib/crm-store";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Ticket | Sociolab CRM",
@@ -14,27 +14,19 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const ticket = store.getTicket(id);
-  const teamMembers = store.getTeamMembers();
-  const db = store.__readDb();
+  const ticket = await prisma.ticket.findUnique({ where: { id } });
 
   if (!ticket) notFound();
 
-  const company = db.companies.find((c: any) => c.id === ticket.companyId);
-  const contact = ticket.contactId ? db.contacts.find((c: any) => c.id === ticket.contactId) : null;
-  const project = ticket.projectId ? db.projects.find((p: any) => p.id === ticket.projectId) : null;
-  const assignee = ticket.assigneeId ? db.teamMembers.find((m: any) => m.id === ticket.assigneeId) : null;
-  const messages = db.ticketMessages
-    .filter((m: any) => m.ticketId === ticket.id)
-    .sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-  const activities = db.activities
-    .filter((a: any) => a.ticketId === ticket.id)
-    .map((a: any) => ({
-      ...a,
-      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
-    }))
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 50);
+  const [company, contact, project, assignee, teamMembers, messages, activities] = await Promise.all([
+    ticket.companyId ? prisma.company.findUnique({ where: { id: ticket.companyId } }) : null,
+    ticket.contactId ? prisma.contact.findUnique({ where: { id: ticket.contactId } }) : null,
+    ticket.projectId ? prisma.project.findUnique({ where: { id: ticket.projectId } }) : null,
+    ticket.assigneeId ? prisma.teamMember.findUnique({ where: { id: ticket.assigneeId } }) : null,
+    prisma.teamMember.findMany({ orderBy: { name: "asc" } }),
+    prisma.ticketMessage.findMany({ where: { ticketId: ticket.id }, orderBy: { createdAt: "asc" } }),
+    prisma.activity.findMany({ where: { ticketId: ticket.id }, include: { user: { select: { id: true, name: true } } }, orderBy: { createdAt: "desc" }, take: 50 }),
+  ]);
 
   const statusColors: Record<string, string> = {
     open: "bg-red-100 text-red-700",

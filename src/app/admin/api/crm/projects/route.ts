@@ -14,18 +14,20 @@ export async function GET(request: NextRequest) {
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
 
-  const result = store.getProjects({ companyId, status, page, limit });
+  const result = await store.getProjects({ companyId, status, page, limit });
 
   // Enrich with relations
-  const db = store.__readDb();
-  const enriched = result.projects.map((p: any) => ({
-    ...p,
-    company: db.companies.find((c: any) => c.id === p.companyId) || { id: p.companyId, name: "Unknown" },
-    deal: p.dealId ? db.deals.find((d: any) => d.id === p.dealId) ? { id: p.dealId, title: db.deals.find((d: any) => d.id === p.dealId)?.title } : null : null,
-    _count: {
-      tasks: db.tasks.filter((t: any) => t.projectId === p.id).length,
-      invoices: 0,
-    },
+  const enriched = await Promise.all(result.projects.map(async (p: any) => {
+    const deal = p.dealId ? await store.db.deal.findUnique({ where: { id: p.dealId } }).catch(() => null) : null;
+    return {
+      ...p,
+      company: await store.db.company.findUnique({ where: { id: p.companyId } }).catch(() => null) || { id: p.companyId, name: "Unknown" },
+      deal: deal ? { id: deal.id, title: deal.title } : null,
+      _count: {
+        tasks: await store.db.task.count({ where: { projectId: p.id } }),
+        invoices: 0,
+      },
+    };
   }));
 
   return NextResponse.json({ projects: enriched, total: result.total, page: result.page, totalPages: result.totalPages });
@@ -57,7 +59,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Name and company required." }, { status: 400 });
   }
 
-  const project = store.createProject({
+  const project = await store.createProject({
     name: body.name,
     companyId: body.companyId,
     dealId: body.dealId,
@@ -70,7 +72,7 @@ export async function POST(request: NextRequest) {
     description: body.description,
   });
 
-  store.createActivity({
+  await store.createActivity({
     type: "project-created",
     subject: `Created project "${project.name}"`,
     projectId: project.id,

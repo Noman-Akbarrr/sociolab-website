@@ -14,18 +14,17 @@ export async function GET(request: NextRequest) {
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
 
-  const result = store.getContacts({ companyId, search, page, limit });
+  const result = await store.getContacts({ companyId, search, page, limit });
 
   // Enrich with company and counts
-  const db = store.__readDb();
-  const enriched = result.contacts.map((c: any) => ({
+  const enriched = await Promise.all(result.contacts.map(async (c: any) => ({
     ...c,
-    company: db.companies.find((co: any) => co.id === c.companyId) || { id: c.companyId, name: "Unknown" },
+    company: await store.db.company.findUnique({ where: { id: c.companyId } }).catch(() => null) || { id: c.companyId, name: "Unknown" },
     _count: {
-      deals: db.deals.filter((d: any) => d.contactIds?.includes(c.id)).length,
-      tickets: db.tickets.filter((t: any) => t.contactId === c.id).length,
+      deals: await store.db.dealContact.count({ where: { contactId: c.id } }),
+      tickets: await store.db.ticket.count({ where: { contactId: c.id } }),
     },
-  }));
+  })));
 
   return NextResponse.json({ contacts: enriched, total: result.total, page: result.page, totalPages: result.totalPages });
 }
@@ -56,7 +55,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "First name, last name, and email required." }, { status: 400 });
   }
 
-  const contact = store.createContact({
+  const contact = await store.createContact({
     companyId: body.companyId,
     firstName: body.firstName,
     lastName: body.lastName,
@@ -69,7 +68,7 @@ export async function POST(request: NextRequest) {
     notes: body.notes,
   });
 
-  store.createActivity({
+  await store.createActivity({
     type: "contact-created",
     subject: `Created contact ${contact.firstName} ${contact.lastName}`,
     contactId: contact.id,

@@ -12,11 +12,14 @@ export default async function PipelinesPage() {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
-  const pipelines = getPipelines().map((pipeline: any) => {
-    const { deals, total } = getDeals({ pipelineId: pipeline.id, limit: 0 });
-    const totalValue = deals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
-    return { ...pipeline, dealCount: total, totalValue };
-  });
+  const rawPipelines = await getPipelines();
+  const pipelines = await Promise.all(
+    rawPipelines.map(async (pipeline: any) => {
+      const { deals, total } = await getDeals({ pipelineId: pipeline.id, limit: 0 });
+      const totalValue = deals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
+      return { ...pipeline, dealCount: total, totalValue };
+    })
+  );
 
   return (
     <div className="px-8 py-10">

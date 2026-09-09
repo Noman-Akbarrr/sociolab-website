@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   const approvedOnly = request.nextUrl.searchParams.get("approved") === "true";
 
-  let testimonials = store.getTestimonials();
+  let testimonials = await store.getTestimonials();
   if (approvedOnly) testimonials = testimonials.filter((t: any) => t.approved);
 
   return NextResponse.json({ testimonials });
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Quote, name, and role required." }, { status: 400 });
   }
 
-  const testimonial = store.createTestimonial({
+  const testimonial = await store.createTestimonial({
     quote: body.quote,
     name: body.name,
     role: body.role,

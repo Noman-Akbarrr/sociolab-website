@@ -13,7 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const project = store.getProject(id);
+  const project = await store.getProject(id);
   if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ project });
 }
@@ -42,10 +42,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const project = store.updateProject(id, body);
+  const project = await store.updateProject(id, body);
   if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  store.createActivity({
+  await store.createActivity({
     type: "project-updated",
     subject: `Updated project "${project.name}"`,
     projectId: project.id,
@@ -63,6 +63,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteProject(id);
+  await store.deleteProject(id);
   return NextResponse.json({ ok: true });
 }

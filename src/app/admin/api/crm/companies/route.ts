@@ -13,26 +13,18 @@ export async function GET(request: NextRequest) {
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
 
-  const result = store.getCompanies({ search, page, limit });
-  const db = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb() : null;
+  const result = await store.getCompanies({ search, page, limit });
 
   // Add counts
-  const companiesWithCounts = result.companies.map((c: any) => {
-    const allCompanies = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().companies : [];
-    const allDeals = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().deals : [];
-    const allContacts = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().contacts : [];
-    const allTickets = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().tickets : [];
-    const allProjects = require("@/lib/crm-store").__readDb ? require("@/lib/crm-store").__readDb().projects : [];
-    return {
-      ...c,
-      _count: {
-        deals: allDeals.filter((d: any) => d.companyId === c.id).length,
-        projects: allProjects.filter((p: any) => p.companyId === c.id).length,
-        contacts: allContacts.filter((ct: any) => ct.companyId === c.id).length,
-        tickets: allTickets.filter((t: any) => t.companyId === c.id).length,
-      },
-    };
-  });
+  const companiesWithCounts = await Promise.all(result.companies.map(async (c: any) => ({
+    ...c,
+    _count: {
+      deals: await store.db.deal.count({ where: { companyId: c.id } }),
+      projects: await store.db.project.count({ where: { companyId: c.id } }),
+      contacts: await store.db.contact.count({ where: { companyId: c.id } }),
+      tickets: await store.db.ticket.count({ where: { companyId: c.id } }),
+    },
+  })));
 
   return NextResponse.json({ companies: companiesWithCounts, total: result.total, page: result.page, totalPages: result.totalPages });
 }
@@ -59,7 +51,7 @@ export async function POST(request: NextRequest) {
 
   if (!body.name) return NextResponse.json({ error: "Name required." }, { status: 400 });
 
-  const company = store.createCompany({
+  const company = await store.createCompany({
     name: body.name,
     domain: body.domain,
     industry: body.industry,
@@ -70,7 +62,7 @@ export async function POST(request: NextRequest) {
     tags: body.tags || [],
   });
 
-  store.createActivity({
+  await store.createActivity({
     type: "company-created",
     subject: `Created company ${company.name}`,
     companyId: company.id,

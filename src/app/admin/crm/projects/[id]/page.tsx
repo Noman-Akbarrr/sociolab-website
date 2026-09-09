@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import * as store from "@/lib/crm-store";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Project | Sociolab CRM",
@@ -14,33 +14,18 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const project = store.getProject(id);
-  const teamMembers = store.getTeamMembers();
-  const db = store.__readDb();
+  const project = await prisma.project.findUnique({ where: { id } });
 
   if (!project) notFound();
 
-  const company = db.companies.find((c: any) => c.id === project.companyId);
-  const deal = project.dealId ? db.deals.find((d: any) => d.id === project.dealId) : null;
-  const dealStage = deal ? db.pipelineStages.find((s: any) => s.id === deal.stageId) : null;
-
-  const projectTasks = db.tasks
-    .filter((t: any) => t.projectId === project.id)
-    .map((t: any) => ({
-      ...t,
-      assignee: t.assigneeId ? db.teamMembers.find((m: any) => m.id === t.assigneeId) : null,
-    }));
-
-  const projectActivities = db.activities
-    .filter((a: any) => a.projectId === project.id)
-    .map((a: any) => ({
-      ...a,
-      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
-    }))
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 50);
-
-  const testimonial = db.testimonials.find((t: any) => t.projectId === project.id) || null;
+  const [company, deal, teamMembers, projectTasks, projectActivities, testimonial] = await Promise.all([
+    project.companyId ? prisma.company.findUnique({ where: { id: project.companyId } }) : null,
+    project.dealId ? prisma.deal.findUnique({ where: { id: project.dealId } }) : null,
+    prisma.teamMember.findMany({ orderBy: { name: "asc" } }),
+    prisma.task.findMany({ where: { projectId: project.id }, include: { assignee: { select: { id: true, name: true } } } }),
+    prisma.activity.findMany({ where: { projectId: project.id }, include: { user: { select: { id: true, name: true } } }, orderBy: { createdAt: "desc" }, take: 50 }),
+    prisma.testimonial.findFirst({ where: { projectId: project.id } }),
+  ]);
 
   const formatCurrency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 

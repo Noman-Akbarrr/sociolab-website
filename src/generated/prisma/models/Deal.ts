@@ -40,6 +40,7 @@ export type DealMinAggregateOutputType = {
   id: string | null
   title: string | null
   companyId: string | null
+  pipelineId: string | null
   value: number | null
   currency: string | null
   stageId: string | null
@@ -48,6 +49,16 @@ export type DealMinAggregateOutputType = {
   closedAt: Date | null
   lostReason: string | null
   ownerId: string | null
+  contactName: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  city: string | null
+  country: string | null
+  source: string | null
+  dealType: string | null
+  priority: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +67,7 @@ export type DealMaxAggregateOutputType = {
   id: string | null
   title: string | null
   companyId: string | null
+  pipelineId: string | null
   value: number | null
   currency: string | null
   stageId: string | null
@@ -64,6 +76,16 @@ export type DealMaxAggregateOutputType = {
   closedAt: Date | null
   lostReason: string | null
   ownerId: string | null
+  contactName: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  city: string | null
+  country: string | null
+  source: string | null
+  dealType: string | null
+  priority: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +94,7 @@ export type DealCountAggregateOutputType = {
   id: number
   title: number
   companyId: number
+  pipelineId: number
   value: number
   currency: number
   stageId: number
@@ -80,6 +103,16 @@ export type DealCountAggregateOutputType = {
   closedAt: number
   lostReason: number
   ownerId: number
+  contactName: number
+  contactEmail: number
+  contactPhone: number
+  address: number
+  city: number
+  country: number
+  source: number
+  dealType: number
+  priority: number
+  notes: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,6 +133,7 @@ export type DealMinAggregateInputType = {
   id?: true
   title?: true
   companyId?: true
+  pipelineId?: true
   value?: true
   currency?: true
   stageId?: true
@@ -108,6 +142,16 @@ export type DealMinAggregateInputType = {
   closedAt?: true
   lostReason?: true
   ownerId?: true
+  contactName?: true
+  contactEmail?: true
+  contactPhone?: true
+  address?: true
+  city?: true
+  country?: true
+  source?: true
+  dealType?: true
+  priority?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,6 +160,7 @@ export type DealMaxAggregateInputType = {
   id?: true
   title?: true
   companyId?: true
+  pipelineId?: true
   value?: true
   currency?: true
   stageId?: true
@@ -124,6 +169,16 @@ export type DealMaxAggregateInputType = {
   closedAt?: true
   lostReason?: true
   ownerId?: true
+  contactName?: true
+  contactEmail?: true
+  contactPhone?: true
+  address?: true
+  city?: true
+  country?: true
+  source?: true
+  dealType?: true
+  priority?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +187,7 @@ export type DealCountAggregateInputType = {
   id?: true
   title?: true
   companyId?: true
+  pipelineId?: true
   value?: true
   currency?: true
   stageId?: true
@@ -140,6 +196,16 @@ export type DealCountAggregateInputType = {
   closedAt?: true
   lostReason?: true
   ownerId?: true
+  contactName?: true
+  contactEmail?: true
+  contactPhone?: true
+  address?: true
+  city?: true
+  country?: true
+  source?: true
+  dealType?: true
+  priority?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -235,6 +301,7 @@ export type DealGroupByOutputType = {
   id: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency: string
   stageId: string
@@ -243,6 +310,16 @@ export type DealGroupByOutputType = {
   closedAt: Date | null
   lostReason: string | null
   ownerId: string
+  contactName: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  city: string | null
+  country: string | null
+  source: string | null
+  dealType: string | null
+  priority: string
+  notes: string | null
   createdAt: Date
   updatedAt: Date
   _count: DealCountAggregateOutputType | null
@@ -274,6 +351,7 @@ export type DealWhereInput = {
   id?: Prisma.StringFilter<"Deal"> | string
   title?: Prisma.StringFilter<"Deal"> | string
   companyId?: Prisma.StringFilter<"Deal"> | string
+  pipelineId?: Prisma.StringFilter<"Deal"> | string
   value?: Prisma.IntFilter<"Deal"> | number
   currency?: Prisma.StringFilter<"Deal"> | string
   stageId?: Prisma.StringFilter<"Deal"> | string
@@ -282,9 +360,20 @@ export type DealWhereInput = {
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   lostReason?: Prisma.StringNullableFilter<"Deal"> | string | null
   ownerId?: Prisma.StringFilter<"Deal"> | string
+  contactName?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactEmail?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Deal"> | string | null
+  address?: Prisma.StringNullableFilter<"Deal"> | string | null
+  city?: Prisma.StringNullableFilter<"Deal"> | string | null
+  country?: Prisma.StringNullableFilter<"Deal"> | string | null
+  source?: Prisma.StringNullableFilter<"Deal"> | string | null
+  dealType?: Prisma.StringNullableFilter<"Deal"> | string | null
+  priority?: Prisma.StringFilter<"Deal"> | string
+  notes?: Prisma.StringNullableFilter<"Deal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  pipeline?: Prisma.XOR<Prisma.PipelineScalarRelationFilter, Prisma.PipelineWhereInput>
   stage?: Prisma.XOR<Prisma.PipelineStageScalarRelationFilter, Prisma.PipelineStageWhereInput>
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contacts?: Prisma.DealContactListRelationFilter
@@ -296,6 +385,7 @@ export type DealOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
@@ -304,9 +394,20 @@ export type DealOrderByWithRelationInput = {
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lostReason?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  dealType?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
+  pipeline?: Prisma.PipelineOrderByWithRelationInput
   stage?: Prisma.PipelineStageOrderByWithRelationInput
   owner?: Prisma.UserOrderByWithRelationInput
   contacts?: Prisma.DealContactOrderByRelationAggregateInput
@@ -321,6 +422,7 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DealWhereInput | Prisma.DealWhereInput[]
   title?: Prisma.StringFilter<"Deal"> | string
   companyId?: Prisma.StringFilter<"Deal"> | string
+  pipelineId?: Prisma.StringFilter<"Deal"> | string
   value?: Prisma.IntFilter<"Deal"> | number
   currency?: Prisma.StringFilter<"Deal"> | string
   stageId?: Prisma.StringFilter<"Deal"> | string
@@ -329,9 +431,20 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   lostReason?: Prisma.StringNullableFilter<"Deal"> | string | null
   ownerId?: Prisma.StringFilter<"Deal"> | string
+  contactName?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactEmail?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Deal"> | string | null
+  address?: Prisma.StringNullableFilter<"Deal"> | string | null
+  city?: Prisma.StringNullableFilter<"Deal"> | string | null
+  country?: Prisma.StringNullableFilter<"Deal"> | string | null
+  source?: Prisma.StringNullableFilter<"Deal"> | string | null
+  dealType?: Prisma.StringNullableFilter<"Deal"> | string | null
+  priority?: Prisma.StringFilter<"Deal"> | string
+  notes?: Prisma.StringNullableFilter<"Deal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
+  pipeline?: Prisma.XOR<Prisma.PipelineScalarRelationFilter, Prisma.PipelineWhereInput>
   stage?: Prisma.XOR<Prisma.PipelineStageScalarRelationFilter, Prisma.PipelineStageWhereInput>
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   contacts?: Prisma.DealContactListRelationFilter
@@ -343,6 +456,7 @@ export type DealOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
@@ -351,6 +465,16 @@ export type DealOrderByWithAggregationInput = {
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lostReason?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
+  country?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  dealType?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DealCountOrderByAggregateInput
@@ -367,6 +491,7 @@ export type DealScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   title?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   companyId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  pipelineId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   value?: Prisma.IntWithAggregatesFilter<"Deal"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   stageId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
@@ -375,6 +500,16 @@ export type DealScalarWhereWithAggregatesInput = {
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
   lostReason?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   ownerId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  contactName?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  contactEmail?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  contactPhone?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  city?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  country?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  source?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  dealType?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
+  priority?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Deal"> | Date | string
 }
@@ -388,9 +523,20 @@ export type DealCreateInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
@@ -402,6 +548,7 @@ export type DealUncheckedCreateInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -410,6 +557,16 @@ export type DealUncheckedCreateInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -426,9 +583,20 @@ export type DealUpdateInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
@@ -440,6 +608,7 @@ export type DealUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -448,6 +617,16 @@ export type DealUncheckedUpdateInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -459,6 +638,7 @@ export type DealCreateManyInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -467,6 +647,16 @@ export type DealCreateManyInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -480,6 +670,16 @@ export type DealUpdateManyMutationInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -488,6 +688,7 @@ export type DealUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -496,6 +697,16 @@ export type DealUncheckedUpdateManyInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -514,6 +725,7 @@ export type DealCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
@@ -522,6 +734,16 @@ export type DealCountOrderByAggregateInput = {
   closedAt?: Prisma.SortOrder
   lostReason?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  dealType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -535,6 +757,7 @@ export type DealMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
@@ -543,6 +766,16 @@ export type DealMaxOrderByAggregateInput = {
   closedAt?: Prisma.SortOrder
   lostReason?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  dealType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -551,6 +784,7 @@ export type DealMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   companyId?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   value?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   stageId?: Prisma.SortOrder
@@ -559,6 +793,16 @@ export type DealMinOrderByAggregateInput = {
   closedAt?: Prisma.SortOrder
   lostReason?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
+  contactName?: Prisma.SortOrder
+  contactEmail?: Prisma.SortOrder
+  contactPhone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  city?: Prisma.SortOrder
+  country?: Prisma.SortOrder
+  source?: Prisma.SortOrder
+  dealType?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -617,6 +861,48 @@ export type DealUncheckedUpdateManyWithoutOwnerNestedInput = {
   connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
   update?: Prisma.DealUpdateWithWhereUniqueWithoutOwnerInput | Prisma.DealUpdateWithWhereUniqueWithoutOwnerInput[]
   updateMany?: Prisma.DealUpdateManyWithWhereWithoutOwnerInput | Prisma.DealUpdateManyWithWhereWithoutOwnerInput[]
+  deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
+}
+
+export type DealCreateNestedManyWithoutPipelineInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput> | Prisma.DealCreateWithoutPipelineInput[] | Prisma.DealUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPipelineInput | Prisma.DealCreateOrConnectWithoutPipelineInput[]
+  createMany?: Prisma.DealCreateManyPipelineInputEnvelope
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+}
+
+export type DealUncheckedCreateNestedManyWithoutPipelineInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput> | Prisma.DealCreateWithoutPipelineInput[] | Prisma.DealUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPipelineInput | Prisma.DealCreateOrConnectWithoutPipelineInput[]
+  createMany?: Prisma.DealCreateManyPipelineInputEnvelope
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+}
+
+export type DealUpdateManyWithoutPipelineNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput> | Prisma.DealCreateWithoutPipelineInput[] | Prisma.DealUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPipelineInput | Prisma.DealCreateOrConnectWithoutPipelineInput[]
+  upsert?: Prisma.DealUpsertWithWhereUniqueWithoutPipelineInput | Prisma.DealUpsertWithWhereUniqueWithoutPipelineInput[]
+  createMany?: Prisma.DealCreateManyPipelineInputEnvelope
+  set?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  disconnect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  delete?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  update?: Prisma.DealUpdateWithWhereUniqueWithoutPipelineInput | Prisma.DealUpdateWithWhereUniqueWithoutPipelineInput[]
+  updateMany?: Prisma.DealUpdateManyWithWhereWithoutPipelineInput | Prisma.DealUpdateManyWithWhereWithoutPipelineInput[]
+  deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
+}
+
+export type DealUncheckedUpdateManyWithoutPipelineNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput> | Prisma.DealCreateWithoutPipelineInput[] | Prisma.DealUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutPipelineInput | Prisma.DealCreateOrConnectWithoutPipelineInput[]
+  upsert?: Prisma.DealUpsertWithWhereUniqueWithoutPipelineInput | Prisma.DealUpsertWithWhereUniqueWithoutPipelineInput[]
+  createMany?: Prisma.DealCreateManyPipelineInputEnvelope
+  set?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  disconnect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  delete?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  update?: Prisma.DealUpdateWithWhereUniqueWithoutPipelineInput | Prisma.DealUpdateWithWhereUniqueWithoutPipelineInput[]
+  updateMany?: Prisma.DealUpdateManyWithWhereWithoutPipelineInput | Prisma.DealUpdateManyWithWhereWithoutPipelineInput[]
   deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
 }
 
@@ -759,9 +1045,20 @@ export type DealCreateWithoutOwnerInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
   activities?: Prisma.ActivityCreateNestedManyWithoutDealInput
@@ -772,6 +1069,7 @@ export type DealUncheckedCreateWithoutOwnerInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -779,6 +1077,16 @@ export type DealUncheckedCreateWithoutOwnerInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -819,6 +1127,7 @@ export type DealScalarWhereInput = {
   id?: Prisma.StringFilter<"Deal"> | string
   title?: Prisma.StringFilter<"Deal"> | string
   companyId?: Prisma.StringFilter<"Deal"> | string
+  pipelineId?: Prisma.StringFilter<"Deal"> | string
   value?: Prisma.IntFilter<"Deal"> | number
   currency?: Prisma.StringFilter<"Deal"> | string
   stageId?: Prisma.StringFilter<"Deal"> | string
@@ -827,8 +1136,102 @@ export type DealScalarWhereInput = {
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   lostReason?: Prisma.StringNullableFilter<"Deal"> | string | null
   ownerId?: Prisma.StringFilter<"Deal"> | string
+  contactName?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactEmail?: Prisma.StringNullableFilter<"Deal"> | string | null
+  contactPhone?: Prisma.StringNullableFilter<"Deal"> | string | null
+  address?: Prisma.StringNullableFilter<"Deal"> | string | null
+  city?: Prisma.StringNullableFilter<"Deal"> | string | null
+  country?: Prisma.StringNullableFilter<"Deal"> | string | null
+  source?: Prisma.StringNullableFilter<"Deal"> | string | null
+  dealType?: Prisma.StringNullableFilter<"Deal"> | string | null
+  priority?: Prisma.StringFilter<"Deal"> | string
+  notes?: Prisma.StringNullableFilter<"Deal"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
+}
+
+export type DealCreateWithoutPipelineInput = {
+  id?: string
+  title: string
+  value: number
+  currency?: string
+  probability?: number
+  expectedClose?: Date | string | null
+  closedAt?: Date | string | null
+  lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
+  owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
+  contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutDealInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutDealInput
+}
+
+export type DealUncheckedCreateWithoutPipelineInput = {
+  id?: string
+  title: string
+  companyId: string
+  value: number
+  currency?: string
+  stageId: string
+  probability?: number
+  expectedClose?: Date | string | null
+  closedAt?: Date | string | null
+  lostReason?: string | null
+  ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutDealInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutDealInput
+}
+
+export type DealCreateOrConnectWithoutPipelineInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput>
+}
+
+export type DealCreateManyPipelineInputEnvelope = {
+  data: Prisma.DealCreateManyPipelineInput | Prisma.DealCreateManyPipelineInput[]
+  skipDuplicates?: boolean
+}
+
+export type DealUpsertWithWhereUniqueWithoutPipelineInput = {
+  where: Prisma.DealWhereUniqueInput
+  update: Prisma.XOR<Prisma.DealUpdateWithoutPipelineInput, Prisma.DealUncheckedUpdateWithoutPipelineInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutPipelineInput, Prisma.DealUncheckedCreateWithoutPipelineInput>
+}
+
+export type DealUpdateWithWhereUniqueWithoutPipelineInput = {
+  where: Prisma.DealWhereUniqueInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutPipelineInput, Prisma.DealUncheckedUpdateWithoutPipelineInput>
+}
+
+export type DealUpdateManyWithWhereWithoutPipelineInput = {
+  where: Prisma.DealScalarWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateManyMutationInput, Prisma.DealUncheckedUpdateManyWithoutPipelineInput>
 }
 
 export type DealCreateWithoutCompanyInput = {
@@ -840,8 +1243,19 @@ export type DealCreateWithoutCompanyInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
@@ -852,6 +1266,7 @@ export type DealCreateWithoutCompanyInput = {
 export type DealUncheckedCreateWithoutCompanyInput = {
   id?: string
   title: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -860,6 +1275,16 @@ export type DealUncheckedCreateWithoutCompanyInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -902,9 +1327,20 @@ export type DealCreateWithoutContactsInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   activities?: Prisma.ActivityCreateNestedManyWithoutDealInput
@@ -915,6 +1351,7 @@ export type DealUncheckedCreateWithoutContactsInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -923,6 +1360,16 @@ export type DealUncheckedCreateWithoutContactsInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutDealInput
@@ -954,9 +1401,20 @@ export type DealUpdateWithoutContactsInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutDealNestedInput
@@ -967,6 +1425,7 @@ export type DealUncheckedUpdateWithoutContactsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -975,6 +1434,16 @@ export type DealUncheckedUpdateWithoutContactsInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutDealNestedInput
@@ -990,9 +1459,20 @@ export type DealCreateWithoutStageInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
   activities?: Prisma.ActivityCreateNestedManyWithoutDealInput
@@ -1003,6 +1483,7 @@ export type DealUncheckedCreateWithoutStageInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   probability?: number
@@ -1010,6 +1491,16 @@ export type DealUncheckedCreateWithoutStageInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -1052,9 +1543,20 @@ export type DealCreateWithoutProjectsInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
@@ -1065,6 +1567,7 @@ export type DealUncheckedCreateWithoutProjectsInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -1073,6 +1576,16 @@ export type DealUncheckedCreateWithoutProjectsInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -1104,9 +1617,20 @@ export type DealUpdateWithoutProjectsInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
@@ -1117,6 +1641,7 @@ export type DealUncheckedUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1125,6 +1650,16 @@ export type DealUncheckedUpdateWithoutProjectsInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -1140,9 +1675,20 @@ export type DealCreateWithoutActivitiesInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutDealsInput
+  pipeline: Prisma.PipelineCreateNestedOneWithoutDealsInput
   stage: Prisma.PipelineStageCreateNestedOneWithoutDealsInput
   owner: Prisma.UserCreateNestedOneWithoutOwnedDealsInput
   contacts?: Prisma.DealContactCreateNestedManyWithoutDealInput
@@ -1153,6 +1699,7 @@ export type DealUncheckedCreateWithoutActivitiesInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -1161,6 +1708,16 @@ export type DealUncheckedCreateWithoutActivitiesInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.DealContactUncheckedCreateNestedManyWithoutDealInput
@@ -1192,9 +1749,20 @@ export type DealUpdateWithoutActivitiesInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
@@ -1205,6 +1773,7 @@ export type DealUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1213,6 +1782,16 @@ export type DealUncheckedUpdateWithoutActivitiesInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -1223,6 +1802,7 @@ export type DealCreateManyOwnerInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   stageId: string
@@ -1230,6 +1810,16 @@ export type DealCreateManyOwnerInput = {
   expectedClose?: Date | string | null
   closedAt?: Date | string | null
   lostReason?: string | null
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1243,9 +1833,20 @@ export type DealUpdateWithoutOwnerInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutDealNestedInput
@@ -1256,6 +1857,7 @@ export type DealUncheckedUpdateWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1263,6 +1865,16 @@ export type DealUncheckedUpdateWithoutOwnerInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -1274,6 +1886,7 @@ export type DealUncheckedUpdateManyWithoutOwnerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1281,13 +1894,24 @@ export type DealUncheckedUpdateManyWithoutOwnerInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type DealCreateManyCompanyInput = {
+export type DealCreateManyPipelineInput = {
   id?: string
   title: string
+  companyId: string
   value: number
   currency?: string
   stageId: string
@@ -1296,6 +1920,126 @@ export type DealCreateManyCompanyInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DealUpdateWithoutPipelineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
+  contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutDealNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateWithoutPipelineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  stageId?: Prisma.StringFieldUpdateOperationsInput | string
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutDealNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutDealNestedInput
+}
+
+export type DealUncheckedUpdateManyWithoutPipelineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  stageId?: Prisma.StringFieldUpdateOperationsInput | string
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DealCreateManyCompanyInput = {
+  id?: string
+  title: string
+  pipelineId: string
+  value: number
+  currency?: string
+  stageId: string
+  probability?: number
+  expectedClose?: Date | string | null
+  closedAt?: Date | string | null
+  lostReason?: string | null
+  ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1309,8 +2053,19 @@ export type DealUpdateWithoutCompanyInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   stage?: Prisma.PipelineStageUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
@@ -1321,6 +2076,7 @@ export type DealUpdateWithoutCompanyInput = {
 export type DealUncheckedUpdateWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1329,6 +2085,16 @@ export type DealUncheckedUpdateWithoutCompanyInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -1339,6 +2105,7 @@ export type DealUncheckedUpdateWithoutCompanyInput = {
 export type DealUncheckedUpdateManyWithoutCompanyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   stageId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1347,6 +2114,16 @@ export type DealUncheckedUpdateManyWithoutCompanyInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1355,6 +2132,7 @@ export type DealCreateManyStageInput = {
   id?: string
   title: string
   companyId: string
+  pipelineId: string
   value: number
   currency?: string
   probability?: number
@@ -1362,6 +2140,16 @@ export type DealCreateManyStageInput = {
   closedAt?: Date | string | null
   lostReason?: string | null
   ownerId: string
+  contactName?: string | null
+  contactEmail?: string | null
+  contactPhone?: string | null
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  source?: string | null
+  dealType?: string | null
+  priority?: string
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1375,9 +2163,20 @@ export type DealUpdateWithoutStageInput = {
   expectedClose?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutDealsNestedInput
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutDealsNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutOwnedDealsNestedInput
   contacts?: Prisma.DealContactUpdateManyWithoutDealNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutDealNestedInput
@@ -1388,6 +2187,7 @@ export type DealUncheckedUpdateWithoutStageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   probability?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1395,6 +2195,16 @@ export type DealUncheckedUpdateWithoutStageInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.DealContactUncheckedUpdateManyWithoutDealNestedInput
@@ -1406,6 +2216,7 @@ export type DealUncheckedUpdateManyWithoutStageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   probability?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1413,6 +2224,16 @@ export type DealUncheckedUpdateManyWithoutStageInput = {
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lostReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dealType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1470,6 +2291,7 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   title?: boolean
   companyId?: boolean
+  pipelineId?: boolean
   value?: boolean
   currency?: boolean
   stageId?: boolean
@@ -1478,9 +2300,20 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   closedAt?: boolean
   lostReason?: boolean
   ownerId?: boolean
+  contactName?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
+  address?: boolean
+  city?: boolean
+  country?: boolean
+  source?: boolean
+  dealType?: boolean
+  priority?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contacts?: boolean | Prisma.Deal$contactsArgs<ExtArgs>
@@ -1493,6 +2326,7 @@ export type DealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   companyId?: boolean
+  pipelineId?: boolean
   value?: boolean
   currency?: boolean
   stageId?: boolean
@@ -1501,9 +2335,20 @@ export type DealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   closedAt?: boolean
   lostReason?: boolean
   ownerId?: boolean
+  contactName?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
+  address?: boolean
+  city?: boolean
+  country?: boolean
+  source?: boolean
+  dealType?: boolean
+  priority?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
@@ -1512,6 +2357,7 @@ export type DealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   title?: boolean
   companyId?: boolean
+  pipelineId?: boolean
   value?: boolean
   currency?: boolean
   stageId?: boolean
@@ -1520,9 +2366,20 @@ export type DealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   closedAt?: boolean
   lostReason?: boolean
   ownerId?: boolean
+  contactName?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
+  address?: boolean
+  city?: boolean
+  country?: boolean
+  source?: boolean
+  dealType?: boolean
+  priority?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
@@ -1531,6 +2388,7 @@ export type DealSelectScalar = {
   id?: boolean
   title?: boolean
   companyId?: boolean
+  pipelineId?: boolean
   value?: boolean
   currency?: boolean
   stageId?: boolean
@@ -1539,13 +2397,24 @@ export type DealSelectScalar = {
   closedAt?: boolean
   lostReason?: boolean
   ownerId?: boolean
+  contactName?: boolean
+  contactEmail?: boolean
+  contactPhone?: boolean
+  address?: boolean
+  city?: boolean
+  country?: boolean
+  source?: boolean
+  dealType?: boolean
+  priority?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "companyId" | "value" | "currency" | "stageId" | "probability" | "expectedClose" | "closedAt" | "lostReason" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
+export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "companyId" | "pipelineId" | "value" | "currency" | "stageId" | "probability" | "expectedClose" | "closedAt" | "lostReason" | "ownerId" | "contactName" | "contactEmail" | "contactPhone" | "address" | "city" | "country" | "source" | "dealType" | "priority" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
 export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   contacts?: boolean | Prisma.Deal$contactsArgs<ExtArgs>
@@ -1555,11 +2424,13 @@ export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 }
 export type DealIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type DealIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   stage?: boolean | Prisma.PipelineStageDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1568,6 +2439,7 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Deal"
   objects: {
     company: Prisma.$CompanyPayload<ExtArgs>
+    pipeline: Prisma.$PipelinePayload<ExtArgs>
     stage: Prisma.$PipelineStagePayload<ExtArgs>
     owner: Prisma.$UserPayload<ExtArgs>
     contacts: Prisma.$DealContactPayload<ExtArgs>[]
@@ -1578,6 +2450,7 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     title: string
     companyId: string
+    pipelineId: string
     value: number
     currency: string
     stageId: string
@@ -1586,6 +2459,16 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     closedAt: Date | null
     lostReason: string | null
     ownerId: string
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    address: string | null
+    city: string | null
+    country: string | null
+    source: string | null
+    dealType: string | null
+    priority: string
+    notes: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["deal"]>
@@ -1983,6 +2866,7 @@ readonly fields: DealFieldRefs;
 export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   company<T extends Prisma.CompanyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CompanyDefaultArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  pipeline<T extends Prisma.PipelineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PipelineDefaultArgs<ExtArgs>>): Prisma.Prisma__PipelineClient<runtime.Types.Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   stage<T extends Prisma.PipelineStageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PipelineStageDefaultArgs<ExtArgs>>): Prisma.Prisma__PipelineStageClient<runtime.Types.Result.GetResult<Prisma.$PipelineStagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   contacts<T extends Prisma.Deal$contactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2020,6 +2904,7 @@ export interface DealFieldRefs {
   readonly id: Prisma.FieldRef<"Deal", 'String'>
   readonly title: Prisma.FieldRef<"Deal", 'String'>
   readonly companyId: Prisma.FieldRef<"Deal", 'String'>
+  readonly pipelineId: Prisma.FieldRef<"Deal", 'String'>
   readonly value: Prisma.FieldRef<"Deal", 'Int'>
   readonly currency: Prisma.FieldRef<"Deal", 'String'>
   readonly stageId: Prisma.FieldRef<"Deal", 'String'>
@@ -2028,6 +2913,16 @@ export interface DealFieldRefs {
   readonly closedAt: Prisma.FieldRef<"Deal", 'DateTime'>
   readonly lostReason: Prisma.FieldRef<"Deal", 'String'>
   readonly ownerId: Prisma.FieldRef<"Deal", 'String'>
+  readonly contactName: Prisma.FieldRef<"Deal", 'String'>
+  readonly contactEmail: Prisma.FieldRef<"Deal", 'String'>
+  readonly contactPhone: Prisma.FieldRef<"Deal", 'String'>
+  readonly address: Prisma.FieldRef<"Deal", 'String'>
+  readonly city: Prisma.FieldRef<"Deal", 'String'>
+  readonly country: Prisma.FieldRef<"Deal", 'String'>
+  readonly source: Prisma.FieldRef<"Deal", 'String'>
+  readonly dealType: Prisma.FieldRef<"Deal", 'String'>
+  readonly priority: Prisma.FieldRef<"Deal", 'String'>
+  readonly notes: Prisma.FieldRef<"Deal", 'String'>
   readonly createdAt: Prisma.FieldRef<"Deal", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Deal", 'DateTime'>
 }

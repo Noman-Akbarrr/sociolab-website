@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   const pipelineId = request.nextUrl.searchParams.get("pipelineId");
   if (!pipelineId) return NextResponse.json({ error: "pipelineId required." }, { status: 400 });
 
-  const stages = store.getStages(pipelineId);
+  const stages = await store.getStages(pipelineId);
   return NextResponse.json({ stages });
 }
 
@@ -32,10 +32,10 @@ export async function POST(request: NextRequest) {
   const pipelineId = request.nextUrl.searchParams.get("pipelineId");
   if (!pipelineId) return NextResponse.json({ error: "pipelineId required." }, { status: 400 });
 
-  const pipeline = store.getPipeline(pipelineId);
+  const pipeline = await store.getPipeline(pipelineId);
   if (!pipeline) return NextResponse.json({ error: "Pipeline not found." }, { status: 404 });
 
-  const stage = store.createStage(pipelineId, {
+  const stage = await store.createStage(pipelineId, {
     name: body.name,
     label: body.label,
     color: body.color || "#6b7280",

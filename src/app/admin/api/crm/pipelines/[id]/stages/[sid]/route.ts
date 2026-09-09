@@ -20,7 +20,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const stage = store.updateStage(sid, body);
+  const stage = await store.updateStage(sid, body);
   if (!stage) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   return NextResponse.json({ stage });
@@ -36,6 +36,6 @@ export async function DELETE(
   const { sid } = await params;
   const reassignToId = request.nextUrl.searchParams.get("reassignToId") || undefined;
 
-  store.deleteStage(sid, reassignToId);
+  await store.deleteStage(sid, reassignToId);
   return NextResponse.json({ ok: true });
 }

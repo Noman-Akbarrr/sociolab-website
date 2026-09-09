@@ -194,7 +194,7 @@ export type ActivityGroupByOutputType = {
   type: string
   subject: string
   body: string | null
-  userId: string
+  userId: string | null
   dealId: string | null
   companyId: string | null
   contactId: string | null
@@ -230,7 +230,7 @@ export type ActivityWhereInput = {
   type?: Prisma.StringFilter<"Activity"> | string
   subject?: Prisma.StringFilter<"Activity"> | string
   body?: Prisma.StringNullableFilter<"Activity"> | string | null
-  userId?: Prisma.StringFilter<"Activity"> | string
+  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
   dealId?: Prisma.StringNullableFilter<"Activity"> | string | null
   companyId?: Prisma.StringNullableFilter<"Activity"> | string | null
   contactId?: Prisma.StringNullableFilter<"Activity"> | string | null
@@ -238,7 +238,7 @@ export type ActivityWhereInput = {
   ticketId?: Prisma.StringNullableFilter<"Activity"> | string | null
   taskId?: Prisma.StringNullableFilter<"Activity"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   deal?: Prisma.XOR<Prisma.DealNullableScalarRelationFilter, Prisma.DealWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
@@ -252,7 +252,7 @@ export type ActivityOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   dealId?: Prisma.SortOrderInput | Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -277,7 +277,7 @@ export type ActivityWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.StringFilter<"Activity"> | string
   subject?: Prisma.StringFilter<"Activity"> | string
   body?: Prisma.StringNullableFilter<"Activity"> | string | null
-  userId?: Prisma.StringFilter<"Activity"> | string
+  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
   dealId?: Prisma.StringNullableFilter<"Activity"> | string | null
   companyId?: Prisma.StringNullableFilter<"Activity"> | string | null
   contactId?: Prisma.StringNullableFilter<"Activity"> | string | null
@@ -285,7 +285,7 @@ export type ActivityWhereUniqueInput = Prisma.AtLeast<{
   ticketId?: Prisma.StringNullableFilter<"Activity"> | string | null
   taskId?: Prisma.StringNullableFilter<"Activity"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Activity"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   deal?: Prisma.XOR<Prisma.DealNullableScalarRelationFilter, Prisma.DealWhereInput> | null
   company?: Prisma.XOR<Prisma.CompanyNullableScalarRelationFilter, Prisma.CompanyWhereInput> | null
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
@@ -299,7 +299,7 @@ export type ActivityOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrderInput | Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  userId?: Prisma.SortOrderInput | Prisma.SortOrder
   dealId?: Prisma.SortOrderInput | Prisma.SortOrder
   companyId?: Prisma.SortOrderInput | Prisma.SortOrder
   contactId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -320,7 +320,7 @@ export type ActivityScalarWhereWithAggregatesInput = {
   type?: Prisma.StringWithAggregatesFilter<"Activity"> | string
   subject?: Prisma.StringWithAggregatesFilter<"Activity"> | string
   body?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
-  userId?: Prisma.StringWithAggregatesFilter<"Activity"> | string
+  userId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   dealId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   companyId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
   contactId?: Prisma.StringNullableWithAggregatesFilter<"Activity"> | string | null
@@ -336,7 +336,7 @@ export type ActivityCreateInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
@@ -350,7 +350,7 @@ export type ActivityUncheckedCreateInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -366,7 +366,7 @@ export type ActivityUpdateInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
@@ -380,7 +380,7 @@ export type ActivityUncheckedUpdateInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -395,7 +395,7 @@ export type ActivityCreateManyInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -418,7 +418,7 @@ export type ActivityUncheckedUpdateManyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -839,7 +839,7 @@ export type ActivityScalarWhereInput = {
   type?: Prisma.StringFilter<"Activity"> | string
   subject?: Prisma.StringFilter<"Activity"> | string
   body?: Prisma.StringNullableFilter<"Activity"> | string | null
-  userId?: Prisma.StringFilter<"Activity"> | string
+  userId?: Prisma.StringNullableFilter<"Activity"> | string | null
   dealId?: Prisma.StringNullableFilter<"Activity"> | string | null
   companyId?: Prisma.StringNullableFilter<"Activity"> | string | null
   contactId?: Prisma.StringNullableFilter<"Activity"> | string | null
@@ -855,7 +855,7 @@ export type ActivityCreateWithoutCompanyInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
   project?: Prisma.ProjectCreateNestedOneWithoutActivitiesInput
@@ -868,7 +868,7 @@ export type ActivityUncheckedCreateWithoutCompanyInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   contactId?: string | null
   projectId?: string | null
@@ -909,7 +909,7 @@ export type ActivityCreateWithoutContactInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   project?: Prisma.ProjectCreateNestedOneWithoutActivitiesInput
@@ -922,7 +922,7 @@ export type ActivityUncheckedCreateWithoutContactInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   projectId?: string | null
@@ -963,7 +963,7 @@ export type ActivityCreateWithoutDealInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
   project?: Prisma.ProjectCreateNestedOneWithoutActivitiesInput
@@ -976,7 +976,7 @@ export type ActivityUncheckedCreateWithoutDealInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   companyId?: string | null
   contactId?: string | null
   projectId?: string | null
@@ -1017,7 +1017,7 @@ export type ActivityCreateWithoutProjectInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
@@ -1030,7 +1030,7 @@ export type ActivityUncheckedCreateWithoutProjectInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1071,7 +1071,7 @@ export type ActivityCreateWithoutTaskInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
@@ -1084,7 +1084,7 @@ export type ActivityUncheckedCreateWithoutTaskInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1125,7 +1125,7 @@ export type ActivityCreateWithoutTicketInput = {
   subject: string
   body?: string | null
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutActivitiesInput
+  user?: Prisma.UserCreateNestedOneWithoutActivitiesInput
   deal?: Prisma.DealCreateNestedOneWithoutActivitiesInput
   company?: Prisma.CompanyCreateNestedOneWithoutActivitiesInput
   contact?: Prisma.ContactCreateNestedOneWithoutActivitiesInput
@@ -1138,7 +1138,7 @@ export type ActivityUncheckedCreateWithoutTicketInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1234,7 +1234,7 @@ export type ActivityCreateManyCompanyInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   contactId?: string | null
   projectId?: string | null
@@ -1249,7 +1249,7 @@ export type ActivityUpdateWithoutCompanyInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutActivitiesNestedInput
@@ -1262,7 +1262,7 @@ export type ActivityUncheckedUpdateWithoutCompanyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1276,7 +1276,7 @@ export type ActivityUncheckedUpdateManyWithoutCompanyInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1290,7 +1290,7 @@ export type ActivityCreateManyContactInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   projectId?: string | null
@@ -1305,7 +1305,7 @@ export type ActivityUpdateWithoutContactInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutActivitiesNestedInput
@@ -1318,7 +1318,7 @@ export type ActivityUncheckedUpdateWithoutContactInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1332,7 +1332,7 @@ export type ActivityUncheckedUpdateManyWithoutContactInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1346,7 +1346,7 @@ export type ActivityCreateManyDealInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   companyId?: string | null
   contactId?: string | null
   projectId?: string | null
@@ -1361,7 +1361,7 @@ export type ActivityUpdateWithoutDealInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
   project?: Prisma.ProjectUpdateOneWithoutActivitiesNestedInput
@@ -1374,7 +1374,7 @@ export type ActivityUncheckedUpdateWithoutDealInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1388,7 +1388,7 @@ export type ActivityUncheckedUpdateManyWithoutDealInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1402,7 +1402,7 @@ export type ActivityCreateManyProjectInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1417,7 +1417,7 @@ export type ActivityUpdateWithoutProjectInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
@@ -1430,7 +1430,7 @@ export type ActivityUncheckedUpdateWithoutProjectInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1444,7 +1444,7 @@ export type ActivityUncheckedUpdateManyWithoutProjectInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1458,7 +1458,7 @@ export type ActivityCreateManyTaskInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1473,7 +1473,7 @@ export type ActivityUpdateWithoutTaskInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
@@ -1486,7 +1486,7 @@ export type ActivityUncheckedUpdateWithoutTaskInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1500,7 +1500,7 @@ export type ActivityUncheckedUpdateManyWithoutTaskInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1514,7 +1514,7 @@ export type ActivityCreateManyTicketInput = {
   type: string
   subject: string
   body?: string | null
-  userId: string
+  userId?: string | null
   dealId?: string | null
   companyId?: string | null
   contactId?: string | null
@@ -1529,7 +1529,7 @@ export type ActivityUpdateWithoutTicketInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutActivitiesNestedInput
+  user?: Prisma.UserUpdateOneWithoutActivitiesNestedInput
   deal?: Prisma.DealUpdateOneWithoutActivitiesNestedInput
   company?: Prisma.CompanyUpdateOneWithoutActivitiesNestedInput
   contact?: Prisma.ContactUpdateOneWithoutActivitiesNestedInput
@@ -1542,7 +1542,7 @@ export type ActivityUncheckedUpdateWithoutTicketInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1556,7 +1556,7 @@ export type ActivityUncheckedUpdateManyWithoutTicketInput = {
   type?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dealId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   companyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1580,7 +1580,7 @@ export type ActivitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   ticketId?: boolean
   taskId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1602,7 +1602,7 @@ export type ActivitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   ticketId?: boolean
   taskId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1624,7 +1624,7 @@ export type ActivitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   ticketId?: boolean
   taskId?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1650,7 +1650,7 @@ export type ActivitySelectScalar = {
 
 export type ActivityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "type" | "subject" | "body" | "userId" | "dealId" | "companyId" | "contactId" | "projectId" | "ticketId" | "taskId" | "createdAt", ExtArgs["result"]["activity"]>
 export type ActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1659,7 +1659,7 @@ export type ActivityInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   task?: boolean | Prisma.Activity$taskArgs<ExtArgs>
 }
 export type ActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1668,7 +1668,7 @@ export type ActivityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   task?: boolean | Prisma.Activity$taskArgs<ExtArgs>
 }
 export type ActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.Activity$userArgs<ExtArgs>
   deal?: boolean | Prisma.Activity$dealArgs<ExtArgs>
   company?: boolean | Prisma.Activity$companyArgs<ExtArgs>
   contact?: boolean | Prisma.Activity$contactArgs<ExtArgs>
@@ -1680,7 +1680,7 @@ export type ActivityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Activity"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs> | null
     deal: Prisma.$DealPayload<ExtArgs> | null
     company: Prisma.$CompanyPayload<ExtArgs> | null
     contact: Prisma.$ContactPayload<ExtArgs> | null
@@ -1693,7 +1693,7 @@ export type $ActivityPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     type: string
     subject: string
     body: string | null
-    userId: string
+    userId: string | null
     dealId: string | null
     companyId: string | null
     contactId: string | null
@@ -2095,7 +2095,7 @@ readonly fields: ActivityFieldRefs;
  */
 export interface Prisma__ActivityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.Activity$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   deal<T extends Prisma.Activity$dealArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$dealArgs<ExtArgs>>): Prisma.Prisma__DealClient<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   company<T extends Prisma.Activity$companyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$companyArgs<ExtArgs>>): Prisma.Prisma__CompanyClient<runtime.Types.Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   contact<T extends Prisma.Activity$contactArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Activity$contactArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2541,6 +2541,25 @@ export type ActivityDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Activities to delete.
    */
   limit?: number
+}
+
+/**
+ * Activity.user
+ */
+export type Activity$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

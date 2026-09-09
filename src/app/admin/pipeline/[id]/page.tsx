@@ -5,7 +5,7 @@ import { PipelineKanban } from "@/components/admin/crm/PipelineKanban";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const pipeline = getPipeline(id);
+  const pipeline = await getPipeline(id);
   return {
     title: pipeline ? `${pipeline.name} | Sociolab Admin` : "Pipeline | Sociolab Admin",
     robots: { index: false, follow: false },
@@ -17,11 +17,11 @@ export default async function PipelineDetailPage({ params }: { params: Promise<{
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const pipeline = getPipeline(id);
+  const pipeline = await getPipeline(id);
   if (!pipeline) notFound();
 
-  const stages = getStages(id);
-  const { dealsByStage } = getDeals({ pipelineId: id, limit: 100 });
+  const stages = await getStages(id);
+  const { dealsByStage } = await getDeals({ pipelineId: id, limit: 100 });
 
   return (
     <div className="h-full bg-[#090D16]">

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
 
-  const result = store.getActivities({ dealId, companyId, projectId, ticketId, page, limit });
+  const result = await store.getActivities({ dealId, companyId, projectId, ticketId, page, limit });
   return NextResponse.json(result);
 }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Type and subject required." }, { status: 400 });
   }
 
-  const activity = store.createActivity({
+  const activity = await store.createActivity({
     type: body.type,
     subject: body.subject,
     body: body.body,

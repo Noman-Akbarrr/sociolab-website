@@ -13,7 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const ticket = store.getTicket(id);
+  const ticket = await store.getTicket(id);
   if (!ticket) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ ticket });
 }
@@ -38,7 +38,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = store.__readDb().tickets.find((t: any) => t.id === id);
+  const existing = await store.db.ticket.findUnique({ where: { id } });
   if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const updateData: any = { ...body };
@@ -49,10 +49,10 @@ export async function PATCH(
     updateData.closedAt = new Date().toISOString();
   }
 
-  const ticket = store.updateTicket(id, updateData);
+  const ticket = await store.updateTicket(id, updateData);
   if (!ticket) return NextResponse.json({ error: "Failed." }, { status: 500 });
 
-  store.createActivity({
+  await store.createActivity({
     type: "ticket-updated",
     subject: `Updated ticket ${ticket.number}: ${ticket.subject}`,
     ticketId: ticket.id,
@@ -82,7 +82,7 @@ export async function POST(
 
   if (!body.body) return NextResponse.json({ error: "Message body required." }, { status: 400 });
 
-  const message = store.createTicketMessage({
+  const message = await store.createTicketMessage({
     ticketId: id,
     authorId: user.id,
     authorType: "user",
@@ -91,12 +91,12 @@ export async function POST(
   });
 
   // Update ticket status if it was open
-  const ticket = store.__readDb().tickets.find((t: any) => t.id === id);
+  const ticket = await store.db.ticket.findUnique({ where: { id } });
   if (ticket && ticket.status === "open") {
-    store.updateTicket(id, { status: "in-progress" });
+    await store.updateTicket(id, { status: "in-progress" });
   }
 
-  store.createActivity({
+  await store.createActivity({
     type: "ticket-message",
     subject: `Added message to ticket ${ticket?.number || id}`,
     ticketId: id,
@@ -114,12 +114,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const db = store.__readDb();
-  db.tickets = db.tickets.filter((t: any) => t.id !== id);
-  require("fs").writeFileSync(
-    require("path").join(process.cwd(), ".puck", "crm.json"),
-    JSON.stringify(db, null, 2),
-    "utf-8"
-  );
+  await store.db.ticket.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import * as store from "@/lib/crm-store";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Client | Sociolab Admin",
@@ -9,28 +9,26 @@ export const metadata = {
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const db = store.__readDb();
-  const company = db.companies.find((c: any) => c.id === id);
+  const company = await prisma.company.findUnique({ where: { id } });
 
   if (!company) notFound();
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 
-  const companyDeals = db.deals.filter((d: any) => d.companyId === id).map((d: any) => ({
-    ...d,
-    stage: db.pipelineStages.find((s: any) => s.id === d.stageId) || { id: d.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
-  }));
-  const companyProjects = db.projects.filter((p: any) => p.companyId === id);
-  const companyTickets = db.tickets.filter((t: any) => t.companyId === id);
-  const companyContacts = db.contacts.filter((c: any) => c.companyId === id);
-  const companyActivities = db.activities.filter((a: any) => a.companyId === id)
-    .map((a: any) => ({ ...a, user: { id: a.userId, name: "Admin" } }))
-    .sort((a: any, b: any) => (b.createdAt || "").localeCompare(a.createdAt || ""))
-    .slice(0, 30);
+  const [companyDealsRaw, companyProjects, companyTickets, companyContacts, companyActivitiesRaw] = await Promise.all([
+    prisma.deal.findMany({ where: { companyId: id }, include: { stage: true } }),
+    prisma.project.findMany({ where: { companyId: id } }),
+    prisma.ticket.findMany({ where: { companyId: id } }),
+    prisma.contact.findMany({ where: { companyId: id } }),
+    prisma.activity.findMany({ where: { companyId: id }, orderBy: { createdAt: "desc" }, take: 30 }),
+  ]);
 
-  const openDeals = companyDeals.filter((d) => !d.stage.isClosed);
-  const wonDeals = companyDeals.filter((d) => d.stage.isWon);
+  const companyDeals = companyDealsRaw;
+  const companyActivities = companyActivitiesRaw.map((a: any) => ({ ...a, user: { id: a.userId, name: "Admin" } }));
+
+  const openDeals = companyDeals.filter((d) => !d.stage?.isClosed);
+  const wonDeals = companyDeals.filter((d) => d.stage?.isWon);
   const pipelineValue = openDeals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
   const wonValue = wonDeals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
 

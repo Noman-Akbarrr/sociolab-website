@@ -29,7 +29,9 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
   // Stage drag state
   const [stageDragging, setStageDragging] = useState<string | null>(null);
   const [stageDragOverTarget, setStageDragOverTarget] = useState<string | null>(null);
+  const [stageDragInsertSide, setStageDragInsertSide] = useState<"left" | "right">("right");
   const stageDragRef = useRef<string | null>(null);
+  const stageDragInsertBefore = useRef<boolean>(true);
 
   // Deal drag state
   const [dealDragging, setDealDragging] = useState<{ dealId: string; sourceStageId: string } | null>(null);
@@ -111,6 +113,15 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     if (!stageDragRef.current || stageDragRef.current === stageId) return;
     e.dataTransfer.dropEffect = "move";
     setStageDragOverTarget(stageId);
+    // Determine insert position based on mouse X relative to the element
+    const el = e.currentTarget.closest("[data-stage-col]") as HTMLElement;
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const midpoint = rect.left + rect.width / 2;
+      const before = e.clientX < midpoint;
+      stageDragInsertBefore.current = before;
+      setStageDragInsertSide(before ? "left" : "right");
+    }
   }
 
   function handleStageDragLeave() {
@@ -137,9 +148,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     const toIdx = currentIds.indexOf(targetStageId);
     if (fromIdx < 0 || toIdx < 0) { stageDragRef.current = null; return; }
 
-    const newIds = [...currentIds];
-    newIds.splice(fromIdx, 1);
-    newIds.splice(toIdx, 0, draggedStageId);
+    // Determine insertion index based on mouse position
+    const insertBefore = stageDragInsertBefore.current;
+    let insertIdx = insertBefore ? toIdx : toIdx + 1;
+    // Adjust for removal shifting the array
+    if (fromIdx < insertIdx) insertIdx--;
+
+    const newIds = currentIds.filter((id) => id !== draggedStageId);
+    newIds.splice(insertIdx, 0, draggedStageId);
 
     const newStages = newIds.map((id, i) => {
       const s = stages.find((st) => st.id === id);
@@ -308,7 +324,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 12L6 8L10 4" /></svg>
               Pipelines
             </Link>
-            <h1 className="font-display text-base font-semibold text-white">{pipeline.name}</h1>
+            <h1 className="font-display text-sm font-semibold text-white">{pipeline.name}</h1>
             <div className="flex items-center gap-4 mt-1">
               <span className="text-xs text-white/50"><span className="font-semibold text-white">{openDealCount}</span> open</span>
               <span className="text-xs text-white/50"><span className="font-semibold text-white">{totalDeals}</span> total</span>
@@ -337,16 +353,25 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
               data-stage-col
               className={`flex w-[320px] min-w-[320px] flex-col transition-all duration-150 ${
                 isDragSource ? "opacity-40 scale-[0.97]" : ""
-              } ${isDropTarget ? "scale-[1.02]" : ""}`}
+              } ${isDropTarget ? "scale-[1.02]" : ""} relative`}
               onDragOver={(e) => handleColumnDragOver(e, stage.id)}
               onDragLeave={handleColumnDragLeave}
               onDrop={(e) => handleColumnDrop(e, stage.id)}
             >
+              {/* Insert indicator bar */}
+              {isDropTarget && (
+                <div className={`absolute top-0 bottom-0 w-[3px] bg-brand rounded-full z-10 transition-all duration-100 ${
+                  stageDragInsertSide === "left" ? "left-0" : "right-0"
+                }`} />
+              )}
               {/* Column Header */}
               <div
                 className={`flex items-center justify-between rounded-t-[3px] px-4 py-3 transition-all duration-150 ${
                   isDropTarget ? "bg-brand/15 ring-2 ring-brand/50 shadow-lg shadow-brand/10" : "bg-[#111827]"
                 }`}
+                onDragOver={(e) => handleStageDragOver(e, stage.id)}
+                onDragLeave={handleStageDragLeave}
+                onDrop={(e) => handleStageDrop(e, stage.id)}
               >
                 <div className="flex items-center gap-2">
                   {/* Drag handle */}

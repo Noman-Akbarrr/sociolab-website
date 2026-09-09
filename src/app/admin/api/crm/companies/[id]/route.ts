@@ -13,31 +13,40 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const db = store.__readDb();
-  const company = db.companies.find((c: any) => c.id === id);
+  const company = await store.db.company.findUnique({ where: { id } });
   if (!company) return NextResponse.json({ error: "Not found." }, { status: 404 });
+
+  const [contacts, deals, projects, tickets, activities] = await Promise.all([
+    store.db.contact.findMany({ where: { companyId: id } }),
+    store.db.deal.findMany({ where: { companyId: id } }),
+    store.db.project.findMany({ where: { companyId: id } }),
+    store.db.ticket.findMany({ where: { companyId: id } }),
+    store.db.activity.findMany({ where: { companyId: id }, orderBy: { createdAt: "desc" }, take: 50 }),
+  ]);
+
+  const dealsWithStages = await Promise.all(deals.map(async (d: any) => ({
+    ...d,
+    stage: await store.db.pipelineStage.findUnique({ where: { id: d.stageId } }).catch(() => null) || { id: d.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
+  })));
 
   const enriched = {
     ...company,
-    contacts: db.contacts.filter((c: any) => c.companyId === id),
-    deals: db.deals.filter((d: any) => d.companyId === id).map((d: any) => ({
-      ...d,
-      stage: db.pipelineStages.find((s: any) => s.id === d.stageId) || { id: d.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
-    })),
-    projects: db.projects.filter((p: any) => p.companyId === id),
-    tickets: db.tickets.filter((t: any) => t.companyId === id).map((t: any) => ({
+    contacts,
+    deals: dealsWithStages,
+    projects,
+    tickets: tickets.map((t: any) => ({
       ...t,
       assignee: t.assigneeId ? { id: t.assigneeId, name: "Admin" } : null,
     })),
-    activities: db.activities.filter((a: any) => a.companyId === id).map((a: any) => ({
+    activities: activities.map((a: any) => ({
       ...a,
       user: { id: a.userId, name: "Admin" },
-    })).sort((a: any, b: any) => (b.createdAt || "").localeCompare(a.createdAt || "")).slice(0, 50),
+    })),
     _count: {
-      deals: db.deals.filter((d: any) => d.companyId === id).length,
-      projects: db.projects.filter((p: any) => p.companyId === id).length,
-      contacts: db.contacts.filter((c: any) => c.companyId === id).length,
-      tickets: db.tickets.filter((t: any) => t.companyId === id).length,
+      deals: deals.length,
+      projects: projects.length,
+      contacts: contacts.length,
+      tickets: tickets.length,
     },
   };
 
@@ -68,10 +77,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const company = store.updateCompany(id, body);
+  const company = await store.updateCompany(id, body);
   if (!company) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  store.createActivity({
+  await store.createActivity({
     type: "company-updated",
     subject: `Updated company ${company.name}`,
     companyId: company.id,
@@ -88,6 +97,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteCompany(id);
+  await store.deleteCompany(id);
   return NextResponse.json({ ok: true });
 }

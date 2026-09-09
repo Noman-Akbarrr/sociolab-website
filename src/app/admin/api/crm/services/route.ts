@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   const activeOnly = request.nextUrl.searchParams.get("active") === "true";
 
-  let services = store.getServices();
+  let services = await store.getServices();
   if (activeOnly) services = services.filter((s: any) => s.active !== false);
 
   return NextResponse.json({ services });
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Name, slug, and description required." }, { status: 400 });
   }
 
-  const service = store.createService({
+  const service = await store.createService({
     name: body.name,
     slug: body.slug,
     description: body.description,

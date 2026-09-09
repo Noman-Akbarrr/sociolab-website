@@ -158,7 +158,7 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
       <div className="fixed inset-y-0 right-0 z-50 flex w-[480px] flex-col border-l border-[#1E293B] bg-[#111827] shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#1E293B] px-6 py-4">
-          <h2 className="font-display text-lg font-semibold text-white truncate pr-4">
+          <h2 className="font-display text-sm font-semibold text-white truncate pr-4">
             {deal.title}
           </h2>
           <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">

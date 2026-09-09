@@ -13,11 +13,11 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const pipeline = store.getPipeline(id);
+  const pipeline = await store.getPipeline(id);
   if (!pipeline) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  const stages = store.getStages(id);
-  const { deals } = store.getDeals({ pipelineId: id, limit: 0 });
+  const stages = await store.getStages(id);
+  const { deals } = await store.getDeals({ pipelineId: id, limit: 0 });
 
   return NextResponse.json({ pipeline, stages, deals });
 }
@@ -37,10 +37,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = store.getPipeline(id);
+  const existing = await store.getPipeline(id);
   if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  const pipeline = store.updatePipeline(id, body);
+  const pipeline = await store.updatePipeline(id, body);
   return NextResponse.json({ pipeline });
 }
 
@@ -52,6 +52,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deletePipeline(id);
+  await store.deletePipeline(id);
   return NextResponse.json({ ok: true });
 }

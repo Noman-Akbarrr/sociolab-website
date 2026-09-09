@@ -13,7 +13,7 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const deal = store.getDeal(id);
+  const deal = await store.getDeal(id);
   if (!deal) return NextResponse.json({ error: "Not found." }, { status: 404 });
   return NextResponse.json({ deal });
 }
@@ -42,14 +42,14 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const existing = store.getDeal(id);
+  const existing = await store.getDeal(id);
   if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const updateData: any = { ...body };
 
   // Handle stage change
   if (body.stageId && body.stageId !== existing.stageId) {
-    const stages = store.getStages();
+    const stages = await store.getStages();
     const newStage = stages.find((s: any) => s.id === body.stageId);
     if (!newStage) return NextResponse.json({ error: "Invalid stage." }, { status: 400 });
 
@@ -58,7 +58,7 @@ export async function PATCH(
     if (newStage.isWon) updateData.closedAt = new Date().toISOString();
     if (newStage.isClosed && !newStage.isWon) updateData.closedAt = new Date().toISOString();
 
-    store.createActivity({
+    await store.createActivity({
       type: "deal-stage-changed",
       subject: `Deal moved from "${existing.stage.label}" to "${newStage.label}"`,
       body: `Deal "${existing.title}" stage changed`,
@@ -67,17 +67,16 @@ export async function PATCH(
     }, user.id);
   }
 
-  const deal = store.updateDeal(id, updateData);
+  const deal = await store.updateDeal(id, updateData);
   if (!deal) return NextResponse.json({ error: "Failed to update." }, { status: 500 });
 
   // Auto-create project when deal won
   if (body.stageId) {
-    const stages = store.getStages();
+    const stages = await store.getStages();
     const newStage = stages.find((s: any) => s.id === body.stageId);
-    const db = store.__readDb();
-    const existingProject = db.projects.find((p: any) => p.dealId === id);
+    const existingProject = await store.db.project.findFirst({ where: { dealId: id } });
     if (newStage?.isWon && !existing.stage.isWon && !existingProject) {
-      store.createProject({
+      await store.createProject({
         name: existing.title,
         companyId: existing.companyId,
         dealId: id,
@@ -100,6 +99,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteDeal(id);
+  await store.deleteDeal(id);
   return NextResponse.json({ ok: true });
 }

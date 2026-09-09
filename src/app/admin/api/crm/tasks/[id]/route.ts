@@ -34,10 +34,10 @@ export async function PATCH(
     updateData.completedAt = null;
   }
 
-  const task = store.updateTask(id, updateData);
+  const task = await store.updateTask(id, updateData);
   if (!task) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  store.createActivity({
+  await store.createActivity({
     type: "task-updated",
     subject: `Updated task "${task.title}"`,
     taskId: task.id,
@@ -55,6 +55,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  store.deleteTask(id);
+  await store.deleteTask(id);
   return NextResponse.json({ ok: true });
 }

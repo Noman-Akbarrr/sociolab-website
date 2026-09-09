@@ -93,6 +93,17 @@ model NewsletterLead {
 
 /* ============================ CRM MODELS ============================ */
 
+model Pipeline {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String   @default("#3b82f6")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  stages      PipelineStage[]
+  deals       Deal[]
+}
+
 model Company {
   id          String   @id @default(cuid())
   name        String
@@ -138,8 +149,10 @@ model Deal {
   title         String
   companyId     String
   company       Company  @relation(fields: [companyId], references: [id])
+  pipelineId    String
+  pipeline      Pipeline @relation(fields: [pipelineId], references: [id])
   value         Int      // in cents
-  currency      String   @default("USD")
+  currency      String   @default("PKR")
   stageId       String
   stage         PipelineStage @relation(fields: [stageId], references: [id])
   probability   Int      @default(10)
@@ -148,6 +161,19 @@ model Deal {
   lostReason    String?
   ownerId       String
   owner         User     @relation("DealOwner", fields: [ownerId], references: [id])
+  // Contact info (denormalized for quick access)
+  contactName   String?
+  contactEmail  String?
+  contactPhone  String?
+  // Location
+  address       String?
+  city          String?
+  country       String?
+  // Deal metadata
+  source        String?  // "website", "referral", "linkedin", "cold-outreach", etc.
+  dealType      String?  // "new-business", "upsell", "renewal", etc.
+  priority      String   @default("medium")
+  notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   contacts      DealContact[]
@@ -166,15 +192,19 @@ model DealContact {
 }
 
 model PipelineStage {
-  id        String   @id @default(cuid())
-  name      String   @unique // "new", "qualified", "proposal", "negotiation", "won", "lost"
-  label     String
-  order     Int
-  color     String
-  isClosed  Boolean  @default(false)
-  isWon     Boolean  @default(false)
-  createdAt DateTime @default(now())
-  deals     Deal[]
+  id         String   @id @default(cuid())
+  pipelineId String
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  name       String
+  label      String
+  order      Int
+  color      String
+  isClosed   Boolean  @default(false)
+  isWon      Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  deals      Deal[]
+
+  @@unique([pipelineId, name])
 }
 
 model Project {
@@ -256,8 +286,8 @@ model Activity {
   type       String   // "note", "call", "email", "meeting", "task-created", "deal-stage-changed", etc.
   subject    String
   body       String?
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
   dealId     String?
   deal       Deal?    @relation(fields: [dealId], references: [id], onDelete: Cascade)
   companyId  String?

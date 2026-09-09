@@ -16,18 +16,16 @@ export async function POST(request: NextRequest) {
     // Find or create company
     let companyRecord = null;
     if (company) {
-      const db = store.__readDb();
-      companyRecord = db.companies.find((c: any) => c.name.toLowerCase() === company.toLowerCase());
+      companyRecord = await store.db.company.findFirst({ where: { name: { equals: company, mode: "insensitive" } } });
       if (!companyRecord) {
-        companyRecord = store.createCompany({ name: company, tags: ["inbound-lead"] });
+        companyRecord = await store.createCompany({ name: company, tags: ["inbound-lead"] });
       }
     }
 
     // Find or create contact
-    const db = store.__readDb();
-    let contact = db.contacts.find((c: any) => c.email === email);
+    let contact = await store.db.contact.findFirst({ where: { email } });
     if (!contact) {
-      contact = store.createContact({
+      contact = await store.createContact({
         companyId: companyRecord?.id,
         firstName,
         lastName,
@@ -40,14 +38,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Get "new" stage
-    const stages = store.getStages();
+    const stages = await store.getStages();
     const newStage = stages.find((s: any) => s.name === "new");
     if (!newStage) {
       return NextResponse.json({ error: "Pipeline not configured." }, { status: 500 });
     }
 
     // Create deal
-    const deal = store.createDeal({
+    const deal = await store.createDeal({
       title: `${firstName} ${lastName} - ${company || "Inbound Lead"}`,
       companyId: companyRecord?.id || contact.id,
       value: 0,
@@ -58,7 +56,7 @@ export async function POST(request: NextRequest) {
       contactIds: [contact.id],
     }, "admin");
 
-    store.createActivity({
+    await store.createActivity({
       type: "deal-created",
       subject: `New inbound lead: ${deal.title}`,
       body: message || "Submitted via website contact form",

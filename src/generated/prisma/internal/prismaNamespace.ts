@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.9.1
- * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
+ * Prisma Client JS version: 7.10.0
+ * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.9.1",
-  engine: "e922089b7d7502aff4249d5da3420f6fa55fc6ad"
+  client: "7.10.0",
+  engine: "0edf323efd1d98336f3f0a68684b56f689b900d3"
 }
 
 /**
@@ -403,6 +403,7 @@ export const ModelName = {
   Post: 'Post',
   CaseStudy: 'CaseStudy',
   NewsletterLead: 'NewsletterLead',
+  Pipeline: 'Pipeline',
   Company: 'Company',
   Contact: 'Contact',
   Deal: 'Deal',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "page" | "post" | "caseStudy" | "newsletterLead" | "company" | "contact" | "deal" | "dealContact" | "pipelineStage" | "project" | "task" | "ticket" | "ticketMessage" | "activity" | "invoice" | "teamMember" | "service" | "testimonial"
+    modelProps: "user" | "session" | "page" | "post" | "caseStudy" | "newsletterLead" | "pipeline" | "company" | "contact" | "deal" | "dealContact" | "pipelineStage" | "project" | "task" | "ticket" | "ticketMessage" | "activity" | "invoice" | "teamMember" | "service" | "testimonial"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -877,6 +878,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.NewsletterLeadCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.NewsletterLeadCountAggregateOutputType> | number
+        }
+      }
+    }
+    Pipeline: {
+      payload: Prisma.$PipelinePayload<ExtArgs>
+      fields: Prisma.PipelineFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PipelineFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PipelineFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        findFirst: {
+          args: Prisma.PipelineFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PipelineFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        findMany: {
+          args: Prisma.PipelineFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>[]
+        }
+        create: {
+          args: Prisma.PipelineCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        createMany: {
+          args: Prisma.PipelineCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PipelineCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>[]
+        }
+        delete: {
+          args: Prisma.PipelineDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        update: {
+          args: Prisma.PipelineUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        deleteMany: {
+          args: Prisma.PipelineDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PipelineUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PipelineUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>[]
+        }
+        upsert: {
+          args: Prisma.PipelineUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelinePayload>
+        }
+        aggregate: {
+          args: Prisma.PipelineAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePipeline>
+        }
+        groupBy: {
+          args: Prisma.PipelineGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PipelineGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PipelineCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PipelineCountAggregateOutputType> | number
         }
       }
     }
@@ -2045,6 +2120,18 @@ export const NewsletterLeadScalarFieldEnum = {
 export type NewsletterLeadScalarFieldEnum = (typeof NewsletterLeadScalarFieldEnum)[keyof typeof NewsletterLeadScalarFieldEnum]
 
 
+export const PipelineScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PipelineScalarFieldEnum = (typeof PipelineScalarFieldEnum)[keyof typeof PipelineScalarFieldEnum]
+
+
 export const CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -2086,6 +2173,7 @@ export const DealScalarFieldEnum = {
   id: 'id',
   title: 'title',
   companyId: 'companyId',
+  pipelineId: 'pipelineId',
   value: 'value',
   currency: 'currency',
   stageId: 'stageId',
@@ -2094,6 +2182,16 @@ export const DealScalarFieldEnum = {
   closedAt: 'closedAt',
   lostReason: 'lostReason',
   ownerId: 'ownerId',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  city: 'city',
+  country: 'country',
+  source: 'source',
+  dealType: 'dealType',
+  priority: 'priority',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2113,6 +2211,7 @@ export type DealContactScalarFieldEnum = (typeof DealContactScalarFieldEnum)[key
 
 export const PipelineStageScalarFieldEnum = {
   id: 'id',
+  pipelineId: 'pipelineId',
   name: 'name',
   label: 'label',
   order: 'order',
@@ -2571,6 +2670,7 @@ export type GlobalOmitConfig = {
   post?: Prisma.PostOmit
   caseStudy?: Prisma.CaseStudyOmit
   newsletterLead?: Prisma.NewsletterLeadOmit
+  pipeline?: Prisma.PipelineOmit
   company?: Prisma.CompanyOmit
   contact?: Prisma.ContactOmit
   deal?: Prisma.DealOmit

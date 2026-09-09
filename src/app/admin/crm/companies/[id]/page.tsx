@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import * as store from "@/lib/crm-store";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Company | Sociolab CRM",
@@ -14,35 +14,17 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   if (!user) redirect("/admin/login");
 
   const { id } = await params;
-  const db = store.__readDb();
-  const company = db.companies.find((c: any) => c.id === id);
+  const company = await prisma.company.findUnique({ where: { id } });
 
   if (!company) notFound();
 
-  const contacts = db.contacts.filter((c: any) => c.companyId === company.id).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  const deals = db.deals
-    .filter((d: any) => d.companyId === company.id)
-    .map((d: any) => ({ ...d, stage: db.pipelineStages.find((s: any) => s.id === d.stageId) }))
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  const projects = db.projects
-    .filter((p: any) => p.companyId === company.id)
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  const tickets = db.tickets
-    .filter((t: any) => t.companyId === company.id)
-    .map((t: any) => ({
-      ...t,
-      assignee: t.assigneeId ? db.teamMembers.find((m: any) => m.id === t.assigneeId) : null,
-      _count: { messages: db.ticketMessages.filter((m: any) => m.ticketId === t.id).length },
-    }))
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  const activities = db.activities
-    .filter((a: any) => a.companyId === company.id)
-    .map((a: any) => ({
-      ...a,
-      user: db.teamMembers.find((u: any) => u.id === a.userId) || { id: "", name: "Unknown" },
-    }))
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 50);
+  const [contacts, deals, projects, tickets, activities] = await Promise.all([
+    prisma.contact.findMany({ where: { companyId: company.id }, orderBy: { createdAt: "desc" } }),
+    prisma.deal.findMany({ where: { companyId: company.id }, include: { stage: true }, orderBy: { createdAt: "desc" } }),
+    prisma.project.findMany({ where: { companyId: company.id }, orderBy: { createdAt: "desc" } }),
+    prisma.ticket.findMany({ where: { companyId: company.id }, include: { assignee: { select: { id: true, name: true } }, _count: { select: { messages: true } } }, orderBy: { createdAt: "desc" } }),
+    prisma.activity.findMany({ where: { companyId: company.id }, include: { user: { select: { id: true, name: true } } }, orderBy: { createdAt: "desc" }, take: 50 }),
+  ]);
 
   const formatCurrency = (cents: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
 

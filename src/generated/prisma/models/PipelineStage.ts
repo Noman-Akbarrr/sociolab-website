@@ -36,6 +36,7 @@ export type PipelineStageSumAggregateOutputType = {
 
 export type PipelineStageMinAggregateOutputType = {
   id: string | null
+  pipelineId: string | null
   name: string | null
   label: string | null
   order: number | null
@@ -47,6 +48,7 @@ export type PipelineStageMinAggregateOutputType = {
 
 export type PipelineStageMaxAggregateOutputType = {
   id: string | null
+  pipelineId: string | null
   name: string | null
   label: string | null
   order: number | null
@@ -58,6 +60,7 @@ export type PipelineStageMaxAggregateOutputType = {
 
 export type PipelineStageCountAggregateOutputType = {
   id: number
+  pipelineId: number
   name: number
   label: number
   order: number
@@ -79,6 +82,7 @@ export type PipelineStageSumAggregateInputType = {
 
 export type PipelineStageMinAggregateInputType = {
   id?: true
+  pipelineId?: true
   name?: true
   label?: true
   order?: true
@@ -90,6 +94,7 @@ export type PipelineStageMinAggregateInputType = {
 
 export type PipelineStageMaxAggregateInputType = {
   id?: true
+  pipelineId?: true
   name?: true
   label?: true
   order?: true
@@ -101,6 +106,7 @@ export type PipelineStageMaxAggregateInputType = {
 
 export type PipelineStageCountAggregateInputType = {
   id?: true
+  pipelineId?: true
   name?: true
   label?: true
   order?: true
@@ -199,6 +205,7 @@ export type PipelineStageGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type PipelineStageGroupByOutputType = {
   id: string
+  pipelineId: string
   name: string
   label: string
   order: number
@@ -233,6 +240,7 @@ export type PipelineStageWhereInput = {
   OR?: Prisma.PipelineStageWhereInput[]
   NOT?: Prisma.PipelineStageWhereInput | Prisma.PipelineStageWhereInput[]
   id?: Prisma.StringFilter<"PipelineStage"> | string
+  pipelineId?: Prisma.StringFilter<"PipelineStage"> | string
   name?: Prisma.StringFilter<"PipelineStage"> | string
   label?: Prisma.StringFilter<"PipelineStage"> | string
   order?: Prisma.IntFilter<"PipelineStage"> | number
@@ -240,11 +248,13 @@ export type PipelineStageWhereInput = {
   isClosed?: Prisma.BoolFilter<"PipelineStage"> | boolean
   isWon?: Prisma.BoolFilter<"PipelineStage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PipelineStage"> | Date | string
+  pipeline?: Prisma.XOR<Prisma.PipelineScalarRelationFilter, Prisma.PipelineWhereInput>
   deals?: Prisma.DealListRelationFilter
 }
 
 export type PipelineStageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   label?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -252,26 +262,31 @@ export type PipelineStageOrderByWithRelationInput = {
   isClosed?: Prisma.SortOrder
   isWon?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  pipeline?: Prisma.PipelineOrderByWithRelationInput
   deals?: Prisma.DealOrderByRelationAggregateInput
 }
 
 export type PipelineStageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: string
+  pipelineId_name?: Prisma.PipelineStagePipelineIdNameCompoundUniqueInput
   AND?: Prisma.PipelineStageWhereInput | Prisma.PipelineStageWhereInput[]
   OR?: Prisma.PipelineStageWhereInput[]
   NOT?: Prisma.PipelineStageWhereInput | Prisma.PipelineStageWhereInput[]
+  pipelineId?: Prisma.StringFilter<"PipelineStage"> | string
+  name?: Prisma.StringFilter<"PipelineStage"> | string
   label?: Prisma.StringFilter<"PipelineStage"> | string
   order?: Prisma.IntFilter<"PipelineStage"> | number
   color?: Prisma.StringFilter<"PipelineStage"> | string
   isClosed?: Prisma.BoolFilter<"PipelineStage"> | boolean
   isWon?: Prisma.BoolFilter<"PipelineStage"> | boolean
   createdAt?: Prisma.DateTimeFilter<"PipelineStage"> | Date | string
+  pipeline?: Prisma.XOR<Prisma.PipelineScalarRelationFilter, Prisma.PipelineWhereInput>
   deals?: Prisma.DealListRelationFilter
-}, "id" | "name">
+}, "id" | "pipelineId_name">
 
 export type PipelineStageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   label?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -291,6 +306,7 @@ export type PipelineStageScalarWhereWithAggregatesInput = {
   OR?: Prisma.PipelineStageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PipelineStageScalarWhereWithAggregatesInput | Prisma.PipelineStageScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PipelineStage"> | string
+  pipelineId?: Prisma.StringWithAggregatesFilter<"PipelineStage"> | string
   name?: Prisma.StringWithAggregatesFilter<"PipelineStage"> | string
   label?: Prisma.StringWithAggregatesFilter<"PipelineStage"> | string
   order?: Prisma.IntWithAggregatesFilter<"PipelineStage"> | number
@@ -309,11 +325,13 @@ export type PipelineStageCreateInput = {
   isClosed?: boolean
   isWon?: boolean
   createdAt?: Date | string
+  pipeline: Prisma.PipelineCreateNestedOneWithoutStagesInput
   deals?: Prisma.DealCreateNestedManyWithoutStageInput
 }
 
 export type PipelineStageUncheckedCreateInput = {
   id?: string
+  pipelineId: string
   name: string
   label: string
   order: number
@@ -333,11 +351,13 @@ export type PipelineStageUpdateInput = {
   isClosed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isWon?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutStagesNestedInput
   deals?: Prisma.DealUpdateManyWithoutStageNestedInput
 }
 
 export type PipelineStageUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -350,6 +370,7 @@ export type PipelineStageUncheckedUpdateInput = {
 
 export type PipelineStageCreateManyInput = {
   id?: string
+  pipelineId: string
   name: string
   label: string
   order: number
@@ -372,6 +393,7 @@ export type PipelineStageUpdateManyMutationInput = {
 
 export type PipelineStageUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   order?: Prisma.IntFieldUpdateOperationsInput | number
@@ -381,13 +403,29 @@ export type PipelineStageUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type PipelineStageListRelationFilter = {
+  every?: Prisma.PipelineStageWhereInput
+  some?: Prisma.PipelineStageWhereInput
+  none?: Prisma.PipelineStageWhereInput
+}
+
+export type PipelineStageOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type PipelineStageScalarRelationFilter = {
   is?: Prisma.PipelineStageWhereInput
   isNot?: Prisma.PipelineStageWhereInput
 }
 
+export type PipelineStagePipelineIdNameCompoundUniqueInput = {
+  pipelineId: string
+  name: string
+}
+
 export type PipelineStageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   label?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -403,6 +441,7 @@ export type PipelineStageAvgOrderByAggregateInput = {
 
 export type PipelineStageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   label?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -414,6 +453,7 @@ export type PipelineStageMaxOrderByAggregateInput = {
 
 export type PipelineStageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  pipelineId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   label?: Prisma.SortOrder
   order?: Prisma.SortOrder
@@ -425,6 +465,48 @@ export type PipelineStageMinOrderByAggregateInput = {
 
 export type PipelineStageSumOrderByAggregateInput = {
   order?: Prisma.SortOrder
+}
+
+export type PipelineStageCreateNestedManyWithoutPipelineInput = {
+  create?: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput> | Prisma.PipelineStageCreateWithoutPipelineInput[] | Prisma.PipelineStageUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.PipelineStageCreateOrConnectWithoutPipelineInput | Prisma.PipelineStageCreateOrConnectWithoutPipelineInput[]
+  createMany?: Prisma.PipelineStageCreateManyPipelineInputEnvelope
+  connect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+}
+
+export type PipelineStageUncheckedCreateNestedManyWithoutPipelineInput = {
+  create?: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput> | Prisma.PipelineStageCreateWithoutPipelineInput[] | Prisma.PipelineStageUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.PipelineStageCreateOrConnectWithoutPipelineInput | Prisma.PipelineStageCreateOrConnectWithoutPipelineInput[]
+  createMany?: Prisma.PipelineStageCreateManyPipelineInputEnvelope
+  connect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+}
+
+export type PipelineStageUpdateManyWithoutPipelineNestedInput = {
+  create?: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput> | Prisma.PipelineStageCreateWithoutPipelineInput[] | Prisma.PipelineStageUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.PipelineStageCreateOrConnectWithoutPipelineInput | Prisma.PipelineStageCreateOrConnectWithoutPipelineInput[]
+  upsert?: Prisma.PipelineStageUpsertWithWhereUniqueWithoutPipelineInput | Prisma.PipelineStageUpsertWithWhereUniqueWithoutPipelineInput[]
+  createMany?: Prisma.PipelineStageCreateManyPipelineInputEnvelope
+  set?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  disconnect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  delete?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  connect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  update?: Prisma.PipelineStageUpdateWithWhereUniqueWithoutPipelineInput | Prisma.PipelineStageUpdateWithWhereUniqueWithoutPipelineInput[]
+  updateMany?: Prisma.PipelineStageUpdateManyWithWhereWithoutPipelineInput | Prisma.PipelineStageUpdateManyWithWhereWithoutPipelineInput[]
+  deleteMany?: Prisma.PipelineStageScalarWhereInput | Prisma.PipelineStageScalarWhereInput[]
+}
+
+export type PipelineStageUncheckedUpdateManyWithoutPipelineNestedInput = {
+  create?: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput> | Prisma.PipelineStageCreateWithoutPipelineInput[] | Prisma.PipelineStageUncheckedCreateWithoutPipelineInput[]
+  connectOrCreate?: Prisma.PipelineStageCreateOrConnectWithoutPipelineInput | Prisma.PipelineStageCreateOrConnectWithoutPipelineInput[]
+  upsert?: Prisma.PipelineStageUpsertWithWhereUniqueWithoutPipelineInput | Prisma.PipelineStageUpsertWithWhereUniqueWithoutPipelineInput[]
+  createMany?: Prisma.PipelineStageCreateManyPipelineInputEnvelope
+  set?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  disconnect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  delete?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  connect?: Prisma.PipelineStageWhereUniqueInput | Prisma.PipelineStageWhereUniqueInput[]
+  update?: Prisma.PipelineStageUpdateWithWhereUniqueWithoutPipelineInput | Prisma.PipelineStageUpdateWithWhereUniqueWithoutPipelineInput[]
+  updateMany?: Prisma.PipelineStageUpdateManyWithWhereWithoutPipelineInput | Prisma.PipelineStageUpdateManyWithWhereWithoutPipelineInput[]
+  deleteMany?: Prisma.PipelineStageScalarWhereInput | Prisma.PipelineStageScalarWhereInput[]
 }
 
 export type PipelineStageCreateNestedOneWithoutDealsInput = {
@@ -441,6 +523,71 @@ export type PipelineStageUpdateOneRequiredWithoutDealsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PipelineStageUpdateToOneWithWhereWithoutDealsInput, Prisma.PipelineStageUpdateWithoutDealsInput>, Prisma.PipelineStageUncheckedUpdateWithoutDealsInput>
 }
 
+export type PipelineStageCreateWithoutPipelineInput = {
+  id?: string
+  name: string
+  label: string
+  order: number
+  color: string
+  isClosed?: boolean
+  isWon?: boolean
+  createdAt?: Date | string
+  deals?: Prisma.DealCreateNestedManyWithoutStageInput
+}
+
+export type PipelineStageUncheckedCreateWithoutPipelineInput = {
+  id?: string
+  name: string
+  label: string
+  order: number
+  color: string
+  isClosed?: boolean
+  isWon?: boolean
+  createdAt?: Date | string
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutStageInput
+}
+
+export type PipelineStageCreateOrConnectWithoutPipelineInput = {
+  where: Prisma.PipelineStageWhereUniqueInput
+  create: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput>
+}
+
+export type PipelineStageCreateManyPipelineInputEnvelope = {
+  data: Prisma.PipelineStageCreateManyPipelineInput | Prisma.PipelineStageCreateManyPipelineInput[]
+  skipDuplicates?: boolean
+}
+
+export type PipelineStageUpsertWithWhereUniqueWithoutPipelineInput = {
+  where: Prisma.PipelineStageWhereUniqueInput
+  update: Prisma.XOR<Prisma.PipelineStageUpdateWithoutPipelineInput, Prisma.PipelineStageUncheckedUpdateWithoutPipelineInput>
+  create: Prisma.XOR<Prisma.PipelineStageCreateWithoutPipelineInput, Prisma.PipelineStageUncheckedCreateWithoutPipelineInput>
+}
+
+export type PipelineStageUpdateWithWhereUniqueWithoutPipelineInput = {
+  where: Prisma.PipelineStageWhereUniqueInput
+  data: Prisma.XOR<Prisma.PipelineStageUpdateWithoutPipelineInput, Prisma.PipelineStageUncheckedUpdateWithoutPipelineInput>
+}
+
+export type PipelineStageUpdateManyWithWhereWithoutPipelineInput = {
+  where: Prisma.PipelineStageScalarWhereInput
+  data: Prisma.XOR<Prisma.PipelineStageUpdateManyMutationInput, Prisma.PipelineStageUncheckedUpdateManyWithoutPipelineInput>
+}
+
+export type PipelineStageScalarWhereInput = {
+  AND?: Prisma.PipelineStageScalarWhereInput | Prisma.PipelineStageScalarWhereInput[]
+  OR?: Prisma.PipelineStageScalarWhereInput[]
+  NOT?: Prisma.PipelineStageScalarWhereInput | Prisma.PipelineStageScalarWhereInput[]
+  id?: Prisma.StringFilter<"PipelineStage"> | string
+  pipelineId?: Prisma.StringFilter<"PipelineStage"> | string
+  name?: Prisma.StringFilter<"PipelineStage"> | string
+  label?: Prisma.StringFilter<"PipelineStage"> | string
+  order?: Prisma.IntFilter<"PipelineStage"> | number
+  color?: Prisma.StringFilter<"PipelineStage"> | string
+  isClosed?: Prisma.BoolFilter<"PipelineStage"> | boolean
+  isWon?: Prisma.BoolFilter<"PipelineStage"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"PipelineStage"> | Date | string
+}
+
 export type PipelineStageCreateWithoutDealsInput = {
   id?: string
   name: string
@@ -450,10 +597,12 @@ export type PipelineStageCreateWithoutDealsInput = {
   isClosed?: boolean
   isWon?: boolean
   createdAt?: Date | string
+  pipeline: Prisma.PipelineCreateNestedOneWithoutStagesInput
 }
 
 export type PipelineStageUncheckedCreateWithoutDealsInput = {
   id?: string
+  pipelineId: string
   name: string
   label: string
   order: number
@@ -488,9 +637,57 @@ export type PipelineStageUpdateWithoutDealsInput = {
   isClosed?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isWon?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pipeline?: Prisma.PipelineUpdateOneRequiredWithoutStagesNestedInput
 }
 
 export type PipelineStageUncheckedUpdateWithoutDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  pipelineId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  isClosed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isWon?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PipelineStageCreateManyPipelineInput = {
+  id?: string
+  name: string
+  label: string
+  order: number
+  color: string
+  isClosed?: boolean
+  isWon?: boolean
+  createdAt?: Date | string
+}
+
+export type PipelineStageUpdateWithoutPipelineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  isClosed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isWon?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUpdateManyWithoutStageNestedInput
+}
+
+export type PipelineStageUncheckedUpdateWithoutPipelineInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  isClosed?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isWon?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUncheckedUpdateManyWithoutStageNestedInput
+}
+
+export type PipelineStageUncheckedUpdateManyWithoutPipelineInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -534,6 +731,7 @@ export type PipelineStageCountOutputTypeCountDealsArgs<ExtArgs extends runtime.T
 
 export type PipelineStageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  pipelineId?: boolean
   name?: boolean
   label?: boolean
   order?: boolean
@@ -541,12 +739,14 @@ export type PipelineStageSelect<ExtArgs extends runtime.Types.Extensions.Interna
   isClosed?: boolean
   isWon?: boolean
   createdAt?: boolean
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   deals?: boolean | Prisma.PipelineStage$dealsArgs<ExtArgs>
   _count?: boolean | Prisma.PipelineStageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pipelineStage"]>
 
 export type PipelineStageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  pipelineId?: boolean
   name?: boolean
   label?: boolean
   order?: boolean
@@ -554,10 +754,12 @@ export type PipelineStageSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   isClosed?: boolean
   isWon?: boolean
   createdAt?: boolean
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pipelineStage"]>
 
 export type PipelineStageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  pipelineId?: boolean
   name?: boolean
   label?: boolean
   order?: boolean
@@ -565,10 +767,12 @@ export type PipelineStageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   isClosed?: boolean
   isWon?: boolean
   createdAt?: boolean
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pipelineStage"]>
 
 export type PipelineStageSelectScalar = {
   id?: boolean
+  pipelineId?: boolean
   name?: boolean
   label?: boolean
   order?: boolean
@@ -578,21 +782,28 @@ export type PipelineStageSelectScalar = {
   createdAt?: boolean
 }
 
-export type PipelineStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "label" | "order" | "color" | "isClosed" | "isWon" | "createdAt", ExtArgs["result"]["pipelineStage"]>
+export type PipelineStageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "pipelineId" | "name" | "label" | "order" | "color" | "isClosed" | "isWon" | "createdAt", ExtArgs["result"]["pipelineStage"]>
 export type PipelineStageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
   deals?: boolean | Prisma.PipelineStage$dealsArgs<ExtArgs>
   _count?: boolean | Prisma.PipelineStageCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PipelineStageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PipelineStageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PipelineStageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
+}
+export type PipelineStageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pipeline?: boolean | Prisma.PipelineDefaultArgs<ExtArgs>
+}
 
 export type $PipelineStagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PipelineStage"
   objects: {
+    pipeline: Prisma.$PipelinePayload<ExtArgs>
     deals: Prisma.$DealPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    pipelineId: string
     name: string
     label: string
     order: number
@@ -994,6 +1205,7 @@ readonly fields: PipelineStageFieldRefs;
  */
 export interface Prisma__PipelineStageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  pipeline<T extends Prisma.PipelineDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PipelineDefaultArgs<ExtArgs>>): Prisma.Prisma__PipelineClient<runtime.Types.Result.GetResult<Prisma.$PipelinePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   deals<T extends Prisma.PipelineStage$dealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PipelineStage$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1025,6 +1237,7 @@ export interface Prisma__PipelineStageClient<T, Null = never, ExtArgs extends ru
  */
 export interface PipelineStageFieldRefs {
   readonly id: Prisma.FieldRef<"PipelineStage", 'String'>
+  readonly pipelineId: Prisma.FieldRef<"PipelineStage", 'String'>
   readonly name: Prisma.FieldRef<"PipelineStage", 'String'>
   readonly label: Prisma.FieldRef<"PipelineStage", 'String'>
   readonly order: Prisma.FieldRef<"PipelineStage", 'Int'>
@@ -1286,6 +1499,10 @@ export type PipelineStageCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    */
   data: Prisma.PipelineStageCreateManyInput | Prisma.PipelineStageCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PipelineStageIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1356,6 +1573,10 @@ export type PipelineStageUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * Limit how many PipelineStages to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PipelineStageIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

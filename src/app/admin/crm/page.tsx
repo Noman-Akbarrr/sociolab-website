@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
-import * as store from "@/lib/crm-store";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "CRM Dashboard | Sociolab Admin",
@@ -12,42 +12,33 @@ export default async function CRMDashboard() {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
-  const stats = store.getDashboardStats(user.id);
-  const db = store.__readDb();
+  const [openDeals, recentDealsRaw, recentActivitiesRaw, myTasksCount, dealsCount, wonDealsThisMonth, activeProjects, openTickets] = await Promise.all([
+    prisma.deal.findMany({ where: { stage: { isClosed: false } }, include: { stage: true } }),
+    prisma.deal.findMany({ take: 5, orderBy: { createdAt: "desc" }, include: { company: true, stage: true } }),
+    prisma.activity.findMany({ take: 10, orderBy: { createdAt: "desc" }, include: { user: { select: { id: true, name: true } }, deal: { select: { id: true, title: true } }, company: { select: { id: true, name: true } }, project: { select: { id: true, name: true } }, ticket: { select: { id: true, number: true } } } }),
+    prisma.task.count({ where: { assigneeId: user.id, status: { in: ["todo", "in-progress", "review"] } } }),
+    prisma.deal.count(),
+    prisma.deal.count({ where: { stage: { isWon: true }, createdAt: { gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) } } }),
+    prisma.project.count({ where: { status: { in: ["kickoff", "active"] } } }),
+    prisma.ticket.count({ where: { status: { in: ["open", "waiting-client", "in-progress"] } } }),
+  ]);
 
-  const openDealsValue = db.deals
-    .filter((d: any) => {
-      const stage = db.pipelineStages.find((s: any) => s.id === d.stageId);
-      return stage && !stage.isClosed;
-    })
-    .reduce((sum: number, d: any) => sum + (d.value || 0), 0);
+  const openDealsValue = openDeals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
 
-  const recentDeals = db.deals.slice(0, 5).map((deal: any) => ({
-    ...deal,
-    company: db.companies.find((c: any) => c.id === deal.companyId),
-    stage: db.pipelineStages.find((s: any) => s.id === deal.stageId),
-  }));
-
-  const recentActivities = db.activities.slice(0, 10).map((activity: any) => ({
-    ...activity,
-    user: db.teamMembers.find((u: any) => u.id === activity.userId) || { id: "", name: "Unknown" },
-    deal: activity.dealId ? db.deals.find((d: any) => d.id === activity.dealId) : null,
-    company: activity.companyId ? db.companies.find((c: any) => c.id === activity.companyId) : null,
-    project: activity.projectId ? db.projects.find((p: any) => p.id === activity.projectId) : null,
-    ticket: activity.ticketId ? db.tickets.find((t: any) => t.id === activity.ticketId) : null,
-  }));
+  const recentDeals = recentDealsRaw;
+  const recentActivities = recentActivitiesRaw;
 
   const formatCurrency = (cents: number) => {
     return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
   };
 
   const statsCards = [
-    { label: "Total Deals", value: (stats.dealsCount || 0).toString(), href: "/admin/pipeline", color: "text-brand" },
+    { label: "Total Deals", value: (dealsCount || 0).toString(), href: "/admin/pipeline", color: "text-brand" },
     { label: "Pipeline Value", value: formatCurrency(openDealsValue || 0), href: "/admin/pipeline", color: "text-brand" },
-    { label: "Won This Month", value: (stats.wonDealsThisMonth || 0).toString(), href: "/admin/pipeline", color: "text-green-600" },
-    { label: "Active Projects", value: (stats.activeProjects || 0).toString(), href: "/admin/crm/projects", color: "text-blue-600" },
-    { label: "Open Tickets", value: (stats.openTickets || 0).toString(), href: "/admin/crm/tickets", color: "text-orange-600" },
-    { label: "My Tasks", value: (db.tasks.filter((t: any) => t.assigneeId === user.id && ["todo", "in-progress", "review"].includes(t.status)).length || 0).toString(), href: "/admin/crm/tasks", color: "text-purple-600" },
+    { label: "Won This Month", value: (wonDealsThisMonth || 0).toString(), href: "/admin/pipeline", color: "text-green-600" },
+    { label: "Active Projects", value: (activeProjects || 0).toString(), href: "/admin/crm/projects", color: "text-blue-600" },
+    { label: "Open Tickets", value: (openTickets || 0).toString(), href: "/admin/crm/tickets", color: "text-orange-600" },
+    { label: "My Tasks", value: (myTasksCount || 0).toString(), href: "/admin/crm/tasks", color: "text-purple-600" },
   ];
 
   return (

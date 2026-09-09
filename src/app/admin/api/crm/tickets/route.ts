@@ -16,18 +16,17 @@ export async function GET(request: NextRequest) {
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
 
-  const result = store.getTickets({ companyId, status, page, limit });
+  const result = await store.getTickets({ companyId, status, page, limit });
 
   // Enrich with relations
-  const db = store.__readDb();
-  const enriched = result.tickets.map((t: any) => ({
+  const enriched = await Promise.all(result.tickets.map(async (t: any) => ({
     ...t,
-    company: db.companies.find((c: any) => c.id === t.companyId) || { id: t.companyId, name: "Unknown" },
-    contact: t.contactId ? db.contacts.find((c: any) => c.id === t.contactId) || { id: t.contactId, firstName: "Unknown", lastName: "", email: "" } : null,
-    project: t.projectId ? db.projects.find((p: any) => p.id === t.projectId) || { id: t.projectId, name: "Unknown" } : null,
+    company: await store.db.company.findUnique({ where: { id: t.companyId } }).catch(() => null) || { id: t.companyId, name: "Unknown" },
+    contact: t.contactId ? await store.db.contact.findUnique({ where: { id: t.contactId } }).catch(() => null) || { id: t.contactId, firstName: "Unknown", lastName: "", email: "" } : null,
+    project: t.projectId ? await store.db.project.findUnique({ where: { id: t.projectId } }).catch(() => null) || { id: t.projectId, name: "Unknown" } : null,
     assignee: t.assigneeId ? { id: t.assigneeId, name: "Admin" } : null,
-    _count: { messages: db.ticketMessages.filter((m: any) => m.ticketId === t.id).length },
-  }));
+    _count: { messages: await store.db.ticketMessage.count({ where: { ticketId: t.id } }) },
+  })));
 
   return NextResponse.json({ tickets: enriched, total: result.total, page: result.page, totalPages: result.totalPages });
 }
@@ -55,7 +54,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Subject, description, and company required." }, { status: 400 });
   }
 
-  const ticket = store.createTicket({
+  const ticket = await store.createTicket({
     subject: body.subject,
     description: body.description,
     companyId: body.companyId,
@@ -65,7 +64,7 @@ export async function POST(request: NextRequest) {
     assigneeId: body.assigneeId,
   });
 
-  store.createActivity({
+  await store.createActivity({
     type: "ticket-created",
     subject: `Created ticket ${ticket.number}: ${ticket.subject}`,
     ticketId: ticket.id,

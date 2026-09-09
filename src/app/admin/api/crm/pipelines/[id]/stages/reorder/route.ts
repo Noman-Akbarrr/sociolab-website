@@ -24,6 +24,6 @@ export async function PUT(
     return NextResponse.json({ error: "stageIds array required." }, { status: 400 });
   }
 
-  store.reorderStages(id, body.stageIds);
+  await store.reorderStages(id, body.stageIds);
   return NextResponse.json({ ok: true });
 }
