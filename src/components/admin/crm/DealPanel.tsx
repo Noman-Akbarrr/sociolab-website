@@ -10,6 +10,7 @@ interface DealPanelProps {
 
 export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelProps) {
   const [deal, setDeal] = useState<any>(null);
+  const [stages, setStages] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<any>({});
@@ -33,7 +34,27 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
         probability: data.deal?.probability ?? 10,
         expectedClose: data.deal?.expectedClose?.split("T")[0] || "",
         lostReason: data.deal?.lostReason || "",
+        contactName: data.deal?.contactName || "",
+        contactEmail: data.deal?.contactEmail || "",
+        contactPhone: data.deal?.contactPhone || "",
+        address: data.deal?.address || "",
+        city: data.deal?.city || "",
+        country: data.deal?.country || "",
+        source: data.deal?.source || "",
+        dealType: data.deal?.dealType || "",
+        priority: data.deal?.priority || "medium",
+        notes: data.deal?.notes || "",
       });
+      // Fetch stages after deal is loaded
+      if (data.deal?.pipelineId) {
+        try {
+          const sRes = await fetch(`/admin/api/crm/pipelines/${data.deal.pipelineId}/stages`);
+          if (sRes.ok) {
+            const sData = await sRes.json();
+            setStages(sData.stages || []);
+          }
+        } catch {}
+      }
     } catch {}
     setLoading(false);
   }
@@ -46,6 +67,16 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
     if (editForm.probability !== undefined) body.probability = parseInt(editForm.probability);
     if (editForm.expectedClose) body.expectedClose = editForm.expectedClose;
     if (editForm.lostReason !== undefined) body.lostReason = editForm.lostReason;
+    body.contactName = editForm.contactName || null;
+    body.contactEmail = editForm.contactEmail || null;
+    body.contactPhone = editForm.contactPhone || null;
+    body.address = editForm.address || null;
+    body.city = editForm.city || null;
+    body.country = editForm.country || null;
+    body.source = editForm.source || null;
+    body.dealType = editForm.dealType || null;
+    body.priority = editForm.priority || "medium";
+    body.notes = editForm.notes || null;
 
     await fetch(`/admin/api/crm/deals/${dealId}`, {
       method: "PATCH",
@@ -205,6 +236,126 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Priority</label>
+                    <select
+                      value={editForm.priority}
+                      onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white focus:border-brand focus:outline-none"
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                      <option value="urgent">Urgent</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Source</label>
+                    <select
+                      value={editForm.source}
+                      onChange={(e) => setEditForm({ ...editForm, source: e.target.value })}
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white focus:border-brand focus:outline-none"
+                    >
+                      <option value="">Select</option>
+                      <option value="website">Website</option>
+                      <option value="referral">Referral</option>
+                      <option value="linkedin">LinkedIn</option>
+                      <option value="cold-outreach">Cold Outreach</option>
+                      <option value="whatsapp">WhatsApp</option>
+                      <option value="event">Event</option>
+                      <option value="ad">Advertisement</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Deal Type</label>
+                    <select
+                      value={editForm.dealType}
+                      onChange={(e) => setEditForm({ ...editForm, dealType: e.target.value })}
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white focus:border-brand focus:outline-none"
+                    >
+                      <option value="">Select</option>
+                      <option value="new-business">New Business</option>
+                      <option value="upsell">Upsell</option>
+                      <option value="renewal">Renewal</option>
+                      <option value="partnership">Partnership</option>
+                      <option value="freelance">Freelance</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">City</label>
+                    <input
+                      value={editForm.city}
+                      onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                      placeholder="Lahore"
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Country</label>
+                    <input
+                      value={editForm.country}
+                      onChange={(e) => setEditForm({ ...editForm, country: e.target.value })}
+                      placeholder="Pakistan"
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Contact Name</label>
+                    <input
+                      value={editForm.contactName}
+                      onChange={(e) => setEditForm({ ...editForm, contactName: e.target.value })}
+                      placeholder="John Doe"
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Contact Email</label>
+                    <input
+                      type="email"
+                      value={editForm.contactEmail}
+                      onChange={(e) => setEditForm({ ...editForm, contactEmail: e.target.value })}
+                      placeholder="john@acme.com"
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-white/50 mb-1">Contact Phone</label>
+                    <input
+                      type="tel"
+                      value={editForm.contactPhone}
+                      onChange={(e) => setEditForm({ ...editForm, contactPhone: e.target.value })}
+                      placeholder="+92 300 1234567"
+                      className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-white/50 mb-1">Address</label>
+                  <input
+                    value={editForm.address}
+                    onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                    placeholder="Office address"
+                    className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-white/50 mb-1">Notes</label>
+                  <textarea
+                    value={editForm.notes}
+                    onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
+                    rows={3}
+                    placeholder="Deal notes..."
+                    className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-brand focus:outline-none resize-none"
+                  />
+                </div>
                 {deal.stage?.isClosed && !deal.stage?.isWon && (
                   <div>
                     <label className="block text-xs text-white/50 mb-1">Lost Reason</label>
@@ -233,8 +384,10 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
                     onChange={(e) => changeStage(e.target.value)}
                     className="rounded-[3px] border border-[#1E293B] bg-[#090D16] px-2 py-1 text-sm text-white focus:border-brand focus:outline-none"
                   >
-                    {/* Stages would need to be passed as prop or fetched */}
-                    <option value={deal.stageId}>{deal.stage?.label}</option>
+                    {stages.map((s: any) => (
+                      <option key={s.id} value={s.id}>{s.label}</option>
+                    ))}
+                    {stages.length === 0 && <option value={deal.stageId}>{deal.stage?.label}</option>}
                   </select>
                 </div>
                 {/* Value */}
@@ -254,6 +407,31 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
                     <span className="text-sm text-white">{new Date(deal.expectedClose).toLocaleDateString()}</span>
                   </div>
                 )}
+                {/* Priority */}
+                {deal.priority && deal.priority !== "medium" && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Priority</span>
+                    <span className={`text-sm font-semibold ${
+                      deal.priority === "urgent" ? "text-red-400" :
+                      deal.priority === "high" ? "text-orange-400" :
+                      deal.priority === "low" ? "text-white/40" : "text-white"
+                    }`}>{deal.priority}</span>
+                  </div>
+                )}
+                {/* Source */}
+                {deal.source && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Source</span>
+                    <span className="text-sm text-white capitalize">{deal.source.replace("-", " ")}</span>
+                  </div>
+                )}
+                {/* Deal Type */}
+                {deal.dealType && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Type</span>
+                    <span className="text-sm text-white capitalize">{deal.dealType.replace("-", " ")}</span>
+                  </div>
+                )}
                 {/* Company */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-white/50">Company</span>
@@ -261,18 +439,42 @@ export default function DealPanel({ dealId, onClose, onDealUpdated }: DealPanelP
                     {deal.company?.name}
                   </a>
                 </div>
+                {/* Contact */}
+                {deal.contactName && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Contact</span>
+                    <span className="text-sm text-white">{deal.contactName}</span>
+                  </div>
+                )}
+                {deal.contactEmail && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Email</span>
+                    <a href={`mailto:${deal.contactEmail}`} className="text-sm text-brand hover:underline">{deal.contactEmail}</a>
+                  </div>
+                )}
+                {deal.contactPhone && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Phone</span>
+                    <a href={`tel:${deal.contactPhone}`} className="text-sm text-brand hover:underline">{deal.contactPhone}</a>
+                  </div>
+                )}
+                {/* Location */}
+                {(deal.city || deal.country) && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-white/50">Location</span>
+                    <span className="text-sm text-white">{[deal.city, deal.country].filter(Boolean).join(", ")}</span>
+                  </div>
+                )}
                 {/* Owner */}
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-white/50">Owner</span>
                   <span className="text-sm text-white">{deal.owner?.name}</span>
                 </div>
-                {/* Contacts */}
-                {deal.contacts && deal.contacts.length > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/50">Contacts</span>
-                    <span className="text-sm text-white">
-                      {deal.contacts.map((c: any) => c.contact ? `${c.contact.firstName} ${c.contact.lastName}` : "").join(", ")}
-                    </span>
+                {/* Notes */}
+                {deal.notes && (
+                  <div className="mt-2 rounded-[3px] border border-[#1E293B] bg-[#090D16] p-3">
+                    <span className="text-xs font-semibold text-white/50">Notes</span>
+                    <p className="mt-1 text-sm text-white/70 whitespace-pre-wrap">{deal.notes}</p>
                   </div>
                 )}
                 {/* Lost Reason */}
