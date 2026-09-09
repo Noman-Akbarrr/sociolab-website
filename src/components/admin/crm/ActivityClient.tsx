@@ -113,7 +113,7 @@ export function ActivityClient({ initialActivities, initialTotal, initialPage, i
                       {activity.deal && (
                         <>
                           <span>·</span>
-                          <Link href={`/admin/crm/deals/${activity.deal.id}`} className="text-brand hover:underline">{activity.deal.title}</Link>
+                           <Link href="/admin/pipeline" className="text-brand hover:underline">{activity.deal.title}</Link>
                         </>
                       )}
                       {activity.company && (

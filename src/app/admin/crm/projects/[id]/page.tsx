@@ -91,7 +91,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <span>Type: <span className="font-semibold">{project.billingType}</span></span>
             {project.startDate && <span>Start: <span className="font-semibold">{new Date(project.startDate).toLocaleDateString()}</span></span>}
             {project.endDate && <span>End: <span className="font-semibold">{new Date(project.endDate).toLocaleDateString()}</span></span>}
-            {deal && <span>From Deal: <Link href={`/admin/crm/deals/${deal.id}`} className="font-semibold text-brand hover:underline">{deal.title}</Link></span>}
+             {deal && <span>From Deal: <Link href="/admin/pipeline" className="font-semibold text-brand hover:underline">{deal.title}</Link></span>}
           </div>
         </div>
       </div>

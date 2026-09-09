@@ -24,7 +24,7 @@ export default async function Dashboard() {
   const statCards = [
     { label: "Total Deals", value: stats.dealsCount.toString(), href: "/admin/pipeline", color: "text-brand" },
     { label: "Pipeline Value", value: formatCurrency(stats.pipelineValue), href: "/admin/pipeline", color: "text-brand" },
-    { label: "Won This Month", value: stats.wonDealsThisMonth.toString(), href: "/admin/deals", color: "text-green-600" },
+    { label: "Won This Month", value: stats.wonDealsThisMonth.toString(), href: "/admin/pipeline", color: "text-green-600" },
     { label: "Active Projects", value: stats.activeProjects.toString(), href: "/admin/clients", color: "text-blue-600" },
     { label: "Open Tickets", value: stats.openTickets.toString(), href: "/admin/clients", color: "text-orange-600" },
   ];
@@ -78,7 +78,7 @@ export default async function Dashboard() {
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-lg font-semibold text-white">Recent Deals</h2>
-            <Link href="/admin/deals" className="text-xs font-semibold text-brand hover:underline">
+            <Link href="/admin/pipeline" className="text-xs font-semibold text-brand hover:underline">
               View all
             </Link>
           </div>
@@ -89,7 +89,7 @@ export default async function Dashboard() {
               <ul className="divide-y divide-line">
                 {stats.recentDeals.map((deal: any) => (
                   <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
-                    <Link href={`/admin/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
+                    <Link href="/admin/pipeline" className="flex min-w-0 flex-1 flex-col gap-1">
                       <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
                       <span className="truncate text-xs text-white/50">{deal.company?.name}</span>
                     </Link>
@@ -125,7 +125,7 @@ export default async function Dashboard() {
                           {a.deal && (
                             <>
                               <span>&middot;</span>
-                              <Link href={`/admin/deals/${a.deal.id}`} className="text-brand hover:underline">
+                              <Link href="/admin/pipeline" className="text-brand hover:underline">
                                 {a.deal.title}
                               </Link>
                             </>

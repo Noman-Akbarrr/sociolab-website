@@ -42,9 +42,9 @@ export default async function CRMDashboard() {
   };
 
   const statsCards = [
-    { label: "Total Deals", value: (stats.dealsCount || 0).toString(), href: "/admin/crm/deals", color: "text-brand" },
-    { label: "Pipeline Value", value: formatCurrency(openDealsValue || 0), href: "/admin/crm/pipeline", color: "text-brand" },
-    { label: "Won This Month", value: (stats.wonDealsThisMonth || 0).toString(), href: "/admin/crm/deals?stage=won", color: "text-green-600" },
+    { label: "Total Deals", value: (stats.dealsCount || 0).toString(), href: "/admin/pipeline", color: "text-brand" },
+    { label: "Pipeline Value", value: formatCurrency(openDealsValue || 0), href: "/admin/pipeline", color: "text-brand" },
+    { label: "Won This Month", value: (stats.wonDealsThisMonth || 0).toString(), href: "/admin/pipeline", color: "text-green-600" },
     { label: "Active Projects", value: (stats.activeProjects || 0).toString(), href: "/admin/crm/projects", color: "text-blue-600" },
     { label: "Open Tickets", value: (stats.openTickets || 0).toString(), href: "/admin/crm/tickets", color: "text-orange-600" },
     { label: "My Tasks", value: (db.tasks.filter((t: any) => t.assigneeId === user.id && ["todo", "in-progress", "review"].includes(t.status)).length || 0).toString(), href: "/admin/crm/tasks", color: "text-purple-600" },
@@ -80,7 +80,7 @@ export default async function CRMDashboard() {
       {/* Quick Actions */}
       <div className="mt-10 flex flex-wrap gap-3">
         <Link
-          href="/admin/crm/deals/new"
+          href="/admin/pipeline"
           className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
         >
           + New Deal
@@ -111,7 +111,7 @@ export default async function CRMDashboard() {
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-xl font-semibold tracking-tight text-white">Recent Deals</h2>
-            <Link href="/admin/crm/deals" className="text-xs font-semibold text-brand hover:underline">View all</Link>
+            <Link href="/admin/pipeline" className="text-xs font-semibold text-brand hover:underline">View all</Link>
           </div>
           <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
             {recentDeals.length === 0 ? (
@@ -120,7 +120,7 @@ export default async function CRMDashboard() {
               <ul className="divide-y divide-[#1E293B]">
                 {recentDeals.map((deal: any) => (
                   <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
-                    <Link href={`/admin/crm/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
+                    <Link href="/admin/pipeline" className="flex min-w-0 flex-1 flex-col gap-1">
                       <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
                       <span className="truncate text-xs text-white/50">{deal.company?.name || "Unknown"}</span>
                     </Link>
@@ -166,7 +166,7 @@ export default async function CRMDashboard() {
                           {activity.deal && (
                             <>
                               <span>Â·</span>
-                              <Link href={`/admin/crm/deals/${activity.deal.id}`} className="text-brand hover:underline">
+                              <Link href="/admin/pipeline" className="text-brand hover:underline">
                                 {activity.deal.title}
                               </Link>
                             </>

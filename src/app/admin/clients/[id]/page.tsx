@@ -65,12 +65,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2 flex flex-col gap-6">
-          <Section title={`Deals (${companyDeals.length})`} href={`/admin/deals?companyId=${company.id}`}>
+          <Section title={`Deals (${companyDeals.length})`} href="/admin/pipeline">
             {companyDeals.length === 0 ? (
               <Empty>No deals yet.</Empty>
             ) : (
               companyDeals.map((deal: any) => (
-                <Link key={deal.id} href={`/admin/deals/${deal.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
+                <Link key={deal.id} href="/admin/pipeline" className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                   <div>
                     <span className="font-display text-sm font-semibold text-white">{deal.title}</span>
                     <div className="flex items-center gap-2 text-xs text-white/50 mt-1">

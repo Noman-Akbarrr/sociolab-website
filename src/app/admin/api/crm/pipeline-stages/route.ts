@@ -17,14 +17,16 @@ export async function POST(request: NextRequest) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
-  let body: { name: string; label: string; color: string; order: number; isClosed?: boolean; isWon?: boolean };
+  let body: { pipelineId: string; name: string; label: string; color: string; order: number; isClosed?: boolean; isWon?: boolean };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const stage = store.createStage({
+  if (!body.pipelineId) return NextResponse.json({ error: "pipelineId required." }, { status: 400 });
+
+  const stage = store.createStage(body.pipelineId, {
     name: body.name,
     label: body.label,
     color: body.color,

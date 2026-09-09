@@ -137,14 +137,14 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
             <div className="border-b border-[#1E293B] px-5 py-4 flex items-center justify-between">
               <h2 className="font-display text-lg font-semibold text-white">Deals ({deals.length})</h2>
-              <Link href={`/admin/crm/deals?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
+               <Link href="/admin/pipeline" className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
             <div className="divide-y divide-[#1E293B]">
               {deals.length === 0 ? (
                 <p className="p-8 text-center text-sm text-white/50">No deals yet.</p>
               ) : (
                 deals.map((deal: any) => (
-                  <Link key={deal.id} href={`/admin/crm/deals/${deal.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
+                   <Link key={deal.id} href="/admin/pipeline" className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <div className="flex min-w-0 flex-col gap-1">
                       <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
                       <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
@@ -297,7 +297,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
             <h3 className="font-display text-sm font-semibold text-white mb-4">Quick Actions</h3>
             <div className="flex flex-col gap-2">
-              <Link href={`/admin/crm/deals/new?companyId=${company.id}`} className="rounded-[3px] bg-brand px-3 py-2 text-sm font-medium text-white text-center hover:bg-brand-dark">+ New Deal</Link>
+               <Link href="/admin/pipeline" className="rounded-[3px] bg-brand px-3 py-2 text-sm font-medium text-white text-center hover:bg-brand-dark">+ New Deal</Link>
               <Link href={`/admin/crm/projects/new?companyId=${company.id}`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white text-center hover:border-brand hover:bg-mist">+ New Project</Link>
               <Link href={`/admin/crm/tickets/new?companyId=${company.id}`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white text-center hover:border-brand hover:bg-mist">+ New Ticket</Link>
             </div>

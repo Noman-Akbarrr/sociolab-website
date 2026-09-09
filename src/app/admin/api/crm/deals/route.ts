@@ -9,13 +9,14 @@ export async function GET(request: NextRequest) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
+  const pipelineId = request.nextUrl.searchParams.get("pipelineId") || "";
   const stageId = request.nextUrl.searchParams.get("stageId") || "";
   const companyId = request.nextUrl.searchParams.get("companyId") || "";
   const search = request.nextUrl.searchParams.get("search") || "";
   const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "50");
 
-  const result = store.getDeals({ stageId, companyId, search, page, limit });
+  const result = store.getDeals({ pipelineId: pipelineId || undefined, stageId, companyId, search, page, limit });
   return NextResponse.json(result);
 }
 
@@ -26,6 +27,7 @@ export async function POST(request: NextRequest) {
   let body: {
     title: string;
     companyId: string;
+    pipelineId: string;
     value?: number;
     currency?: string;
     stageId: string;
@@ -39,17 +41,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (!body.title || !body.companyId || !body.stageId) {
-    return NextResponse.json({ error: "Title, company, and stage required." }, { status: 400 });
+  if (!body.title || !body.companyId || !body.stageId || !body.pipelineId) {
+    return NextResponse.json({ error: "Title, company, pipeline, and stage required." }, { status: 400 });
   }
 
-  const stages = store.getStages();
+  const stages = store.getStages(body.pipelineId);
   const stage = stages.find((s: any) => s.id === body.stageId);
   if (!stage) return NextResponse.json({ error: "Invalid stage." }, { status: 400 });
 
   const deal = store.createDeal({
     title: body.title,
     companyId: body.companyId,
+    pipelineId: body.pipelineId,
     value: body.value || 0,
     currency: body.currency || "USD",
     stageId: body.stageId,

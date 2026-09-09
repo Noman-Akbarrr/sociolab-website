@@ -1,8 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getServerUser } from "@/lib/auth/current";
-import Sidebar from "@/components/admin/sidebar";
-import TopBar from "@/components/admin/top-bar";
+import AdminLayoutClient from "@/components/admin/admin-layout";
 
 export const metadata = {
   title: "Admin | Sociolab",
@@ -21,12 +20,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="min-h-screen bg-mist">
-      <Sidebar />
-      <div className="ml-64">
-        <TopBar userName={user.name} />
-        <main>{children}</main>
-      </div>
-    </div>
+    <AdminLayoutClient userName={user.name}>
+      {children}
+    </AdminLayoutClient>
   );
 }

@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 const sectionNames: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/pages": "Pages",
-  "/admin/pipeline": "Pipeline",
-  "/admin/deals": "Deals",
+  "/admin/pipeline": "Pipelines",
   "/admin/people": "People",
   "/admin/clients": "Clients",
 };

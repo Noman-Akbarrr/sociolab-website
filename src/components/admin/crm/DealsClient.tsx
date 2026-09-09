@@ -184,7 +184,7 @@ export function DealsClient({
                 {dealsByStage.find((d: any) => d.stage.id === stage.id)?.deals.map((deal: any) => (
                   <Link
                     key={deal.id}
-                    href={`/admin/crm/deals/${deal.id}`}
+                    href="/admin/pipeline"
                     className="group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-shadow hover:shadow-md"
                     onDragStart={(e) => e.dataTransfer.setData("dealId", deal.id)}
                   >
@@ -207,7 +207,7 @@ export function DealsClient({
             <ul className="divide-y divide-[#1E293B]">
               {deals.map((deal: any) => (
                 <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
-                  <Link href={`/admin/crm/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
+                  <Link href="/admin/pipeline" className="flex min-w-0 flex-1 flex-col gap-1">
                     <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                       <span>{deal.company.name}</span>

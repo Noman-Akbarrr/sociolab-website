@@ -70,7 +70,7 @@ export function PipelineClient({ initialDealsByStage, initialStages }: PipelineC
           <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Pipeline</h1>
           <p className="text-sm text-white/60">Drag deals between stages. Pipeline value: <span className="font-semibold text-brand">{formatCurrency(totalPipelineValue)}</span> | Won this period: <span className="font-semibold text-green-600">{formatCurrency(wonValue)}</span></p>
         </div>
-        <Link href="/admin/crm/deals/new" className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
+        <Link href="/admin/pipeline" className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
           + New Deal
         </Link>
       </div>
@@ -106,7 +106,7 @@ export function PipelineClient({ initialDealsByStage, initialStages }: PipelineC
                 {deals.map((deal: any) => (
                   <Link
                     key={deal.id}
-                    href={`/admin/crm/deals/${deal.id}`}
+                    href="/admin/pipeline"
                     className={`group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-shadow hover:shadow-md ${draggedDeal?.id === deal.id ? "opacity-50" : ""}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, deal.id, group.stage.id)}

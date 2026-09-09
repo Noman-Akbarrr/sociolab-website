@@ -13,6 +13,7 @@ function now() {
 }
 
 export type CrmData = {
+  pipelines: any[];
   pipelineStages: any[];
   companies: any[];
   contacts: any[];
@@ -27,18 +28,37 @@ export type CrmData = {
   testimonials: any[];
 };
 
-const DEFAULT_STAGES = [
-  { id: uid(), name: "new", label: "New Lead", order: 0, color: "#6b7280", isClosed: false, isWon: false, createdAt: now(), updatedAt: now() },
-  { id: uid(), name: "qualified", label: "Qualified", order: 1, color: "#3b82f6", isClosed: false, isWon: false, createdAt: now(), updatedAt: now() },
-  { id: uid(), name: "proposal", label: "Proposal Sent", order: 2, color: "#8b5cf6", isClosed: false, isWon: false, createdAt: now(), updatedAt: now() },
-  { id: uid(), name: "negotiation", label: "Negotiation", order: 3, color: "#f59e0b", isClosed: false, isWon: false, createdAt: now(), updatedAt: now() },
-  { id: uid(), name: "won", label: "Won", order: 4, color: "#22c55e", isClosed: true, isWon: true, createdAt: now(), updatedAt: now() },
-  { id: uid(), name: "lost", label: "Lost", order: 5, color: "#ef4444", isClosed: true, isWon: false, createdAt: now(), updatedAt: now() },
-];
-
 function emptyData(): CrmData {
   const nowStr = now();
-  const stages = DEFAULT_STAGES;
+
+  // ── Default pipelines with their own stages ──
+  const pipeline1Id = uid();
+  const pipeline2Id = uid();
+
+  const pipelines = [
+    { id: pipeline1Id, name: "General Sales", description: "Standard sales pipeline for all inbound leads", color: "#3b82f6", createdAt: nowStr, updatedAt: nowStr },
+    { id: pipeline2Id, name: "Outreach — Doctors", description: "Targeted outreach to medical professionals", color: "#8b5cf6", createdAt: nowStr, updatedAt: nowStr },
+  ];
+
+  const stages = [
+    // Pipeline 1 stages
+    { id: uid(), pipelineId: pipeline1Id, name: "new", label: "New Lead", order: 0, color: "#6b7280", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline1Id, name: "qualified", label: "Qualified", order: 1, color: "#3b82f6", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline1Id, name: "proposal", label: "Proposal Sent", order: 2, color: "#8b5cf6", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline1Id, name: "negotiation", label: "Negotiation", order: 3, color: "#f59e0b", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline1Id, name: "won", label: "Won", order: 4, color: "#22c55e", isClosed: true, isWon: true, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline1Id, name: "lost", label: "Lost", order: 5, color: "#ef4444", isClosed: true, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    // Pipeline 2 stages
+    { id: uid(), pipelineId: pipeline2Id, name: "new", label: "New Lead", order: 0, color: "#6b7280", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline2Id, name: "contacted", label: "Contacted", order: 1, color: "#06b6d4", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline2Id, name: "meeting", label: "Meeting Scheduled", order: 2, color: "#f59e0b", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline2Id, name: "proposal", label: "Proposal Sent", order: 3, color: "#8b5cf6", isClosed: false, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline2Id, name: "won", label: "Won", order: 4, color: "#22c55e", isClosed: true, isWon: true, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), pipelineId: pipeline2Id, name: "lost", label: "Lost", order: 5, color: "#ef4444", isClosed: true, isWon: false, createdAt: nowStr, updatedAt: nowStr },
+  ];
+
+  const p1Stages = stages.filter((s) => s.pipelineId === pipeline1Id);
+  const p2Stages = stages.filter((s) => s.pipelineId === pipeline2Id);
 
   const companies = [
     { id: uid(), name: "TechCorp Pakistan", domain: "techcorp.pk", industry: "Technology", size: "50-200", website: "https://techcorp.pk", tags: ["enterprise"], notes: "Large enterprise client", createdAt: nowStr, updatedAt: nowStr },
@@ -57,11 +77,11 @@ function emptyData(): CrmData {
   ];
 
   const deals = [
-    { id: uid(), title: "TechCorp Website Redesign", companyId: companies[0].id, value: 1500000, currency: "PKR", stageId: stages[2].id, probability: 60, ownerId: "admin", contactIds: [contacts[0].id], expectedClose: "2026-09-30", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
-    { id: uid(), title: "Green Valley E-commerce", companyId: companies[1].id, value: 800000, currency: "PKR", stageId: stages[1].id, probability: 40, ownerId: "admin", contactIds: [contacts[1].id], expectedClose: "2026-10-15", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
-    { id: uid(), title: "NovaTech Mobile App", companyId: companies[2].id, value: 2500000, currency: "PKR", stageId: stages[3].id, probability: 75, ownerId: "admin", contactIds: [contacts[2].id], expectedClose: "2026-09-20", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
-    { id: uid(), title: "Atlas Fleet Tracking", companyId: companies[3].id, value: 1200000, currency: "PKR", stageId: stages[0].id, probability: 10, ownerId: "admin", contactIds: [contacts[3].id], expectedClose: "2026-11-01", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
-    { id: uid(), title: "BrightFuture LMS Portal", companyId: companies[4].id, value: 600000, currency: "PKR", stageId: stages[4].id, probability: 100, ownerId: "admin", contactIds: [contacts[4].id], expectedClose: "2026-08-15", closedAt: nowStr, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), title: "TechCorp Website Redesign", companyId: companies[0].id, value: 1500000, currency: "PKR", pipelineId: pipeline1Id, stageId: p1Stages[2].id, probability: 60, ownerId: "admin", contactIds: [contacts[0].id], expectedClose: "2026-09-30", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), title: "Green Valley E-commerce", companyId: companies[1].id, value: 800000, currency: "PKR", pipelineId: pipeline1Id, stageId: p1Stages[1].id, probability: 40, ownerId: "admin", contactIds: [contacts[1].id], expectedClose: "2026-10-15", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), title: "NovaTech Mobile App", companyId: companies[2].id, value: 2500000, currency: "PKR", pipelineId: pipeline1Id, stageId: p1Stages[3].id, probability: 75, ownerId: "admin", contactIds: [contacts[2].id], expectedClose: "2026-09-20", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), title: "Atlas Fleet Tracking", companyId: companies[3].id, value: 1200000, currency: "PKR", pipelineId: pipeline1Id, stageId: p1Stages[0].id, probability: 10, ownerId: "admin", contactIds: [contacts[3].id], expectedClose: "2026-11-01", closedAt: null, createdAt: nowStr, updatedAt: nowStr },
+    { id: uid(), title: "BrightFuture LMS Portal", companyId: companies[4].id, value: 600000, currency: "PKR", pipelineId: pipeline1Id, stageId: p1Stages[4].id, probability: 100, ownerId: "admin", contactIds: [contacts[4].id], expectedClose: "2026-08-15", closedAt: nowStr, createdAt: nowStr, updatedAt: nowStr },
   ];
 
   const projects = [
@@ -91,6 +111,7 @@ function emptyData(): CrmData {
   ];
 
   return {
+    pipelines,
     pipelineStages: stages,
     companies,
     contacts,
@@ -131,14 +152,60 @@ function patch<K extends keyof CrmData>(table: K, fn: (db: CrmData) => void) {
   return db;
 }
 
-// ── Pipeline Stages ──
+// ── Pipelines ──
 
-export function getStages() {
-  return readDb().pipelineStages.sort((a: any, b: any) => a.order - b.order);
+export function getPipelines() {
+  return readDb().pipelines.sort((a: any, b: any) => (a.createdAt || "").localeCompare(b.createdAt || ""));
 }
 
-export function createStage(data: any) {
-  const stage = { id: uid(), ...data, createdAt: now(), updatedAt: now() };
+export function getPipeline(id: string) {
+  return readDb().pipelines.find((p: any) => p.id === id) || null;
+}
+
+export function createPipeline(data: any) {
+  const pipeline = { id: uid(), color: "#3b82f6", ...data, createdAt: now(), updatedAt: now() };
+  patch("pipelines", (db) => db.pipelines.push(pipeline));
+  // Create default stages for the new pipeline
+  const defaultStages = [
+    { name: "new", label: "New Lead", order: 0, color: "#6b7280", isClosed: false, isWon: false },
+    { name: "qualified", label: "Qualified", order: 1, color: "#3b82f6", isClosed: false, isWon: false },
+    { name: "proposal", label: "Proposal Sent", order: 2, color: "#8b5cf6", isClosed: false, isWon: false },
+    { name: "won", label: "Won", order: 3, color: "#22c55e", isClosed: true, isWon: true },
+    { name: "lost", label: "Lost", order: 4, color: "#ef4444", isClosed: true, isWon: false },
+  ];
+  const nowStr = now();
+  defaultStages.forEach((s) => {
+    const stage = { id: uid(), pipelineId: pipeline.id, ...s, createdAt: nowStr, updatedAt: nowStr };
+    patch("pipelineStages", (db) => db.pipelineStages.push(stage));
+  });
+  return pipeline;
+}
+
+export function updatePipeline(id: string, data: any) {
+  let updated: any = null;
+  patch("pipelines", (db) => {
+    const i = db.pipelines.findIndex((p: any) => p.id === id);
+    if (i >= 0) { db.pipelines[i] = { ...db.pipelines[i], ...data, updatedAt: now() }; updated = db.pipelines[i]; }
+  });
+  return updated;
+}
+
+export function deletePipeline(id: string) {
+  patch("pipelines", (db) => { db.pipelines = db.pipelines.filter((p: any) => p.id !== id); });
+  patch("pipelineStages", (db) => { db.pipelineStages = db.pipelineStages.filter((s: any) => s.pipelineId !== id); });
+  patch("deals", (db) => { db.deals = db.deals.filter((d: any) => d.pipelineId !== id); });
+}
+
+// ── Pipeline Stages (pipeline-scoped) ──
+
+export function getStages(pipelineId?: string) {
+  const all = readDb().pipelineStages;
+  const filtered = pipelineId ? all.filter((s: any) => s.pipelineId === pipelineId) : all;
+  return filtered.sort((a: any, b: any) => a.order - b.order);
+}
+
+export function createStage(pipelineId: string, data: any) {
+  const stage = { id: uid(), pipelineId, ...data, createdAt: now(), updatedAt: now() };
   patch("pipelineStages", (db) => db.pipelineStages.push(stage));
   return stage;
 }
@@ -152,8 +219,22 @@ export function updateStage(id: string, data: any) {
   return updated;
 }
 
-export function deleteStage(id: string) {
+export function deleteStage(id: string, reassignToId?: string) {
+  if (reassignToId) {
+    patch("deals", (db) => {
+      db.deals.forEach((d: any) => { if (d.stageId === id) d.stageId = reassignToId; });
+    });
+  }
   patch("pipelineStages", (db) => { db.pipelineStages = db.pipelineStages.filter((s: any) => s.id !== id); });
+}
+
+export function reorderStages(pipelineId: string, stageIds: string[]) {
+  patch("pipelineStages", (db) => {
+    stageIds.forEach((sid, i) => {
+      const stage = db.pipelineStages.find((s: any) => s.id === sid && s.pipelineId === pipelineId);
+      if (stage) { stage.order = i; stage.updatedAt = now(); }
+    });
+  });
 }
 
 // ── Companies ──
@@ -232,10 +313,11 @@ export function deleteContact(id: string) {
 
 // ── Deals ──
 
-export function getDeals(opts: { stageId?: string; companyId?: string; search?: string; page?: number; limit?: number } = {}) {
-  const { stageId, companyId, search = "", page = 1, limit = 50 } = opts;
+export function getDeals(opts: { pipelineId?: string; stageId?: string; companyId?: string; search?: string; page?: number; limit?: number } = {}) {
+  const { pipelineId, stageId, companyId, search = "", page = 1, limit = 50 } = opts;
   const db = readDb();
   let list = db.deals;
+  if (pipelineId) list = list.filter((d: any) => d.pipelineId === pipelineId);
   if (stageId) list = list.filter((d: any) => d.stageId === stageId);
   if (companyId) list = list.filter((d: any) => d.companyId === companyId);
   if (search) {
@@ -256,7 +338,9 @@ export function getDeals(opts: { stageId?: string; companyId?: string; search?: 
   const start = (page - 1) * limit;
   const paged = list.slice(start, start + limit);
 
-  const stages = db.pipelineStages.sort((a: any, b: any) => a.order - b.order);
+  const stages = pipelineId
+    ? db.pipelineStages.filter((s: any) => s.pipelineId === pipelineId).sort((a: any, b: any) => a.order - b.order)
+    : db.pipelineStages.sort((a: any, b: any) => a.order - b.order);
   const dealsByStage = stages.map((stage: any) => ({
     stage,
     deals: list.filter((d: any) => d.stageId === stage.id),
@@ -272,6 +356,7 @@ export function getDeal(id: string) {
   return {
     ...deal,
     company: db.companies.find((c: any) => c.id === deal.companyId) || { id: deal.companyId, name: "Unknown" },
+    pipeline: db.pipelines.find((p: any) => p.id === deal.pipelineId) || { id: deal.pipelineId, name: "Unknown" },
     stage: db.pipelineStages.find((s: any) => s.id === deal.stageId) || { id: deal.stageId, label: "Unknown", color: "#999", isClosed: false, isWon: false },
     owner: { id: deal.ownerId, name: "Admin" },
     contacts: (deal.contactIds || []).map((cid: string) => ({ contact: db.contacts.find((c: any) => c.id === cid) })),
@@ -284,6 +369,11 @@ export function createDeal(data: any, userId?: string) {
   const deal = { id: uid(), ownerId: userId || "admin", contactIds: [], ...data, createdAt: now(), updatedAt: now() };
   patch("deals", (db) => db.deals.push(deal));
   return deal;
+}
+
+// Alias for backward compat
+export function createDealForPipeline(pipelineId: string, data: any, userId?: string) {
+  return createDeal({ ...data, pipelineId }, userId);
 }
 
 export function updateDeal(id: string, data: any) {
