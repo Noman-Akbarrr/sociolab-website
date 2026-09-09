@@ -35,7 +35,9 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
   const [activeStageMenu, setActiveStageMenu] = useState<string | null>(null);
   const [colorPickerStage, setColorPickerStage] = useState<string | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
+  const [stageDragOver, setStageDragOver] = useState<string | null>(null);
   const dragDataRef = useRef<{ dealId: string; sourceStageId: string } | null>(null);
+  const stageDragRef = useRef<{ stageId: string } | null>(null);
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-PK", { style: "currency", currency: "PKR", maximumFractionDigits: 0 }).format(cents / 100);
@@ -226,34 +228,126 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     return diff > 0 && diff <= 7 * 24 * 60 * 60 * 1000;
   }
 
+  // Stats for header
+  const allDeals = dealsByStage.flatMap((g) => g.deals);
+  const totalDeals = allDeals.length;
+  const openDeals = allDeals.filter((d: any) => {
+    const s = stages.find((st) => st.id === d.stageId);
+    return s && !s.isClosed;
+  });
+  const openDealCount = openDeals.length;
+  const urgentDeals = openDeals.filter((d: any) => d.expectedClose && isCloseDateSoon(d.expectedClose));
+  const urgentCount = urgentDeals.length;
+  const wonDeals = allDeals.filter((d: any) => {
+    const s = stages.find((st) => st.id === d.stageId);
+    return s?.isWon;
+  });
+  const wonCount = wonDeals.length;
+  const wonValue = wonDeals.reduce((sum: number, d: any) => sum + (d.value || 0), 0);
+
+  // Stage reorder handlers
+  function handleStageDragStart(e: React.DragEvent, stageId: string) {
+    stageDragRef.current = { stageId };
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", `stage:${stageId}`);
+  }
+
+  function handleStageDragOver(e: React.DragEvent, stageId: string) {
+    e.preventDefault();
+    if (!stageDragRef.current || stageDragRef.current.stageId === stageId) return;
+    e.dataTransfer.dropEffect = "move";
+    setStageDragOver(stageId);
+  }
+
+  function handleStageDragLeave() {
+    setStageDragOver(null);
+  }
+
+  async function handleStageDrop(e: React.DragEvent, targetStageId: string) {
+    e.preventDefault();
+    setStageDragOver(null);
+    if (!stageDragRef.current) return;
+    const draggedStageId = stageDragRef.current.stageId;
+    if (draggedStageId === targetStageId) { stageDragRef.current = null; return; }
+
+    const currentIds = stages.map((s) => s.id);
+    const fromIdx = currentIds.indexOf(draggedStageId);
+    const toIdx = currentIds.indexOf(targetStageId);
+    if (fromIdx < 0 || toIdx < 0) { stageDragRef.current = null; return; }
+
+    const newIds = [...currentIds];
+    newIds.splice(fromIdx, 1);
+    newIds.splice(toIdx, 0, draggedStageId);
+
+    // Optimistic update
+    const newStages = newIds.map((id, i) => {
+      const s = stages.find((st) => st.id === id);
+      return s ? { ...s, order: i } : s;
+    }).filter(Boolean) as typeof stages;
+    setStages(newStages);
+
+    await fetch(`/admin/api/crm/pipelines/${pipeline.id}/stages/reorder`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ stageIds: newIds }),
+    });
+    stageDragRef.current = null;
+  }
+
+  function handleDealDragStart(e: React.DragEvent, dealId: string, sourceStageId: string) {
+    dragDataRef.current = { dealId, sourceStageId };
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", dealId);
+  }
+
   return (
     <>
       <div className="border-b border-[#1E293B] bg-[#090D16] px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/pipeline"
-              className="flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
-            >
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M10 12L6 8L10 4" />
-              </svg>
-              Pipelines
-            </Link>
-            <h1 className="font-display text-xl font-bold text-white">{pipeline.name}</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-xs text-white/50">Pipeline Value</p>
-              <p className="font-display text-lg font-bold text-white">{formatCurrency(totalPipelineValue)}</p>
+        <div className="flex items-start justify-between gap-6">
+          {/* Left: Back + Name + Stats */}
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-3">
+              <Link
+                href="/admin/pipeline"
+                className="flex items-center gap-1.5 text-xs text-white/50 transition-colors hover:text-white"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M10 12L6 8L10 4" />
+                </svg>
+                Pipelines
+              </Link>
             </div>
-            <button
-              onClick={() => openNewDealModal()}
-              className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
-            >
-              + New Deal
-            </button>
+            <h1 className="font-display text-base font-semibold text-white">{pipeline.name}</h1>
+            <div className="flex items-center gap-4 mt-1">
+              <span className="text-xs text-white/50">
+                <span className="font-semibold text-white">{openDealCount}</span> open
+              </span>
+              <span className="text-xs text-white/50">
+                <span className="font-semibold text-white">{totalDeals}</span> total
+              </span>
+              <span className="text-xs text-white/50">
+                <span className="font-semibold text-brand">{formatCurrency(totalPipelineValue)}</span> pipeline
+              </span>
+              {urgentCount > 0 && (
+                <span className="text-xs text-orange-400">
+                  <span className="font-semibold">{urgentCount}</span> closing soon
+                </span>
+              )}
+              {wonCount > 0 && (
+                <span className="text-xs text-green-400">
+                  <span className="font-semibold">{wonCount}</span> won
+                </span>
+              )}
+            </div>
           </div>
+
+          {/* Right: New Deal button */}
+          <button
+            onClick={() => openNewDealModal()}
+            className="shrink-0 inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
+          >
+            + New Deal
+          </button>
         </div>
       </div>
 
@@ -269,8 +363,31 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, stage.id)}
             >
-              <div className="flex items-center justify-between rounded-t-[3px] bg-[#111827] px-4 py-3">
+              <div
+                className={`flex items-center justify-between rounded-t-[3px] px-4 py-3 transition-colors ${
+                  stageDragOver === stage.id ? "bg-brand/10 ring-1 ring-brand/50" : "bg-[#111827]"
+                }`}
+              >
                 <div className="flex items-center gap-2">
+                  {/* Drag handle for reordering */}
+                  <div
+                    draggable
+                    onDragStart={(e) => handleStageDragStart(e, stage.id)}
+                    onDragOver={(e) => handleStageDragOver(e, stage.id)}
+                    onDragLeave={handleStageDragLeave}
+                    onDrop={(e) => handleStageDrop(e, stage.id)}
+                    className="cursor-grab active:cursor-grabbing text-white/30 hover:text-white/60 transition-colors"
+                    title="Drag to reorder"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                      <circle cx="5" cy="3" r="1.5" />
+                      <circle cx="11" cy="3" r="1.5" />
+                      <circle cx="5" cy="8" r="1.5" />
+                      <circle cx="11" cy="8" r="1.5" />
+                      <circle cx="5" cy="13" r="1.5" />
+                      <circle cx="11" cy="13" r="1.5" />
+                    </svg>
+                  </div>
                   <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: stage.color }} />
                   {editingStageId === stage.id ? (
                     <input
