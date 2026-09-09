@@ -55,10 +55,10 @@ export function CRMServiceGrid({ eyebrow, title, subtitle, serviceIds = [] }: CR
         <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-ink bg-white p-7 animate-pulse">
-              <div className="h-6 w-1/2 bg-mist rounded" />
-              <div className="h-8 w-3/4 bg-mist rounded" />
-              <div className="h-4 w-1/4 bg-mist rounded" />
+            <div key={i} className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-[#1E293B] bg-[#111827] p-7 animate-pulse">
+              <div className="h-6 w-1/2 bg-[#1E293B] rounded" />
+              <div className="h-8 w-3/4 bg-[#1E293B] rounded" />
+              <div className="h-4 w-1/4 bg-[#1E293B] rounded" />
             </div>
           ))}
         </div>
@@ -71,7 +71,7 @@ export function CRMServiceGrid({ eyebrow, title, subtitle, serviceIds = [] }: CR
       <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         {services.length === 0 ? (
-          <div className="col-span-3 text-center py-12 text-ink/50">
+          <div className="col-span-3 text-center py-12 text-white/50">
             No services found. Add some in the CRM admin.
           </div>
         ) : (
@@ -79,23 +79,23 @@ export function CRMServiceGrid({ eyebrow, title, subtitle, serviceIds = [] }: CR
             <Link
               key={service.id}
               href={service.href || `/services/${service.slug}`}
-              className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-ink bg-white p-7 transition-all duration-200 hover:border-brand hover:bg-brand"
+              className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-[#1E293B] bg-[#111827] p-7 transition-all duration-200 hover:border-[#FF5500] hover:bg-[#FF5500]"
             >
               <div className="flex flex-col gap-3">
                 {(service.icon || service.featured) && (
                   <div className="flex items-center gap-2">
                     {service.icon && <span className="text-2xl">{service.icon}</span>}
-                    {service.featured && <span className="inline-flex items-center rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-white">Featured</span>}
+                    {service.featured && <span className="inline-flex items-center rounded-full bg-[#FF5500] px-2 py-0.5 text-[11px] font-bold text-white">Featured</span>}
                   </div>
                 )}
-                <h3 className="font-display text-xl font-semibold leading-snug text-ink transition-colors group-hover:text-white">
+                <h3 className="font-display text-xl font-semibold leading-snug text-white transition-colors group-hover:text-white">
                   {service.name}
                 </h3>
-                <p className="text-sm leading-relaxed text-ink/65 transition-colors group-hover:text-white/85">
+                <p className="text-sm leading-relaxed text-white/65 transition-colors group-hover:text-white/85">
                   {service.shortDesc || service.description.slice(0, 120) + "..."}
                 </p>
               </div>
-              <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand transition-colors group-hover:text-white">
+              <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#FF5500] transition-colors group-hover:text-white">
                 Learn more
                 <ArrowUpRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>

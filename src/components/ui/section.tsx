@@ -50,7 +50,7 @@ export function SectionHeading({
       ) : null}
       <h2
         className={`font-display text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl md:text-5xl ${
-          dark ? "text-white" : "text-white"
+          dark ? "text-white" : "text-[#111827]"
         }`}
       >
         {title}
@@ -58,7 +58,7 @@ export function SectionHeading({
       {subtitle ? (
         <p
           className={`max-w-2xl text-lg leading-relaxed ${
-            dark ? "text-muted" : "text-muted"
+            dark ? "text-muted" : "text-[#64748B]"
           }`}
         >
           {subtitle}

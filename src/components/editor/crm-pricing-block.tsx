@@ -56,17 +56,17 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
 
   if (loading) {
     return (
-      <Section className="bg-white">
+      <Section>
         <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex h-full flex-col justify-between gap-8 rounded-[3px] p-8 animate-pulse">
               <div className="flex flex-col gap-3">
-                <div className="h-4 w-1/3 bg-mist rounded" />
-                <div className="h-10 w-1/2 bg-mist rounded" />
+                <div className="h-4 w-1/3 bg-[#1E293B] rounded" />
+                <div className="h-10 w-1/2 bg-[#1E293B] rounded" />
               </div>
               <div className="space-y-2.5">
-                {[1, 2, 3].map((j) => <div key={j} className="h-5 w-3/4 bg-mist rounded" />)}
+                {[1, 2, 3].map((j) => <div key={j} className="h-5 w-3/4 bg-[#1E293B] rounded" />)}
               </div>
             </div>
           ))}
@@ -79,11 +79,11 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
   const regularServices = services.filter(s => !s.featured && s.price);
 
   return (
-    <Section className="bg-white">
+    <Section>
       <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
       <div className="mt-12 grid gap-6 md:grid-cols-3">
         {services.length === 0 ? (
-          <div className="col-span-3 text-center py-12 text-ink/50">
+          <div className="col-span-3 text-center py-12 text-white/50">
             No services with pricing found. Add services with prices in the CRM admin.
           </div>
         ) : (
@@ -94,23 +94,23 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
               <div
                 key={service.id}
                 className={`flex h-full flex-col justify-between gap-8 rounded-[3px] p-8 ${
-                  featured ? "bg-ink text-white shadow-xl" : "border border-line bg-white"
+                  featured ? "bg-[#111827] text-white shadow-xl" : "border border-[#1E293B] bg-[#111827]"
                 }`}
               >
                 <div className="flex flex-col gap-3">
-                  <p className={`font-mono text-xs font-bold uppercase tracking-[0.18em] ${featured ? "text-brand-bright" : "text-brand"}`}>
+                  <p className={`font-mono text-xs font-bold uppercase tracking-[0.18em] ${featured ? "text-[#FF6B1A]" : "text-[#FF5500]"}`}>
                     {service.name}
                   </p>
                   <p className="flex items-baseline gap-1">
-                    <span className="font-display text-4xl font-semibold">{price}</span>
+                    <span className="font-display text-4xl font-semibold text-white">{price}</span>
                     {service.period ? (
-                      <span className={`text-sm ${featured ? "text-white/60" : "text-ink/50"}`}>
+                      <span className={`text-sm ${featured ? "text-white/60" : "text-white/50"}`}>
                         {service.period}
                       </span>
                     ) : null}
                   </p>
                   {service.shortDesc ? (
-                    <p className={`text-sm leading-relaxed ${featured ? "text-white/65" : "text-ink/60"}`}>
+                    <p className={`text-sm leading-relaxed ${featured ? "text-white/65" : "text-white/60"}`}>
                       {service.shortDesc}
                     </p>
                   ) : null}
@@ -118,8 +118,8 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
                 <ul className="flex flex-col gap-2.5">
                   {(service.features ?? []).map((feature: string, j: number) => (
                     <li key={j} className="flex items-start gap-2.5 text-sm font-medium">
-                      <CheckIcon className={`mt-0.5 size-4 shrink-0 ${featured ? "text-brand-bright" : "text-brand"}`} />
-                      <span className={featured ? "text-white/85" : "text-ink/80"}>{feature}</span>
+                      <CheckIcon className={`mt-0.5 size-4 shrink-0 ${featured ? "text-[#FF6B1A]" : "text-[#FF5500]"}`} />
+                      <span className={featured ? "text-white/85" : "text-white/80"}>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -128,8 +128,8 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
                     href={service.href || "/contact"}
                     className={`inline-flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-sm font-bold transition-colors ${
                       featured
-                        ? "bg-brand text-white hover:bg-brand-dark"
-                        : "border-2 border-ink text-ink hover:bg-ink hover:text-white"
+                        ? "bg-[#FF5500] text-white hover:bg-[#E04B00]"
+                        : "border-2 border-[#1E293B] text-white hover:bg-[#FF5500] hover:border-[#FF5500]"
                     }`}
                   >
                     {service.ctaLabel || "Get Started"}
@@ -141,7 +141,7 @@ export function CRMPricingBlock({ eyebrow, title, subtitle, note, serviceIds = [
           })
         )}
       </div>
-      {note ? <p className="mt-8 max-w-2xl text-sm text-ink/55">{note}</p> : null}
+      {note ? <p className="mt-8 max-w-2xl text-sm text-white/55">{note}</p> : null}
     </Section>
   );
 }

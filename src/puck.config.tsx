@@ -101,7 +101,7 @@ const config: Config<BlockProps> = {
         eyebrow: { type: "text" },
         title: { type: "textarea" },
         accentTitle: { type: "text" },
-        sub: { type: "textarea" },
+        sub: { type: "richtext", contentEditable: true },
         align: { type: "radio", options: [
           { value: "left", label: "Left" },
           { value: "center", label: "Center" },
@@ -118,6 +118,13 @@ const config: Config<BlockProps> = {
           { value: "sm", label: "Small" },
           { value: "md", label: "Medium" },
           { value: "lg", label: "Large" },
+        ] },
+        buttonRadius: { type: "radio", options: [
+          { value: "rounded-none", label: "Square" },
+          { value: "rounded-[3px]", label: "Slight" },
+          { value: "rounded-lg", label: "Rounded" },
+          { value: "rounded-xl", label: "Extra rounded" },
+          { value: "rounded-full", label: "Pill" },
         ] },
         secondaryLabel: { type: "text" },
         secondaryHref: { type: "text" },
@@ -143,6 +150,7 @@ const config: Config<BlockProps> = {
         ctaStyle: "solid",
         ctaColor: "#ff4d00",
         ctaSize: "md",
+        buttonRadius: "rounded-[3px]",
         secondaryLabel: "See our work",
         secondaryHref: "/work",
         stats: [
@@ -165,6 +173,7 @@ const config: Config<BlockProps> = {
         ctaStyle,
         ctaColor,
         ctaSize,
+        buttonRadius,
         secondaryLabel,
         secondaryHref,
         stats = [],
@@ -198,7 +207,7 @@ const config: Config<BlockProps> = {
                     sizes="100vw"
                   />
                 </div>
-                <div className="absolute inset-0 bg-ink/80" />
+                <div className="absolute inset-0 bg-black/70" />
               </>
             ) : null}
             <Container className={`pt-16 pb-20 sm:pt-24 sm:pb-28 ${imageMode ? "relative" : ""}`}>
@@ -238,7 +247,7 @@ const config: Config<BlockProps> = {
                   <WhatsAppLink
                     cta="hero"
                     message={whatsappMessage}
-                    className={`inline-flex items-center gap-2.5 rounded-[3px] font-bold transition-all hover:-translate-y-[1px] active:translate-y-[1px] ${sizeCls} ${
+                    className={`inline-flex items-center gap-2.5 ${buttonRadius || "rounded-[3px]"} font-bold transition-all hover:-translate-y-[1px] active:translate-y-[1px] ${sizeCls} ${
                       ctaStyle === "outline"
                         ? "border-2 border-[var(--cta)] text-[var(--cta)] hover:bg-[var(--cta)] hover:text-white"
                         : `bg-[var(--cta)] ${lightColor ? "text-ink" : "text-white"} hover:bg-[color-mix(in_srgb,var(--cta),#000_14%)]`
@@ -251,10 +260,10 @@ const config: Config<BlockProps> = {
                   {secondaryLabel && secondaryHref ? (
                     <Link
                       href={secondaryHref}
-                      className={`inline-flex items-center gap-2 rounded-[3px] border-2 px-7 py-[14px] text-base font-bold transition-colors ${
+                      className={`inline-flex items-center gap-2 ${buttonRadius || "rounded-[3px]"} border-2 px-7 py-[14px] text-base font-bold transition-colors ${
                         imageMode
-                          ? "border-white/60 text-white hover:bg-white hover:text-ink"
-                          : "border-ink text-ink hover:bg-ink hover:text-white"
+                          ? "border-white/60 text-white hover:bg-white hover:text-[#111827]"
+                          : "border-[#1E293B] text-[#CBD5E1] hover:bg-[#111827] hover:text-white"
                       }`}
                     >
                       {secondaryLabel}
@@ -272,13 +281,13 @@ const config: Config<BlockProps> = {
                       <div key={i}>
                         <dt className="sr-only">{stat.label}</dt>
                         <dd
-                          className={`font-display text-3xl font-semibold sm:text-4xl ${
-                            imageMode ? "text-white" : "text-ink"
-                          }`}
-                        >
-                          {stat.value}
-                        </dd>
-                        <dd className={`mt-1 text-sm ${imageMode ? "text-white/70" : "text-ink/60"}`}>
+                    className={`font-display text-3xl font-semibold sm:text-4xl ${
+                      imageMode ? "text-white" : "text-[#111827]"
+                    }`}
+                  >
+                    {stat.value}
+                  </dd>
+                  <dd className={`mt-1 text-sm ${imageMode ? "text-white/70" : "text-[#64748B]"}`}>
                           {stat.label}
                         </dd>
                       </div>
@@ -322,6 +331,17 @@ const config: Config<BlockProps> = {
           { value: "left", label: "Left" },
           { value: "center", label: "Center" },
         ] },
+        paddingY: { type: "radio", options: [
+          { value: "none", label: "None" },
+          { value: "sm", label: "Small" },
+          { value: "md", label: "Medium (default)" },
+          { value: "lg", label: "Large" },
+          { value: "xl", label: "Extra large" },
+        ] },
+        showDivider: { type: "radio", options: [
+          { value: "false", label: "No divider" },
+          { value: "true", label: "Show divider" },
+        ] },
       },
       defaultProps: {
         eyebrow: "",
@@ -329,18 +349,24 @@ const config: Config<BlockProps> = {
         subtitle: "",
         dark: "false",
         align: "left",
+        paddingY: "md",
+        showDivider: "false",
       },
-      render: ({ eyebrow, title, subtitle, dark, align }) => (
-        <Section className={dark === "true" ? "bg-ink text-white" : "bg-white"}>
-          <SectionHeading
-            eyebrow={eyebrow}
-            title={title}
-            subtitle={subtitle}
-            dark={dark === "true"}
-            align={align === "center" ? "center" : "left"}
-          />
-        </Section>
-      ),
+      render: ({ eyebrow, title, subtitle, dark, align, paddingY, showDivider }) => {
+        const padCls = paddingY === "none" ? "py-0" : paddingY === "sm" ? "py-8 sm:py-12" : paddingY === "lg" ? "py-16 sm:py-24" : paddingY === "xl" ? "py-20 sm:py-28" : "";
+        return (
+          <Section className={`${dark === "true" ? "" : "bg-white"} ${padCls}`}>
+            <SectionHeading
+              eyebrow={eyebrow}
+              title={title}
+              subtitle={subtitle}
+              dark={dark === "true"}
+              align={align === "center" ? "center" : "left"}
+            />
+            {showDivider === "true" ? <hr className="mt-8 border-[#1E293B]" /> : null}
+          </Section>
+        );
+      },
     },
 
     /* --------------------------- Card grid ------------------------------- */
@@ -362,11 +388,16 @@ const config: Config<BlockProps> = {
           { value: "2", label: "Two columns" },
           { value: "3", label: "Three columns" },
         ] },
+        cardBorder: { type: "radio", options: [
+          { value: "none", label: "No border" },
+          { value: "thin", label: "Thin border" },
+          { value: "thick", label: "Thick border" },
+        ] },
         items: {
           type: "array",
           arrayFields: {
             title: { type: "text" },
-            body: { type: "textarea" },
+            body: { type: "richtext", contentEditable: true },
           },
         },
       },
@@ -377,14 +408,16 @@ const config: Config<BlockProps> = {
         tone: "light",
         numbered: "false",
         columns: "3",
+        cardBorder: "thin",
         items: [
           { title: "Trend-native", body: "We don't guess what's trending — we're the generation scrolling it." },
         ],
       },
-      render: ({ eyebrow, title, subtitle, tone, numbered, columns, items = [] }) => {
+      render: ({ eyebrow, title, subtitle, tone, numbered, columns, cardBorder, items = [] }) => {
         const dark = tone === "dark";
+        const borderCls = cardBorder === "none" ? "" : cardBorder === "thick" ? "border-2 border-[#1E293B]" : "border border-[#1E293B]";
         return (
-          <Section className={dark ? "bg-ink text-white" : "bg-mist"}>
+          <Section className={dark ? "" : "bg-mist"}>
             <SectionHeading
               eyebrow={eyebrow}
               title={title}
@@ -400,7 +433,7 @@ const config: Config<BlockProps> = {
                 <div
                   key={i}
                   className={`flex h-full flex-col gap-4 rounded-[3px] p-7 ${
-                    dark ? "bg-white/5 text-white" : "border border-line bg-white"
+                    dark ? "bg-[#111827] text-white" : `${borderCls || "border border-[#1E293B]"} bg-white text-[#111827]`
                   }`}
                 >
                   {numbered === "true" ? (
@@ -414,14 +447,14 @@ const config: Config<BlockProps> = {
                   ) : null}
                   <h3
                     className={`font-display text-lg font-semibold leading-snug ${
-                      dark ? "text-white" : "text-ink"
+                      dark ? "text-white" : "text-[#111827]"
                     }`}
                   >
                     {card.title}
                   </h3>
                   <p
                     className={`text-sm leading-relaxed ${
-                      dark ? "text-white/60" : "text-ink/65"
+                      dark ? "text-white/60" : "text-[#64748B]"
                     }`}
                   >
                     {card.body}
@@ -470,17 +503,17 @@ const config: Config<BlockProps> = {
               <Link
                 key={i}
                 href={service.href}
-                className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-ink bg-white p-7 transition-all duration-200 hover:border-brand hover:bg-brand"
+                className="group flex h-full flex-col justify-between gap-8 rounded-[3px] border-2 border-[#1E293B] bg-[#111827] p-7 transition-all duration-200 hover:border-[#FF5500] hover:bg-[#FF5500]"
               >
                 <div className="flex flex-col gap-3">
-                  <h3 className="font-display text-xl font-semibold leading-snug text-ink transition-colors group-hover:text-white">
+                  <h3 className="font-display text-xl font-semibold leading-snug text-white transition-colors group-hover:text-white">
                     {service.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-ink/65 transition-colors group-hover:text-white/85">
+                  <p className="text-sm leading-relaxed text-white/65 transition-colors group-hover:text-white/85">
                     {service.body}
                   </p>
                 </div>
-                <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand transition-colors group-hover:text-white">
+                <span className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#FF5500] transition-colors group-hover:text-white">
                   Learn more
                   <ArrowUpRightIcon className="size-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
@@ -510,7 +543,7 @@ const config: Config<BlockProps> = {
           type: "array",
           arrayFields: {
             title: { type: "text" },
-            body: { type: "textarea" },
+            body: { type: "richtext", contentEditable: true },
           },
         },
       },
@@ -528,7 +561,7 @@ const config: Config<BlockProps> = {
         const isDark = dark === "true";
         const timeline = variant === "timeline";
         return (
-          <Section className={isDark ? "bg-ink text-white" : "bg-white"}>
+          <Section className={isDark ? "" : "bg-white"}>
             <SectionHeading
               eyebrow={eyebrow}
               title={title}
@@ -542,7 +575,7 @@ const config: Config<BlockProps> = {
                     <span className="relative flex flex-col items-center">
                       <span
                         className={`grid size-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold ${
-                          isDark ? "bg-brand-bright text-ink" : "bg-brand text-white"
+                          isDark ? "bg-[#FF5500] text-white" : "bg-[#FF5500] text-white"
                         }`}
                       >
                         {i + 1}
@@ -559,7 +592,7 @@ const config: Config<BlockProps> = {
                       <h3 className="font-display text-xl font-semibold">{step.title}</h3>
                       <p
                         className={`mt-2 text-sm leading-relaxed ${
-                          isDark ? "text-white/65" : "text-ink/65"
+                          isDark ? "text-white/65" : "text-[#64748B]"
                         }`}
                       >
                         {step.body}
@@ -574,12 +607,12 @@ const config: Config<BlockProps> = {
                   <li
                     key={i}
                     className={`flex h-full flex-col gap-4 pt-5 ${
-                      isDark ? "border-t-2 border-brand-bright" : "border-t-2 border-brand"
+                      isDark ? "border-t-2 border-[#FF5500]" : "border-t-2 border-[#FF5500]"
                     }`}
                   >
                     <span
                       className={`font-display text-3xl font-semibold ${
-                        isDark ? "text-brand-bright" : "text-brand"
+                        isDark ? "text-[#FF5500]" : "text-[#FF5500]"
                       }`}
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -587,7 +620,7 @@ const config: Config<BlockProps> = {
                     <h3 className="font-display text-lg font-semibold">{step.title}</h3>
                     <p
                       className={`text-sm leading-relaxed ${
-                        isDark ? "text-white/60" : "text-ink/65"
+                        isDark ? "text-white/60" : "text-[#64748B]"
                       }`}
                     >
                       {step.body}
@@ -629,15 +662,15 @@ const config: Config<BlockProps> = {
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {items.map((c: any, i: number) => (
-              <div key={i} className="flex h-full flex-col justify-between gap-10 rounded-[3px] border border-line bg-white p-7">
+              <div key={i} className="flex h-full flex-col justify-between gap-10 rounded-[3px] border border-[#1E293B] bg-[#111827] p-7">
                 <div className="flex flex-col gap-4">
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-ink/50">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-white/50">
                     {c.service}
                   </p>
-                  <p className="font-display text-4xl font-semibold text-brand">{c.metric}</p>
-                  <p className="text-sm leading-relaxed text-ink/70">{c.result}</p>
+                  <p className="font-display text-4xl font-semibold text-[#FF5500]">{c.metric}</p>
+                  <p className="text-sm leading-relaxed text-white/70">{c.result}</p>
                 </div>
-                <span className="text-sm font-bold text-ink">{c.client}</span>
+                <span className="text-sm font-bold text-white">{c.client}</span>
               </div>
             ))}
           </div>
@@ -654,7 +687,7 @@ const config: Config<BlockProps> = {
         items: {
           type: "array",
           arrayFields: {
-            quote: { type: "textarea" },
+            quote: { type: "richtext", contentEditable: true },
             name: { type: "text" },
             role: { type: "text" },
           },
@@ -670,17 +703,17 @@ const config: Config<BlockProps> = {
           <SectionHeading eyebrow={eyebrow} title={title} />
           <div className="mt-12 grid gap-5 md:grid-cols-2">
             {items.map((t: any, i: number) => (
-              <figure key={i} className="flex h-full flex-col justify-between gap-8 rounded-[3px] bg-white p-8">
-                <blockquote className="font-display text-xl font-medium leading-snug text-ink">
+              <figure key={i} className="flex h-full flex-col justify-between gap-8 rounded-[3px] bg-[#111827] p-8">
+                <blockquote className="font-display text-xl font-medium leading-snug text-white">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <figcaption className="flex items-center gap-3">
-                  <span className="grid size-11 place-items-center rounded-full bg-brand font-display text-sm font-bold text-white">
+                  <span className="grid size-11 place-items-center rounded-full bg-[#FF5500] font-display text-sm font-bold text-white">
                     {(t.name || "?").charAt(0)}
                   </span>
                   <span>
-                    <span className="block text-sm font-bold text-ink">{t.name}</span>
-                    <span className="block text-xs text-ink/55">{t.role}</span>
+                    <span className="block text-sm font-bold text-white">{t.name}</span>
+                    <span className="block text-xs text-white/55">{t.role}</span>
                   </span>
                 </figcaption>
               </figure>
@@ -717,13 +750,13 @@ const config: Config<BlockProps> = {
           <div className="mt-12 max-w-3xl divide-y divide-line border-y border-line">
             {items.map((faq: any, i: number) => (
               <details key={i} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-base font-semibold text-ink">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-base font-semibold text-white">
                   {faq.q}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-ink/30 text-ink transition-transform group-open:rotate-45">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/30 text-white transition-transform group-open:rotate-45">
                     +
                   </span>
                 </summary>
-                <p className="pb-2 pt-3 text-sm leading-relaxed text-ink/70">{faq.a}</p>
+                <p className="pb-2 pt-3 text-sm leading-relaxed text-white/70">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -736,7 +769,7 @@ const config: Config<BlockProps> = {
       label: "CTA banner",
       fields: {
         title: { type: "textarea" },
-        body: { type: "textarea" },
+        body: { type: "richtext", contentEditable: true },
         tone: { type: "radio", options: [
           { value: "orange", label: "Orange" },
           { value: "ink", label: "Dark" },
@@ -745,6 +778,13 @@ const config: Config<BlockProps> = {
         whatsappMessage: { type: "textarea" },
         buttonColor: { type: "color" } as any,
         subline: { type: "text" },
+        buttonRadius: { type: "radio", options: [
+          { value: "rounded-none", label: "Square" },
+          { value: "rounded-[3px]", label: "Slight" },
+          { value: "rounded-lg", label: "Rounded" },
+          { value: "rounded-xl", label: "Extra rounded" },
+          { value: "rounded-full", label: "Pill" },
+        ] },
       },
       defaultProps: {
         title: "Let's make your brand the one they talk about.",
@@ -754,9 +794,10 @@ const config: Config<BlockProps> = {
         whatsappMessage: "Hi Sociolab, I want to grow my brand online.",
         buttonColor: "#0d0d0d",
         subline: "We reply fast — usually within the hour",
+        buttonRadius: "rounded-[3px]",
       },
-      render: ({ title, body, tone, ctaLabel, whatsappMessage, buttonColor, subline }) => (
-        <section className={`py-20 sm:py-28 ${tone === "ink" ? "bg-ink" : "bg-brand"}`}>
+      render: ({ title, body, tone, ctaLabel, whatsappMessage, buttonColor, subline, buttonRadius }) => (
+        <section className={`py-20 sm:py-28 ${tone === "ink" ? "" : "bg-[#FF5500]"}`}>
           <Container>
             <div className="flex flex-col items-center gap-6 text-center">
               <h2 className="max-w-3xl font-display text-3xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl">
@@ -766,13 +807,13 @@ const config: Config<BlockProps> = {
               <WhatsAppLink
                 cta="puck-cta"
                 message={whatsappMessage}
-                className={`mt-2 inline-flex items-center gap-2.5 rounded-[3px] px-8 py-4 text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] ${
+                className={`mt-2 inline-flex items-center gap-2.5 ${buttonRadius || "rounded-[3px]"} px-8 py-4 text-base font-bold transition-all hover:scale-[1.02] active:scale-[0.98] ${
                   tone === "ink"
                     ? "bg-[var(--cta)] hover:bg-[color-mix(in_srgb,var(--cta),#000_14%)]"
                     : "bg-[var(--cta)] hover:bg-[color-mix(in_srgb,var(--cta),#000_14%)]"
                 } ${
                   /^#(f[0-9a-f]{5}|f{6}|e[0-9a-f]{5})$/i.test(buttonColor || "")
-                    ? "text-ink"
+                    ? "text-[#111827]"
                     : "text-white"
                 }`}
                 style={{ "--cta": buttonColor || "#0d0d0d" } as React.CSSProperties}
@@ -796,22 +837,24 @@ const config: Config<BlockProps> = {
       label: "Statement",
       fields: {
         eyebrow: { type: "text" },
-        text: { type: "textarea" },
+        text: { type: "richtext", contentEditable: true },
         tone: { type: "radio", options: [
           { value: "ink", label: "Dark" },
           { value: "orange", label: "Orange" },
           { value: "light", label: "Light" },
         ] },
+        textColor: { type: "color" } as any,
       },
       defaultProps: {
         eyebrow: "What we're about",
         text: "A big, bold statement.",
         tone: "ink",
+        textColor: "",
       },
-      render: ({ eyebrow, text, tone }) => (
+      render: ({ eyebrow, text, tone, textColor }) => (
         <section
           className={`py-20 sm:py-24 ${
-            tone === "orange" ? "bg-brand" : tone === "light" ? "bg-white" : "bg-ink"
+            tone === "orange" ? "bg-[#FF5500]" : tone === "light" ? "bg-white" : ""
           }`}
         >
           <Container>
@@ -819,8 +862,9 @@ const config: Config<BlockProps> = {
               {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
               <p
                 className={`mt-6 whitespace-pre-line font-display text-2xl font-medium leading-snug sm:text-4xl ${
-                  tone === "light" ? "text-ink" : "text-white"
+                  tone === "light" ? "text-[#111827]" : "text-white"
                 }`}
+                style={textColor ? { color: textColor } : undefined}
               >
                 {text}
               </p>
@@ -835,17 +879,17 @@ const config: Config<BlockProps> = {
       label: "Callout",
       fields: {
         label: { type: "text" },
-        text: { type: "textarea" },
+        text: { type: "richtext", contentEditable: true },
       },
       defaultProps: {
         label: "Not for you?",
         text: "If any of this feels like a mismatch, we'll tell you straight.",
       },
       render: ({ label, text }) => (
-        <section className="bg-mist">
+        <section className="bg-[#111827]">
           <Container className="py-10">
-            <p className="max-w-3xl font-mono text-sm font-medium leading-relaxed text-ink/75">
-              <span className="font-bold text-brand">{label} </span>
+            <p className="max-w-3xl font-mono text-sm font-medium leading-relaxed text-white/75">
+              <span className="font-bold text-[#FF5500]">{label} </span>
               {text}
             </p>
           </Container>
@@ -859,22 +903,24 @@ const config: Config<BlockProps> = {
       fields: {
         paragraphs: {
           type: "array",
-          arrayFields: { paragraph: { type: "textarea" } },
+          arrayFields: { paragraph: { type: "richtext", contentEditable: true } },
         },
         align: { type: "radio", options: [
           { value: "left", label: "Left" },
           { value: "center", label: "Center" },
         ] },
+        textColor: { type: "color" } as any,
       },
       defaultProps: {
         paragraphs: [],
         align: "left",
+        textColor: "",
       },
-      render: ({ paragraphs = [], align }) => (
+      render: ({ paragraphs = [], align, textColor }) => (
         <Section className="bg-white">
           <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""}`}>
             {paragraphs.map((p: any, i: number) => (
-              <p key={i} className="mb-5 text-lg leading-relaxed text-ink/80">
+              <p key={i} className="mb-5 text-lg leading-relaxed" style={textColor ? { color: textColor } : { color: "#111827", opacity: 0.8 }}>
                 {p.paragraph}
               </p>
             ))}
@@ -889,7 +935,7 @@ const config: Config<BlockProps> = {
       fields: {
         eyebrow: { type: "text" },
         title: { type: "textarea" },
-        intro: { type: "textarea" },
+        intro: { type: "richtext", contentEditable: true },
         items: {
           type: "array",
           arrayFields: { item: { type: "text" } },
@@ -906,19 +952,19 @@ const config: Config<BlockProps> = {
           <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
             <div className="max-w-xl">
               {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-              <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
+              <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 {title}
               </h2>
-              {intro ? <p className="mt-5 text-lg leading-relaxed text-ink/70">{intro}</p> : null}
+              {intro ? <p className="mt-5 text-lg leading-relaxed text-white/70">{intro}</p> : null}
             </div>
             <ul className="grid gap-3 sm:grid-cols-2">
               {items.map((item: any, i: number) => (
                 <li
                   key={i}
-                  className="flex items-start gap-3 rounded-[3px] border border-line bg-white px-5 py-4"
+                  className="flex items-start gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] px-5 py-4"
                 >
-                  <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
-                  <span className="text-sm font-medium text-ink">{item.item}</span>
+                  <CheckIcon className="mt-0.5 size-4 shrink-0 text-[#FF5500]" />
+                  <span className="text-sm font-medium text-white">{item.item}</span>
                 </li>
               ))}
             </ul>
@@ -948,14 +994,14 @@ const config: Config<BlockProps> = {
       },
       render: ({ src, alt, caption, aspect }) => (
         <Section className="bg-white">
-          <figure className="overflow-hidden rounded-[3px] border border-line bg-mist">
+          <figure className="overflow-hidden rounded-[3px] border border-[#1E293B] bg-[#111827]">
             <div style={{ aspectRatio: aspect || "16 / 9" }} className="relative w-full">
               {src ? (
                 <Image src={src} alt={alt || ""} fill className="object-cover" sizes="(max-width: 1200px) 100vw, 1200px" />
               ) : null}
             </div>
             {caption ? (
-              <figcaption className="px-6 py-4 text-sm text-ink/60">{caption}</figcaption>
+              <figcaption className="px-6 py-4 text-sm text-[#64748B]">{caption}</figcaption>
             ) : null}
           </figure>
         </Section>
@@ -968,13 +1014,20 @@ const config: Config<BlockProps> = {
       fields: {
         eyebrow: { type: "text" },
         title: { type: "textarea" },
-        body: { type: "textarea" },
+        body: { type: "richtext", contentEditable: true },
         checklist: {
           type: "array",
           arrayFields: { item: { type: "text" } },
         },
         ctaLabel: { type: "text" },
         ctaHref: { type: "text" },
+        buttonRadius: { type: "radio", options: [
+          { value: "rounded-none", label: "Square" },
+          { value: "rounded-[3px]", label: "Slight" },
+          { value: "rounded-lg", label: "Rounded" },
+          { value: "rounded-xl", label: "Extra rounded" },
+          { value: "rounded-full", label: "Pill" },
+        ] },
         imageSrc: { type: "image" } as any,
         imageAlt: { type: "text" },
         flip: { type: "radio", options: [
@@ -989,24 +1042,25 @@ const config: Config<BlockProps> = {
         checklist: [],
         ctaLabel: "",
         ctaHref: "",
+        buttonRadius: "rounded-[3px]",
         imageSrc: "",
         imageAlt: "",
         flip: "false",
       },
-      render: ({ eyebrow, title, body, checklist = [], ctaLabel, ctaHref, imageSrc, imageAlt, flip }) => (
+      render: ({ eyebrow, title, body, checklist = [], ctaLabel, ctaHref, buttonRadius, imageSrc, imageAlt, flip }) => (
         <Section>
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className={flip === "true" ? "lg:order-2" : ""}>
               {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-              <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
+              <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-white sm:text-4xl">
                 {title}
               </h2>
-              <p className="mt-5 whitespace-pre-line text-lg leading-relaxed text-ink/70">{body}</p>
+              <p className="mt-5 whitespace-pre-line text-lg leading-relaxed text-white/70">{body}</p>
               {checklist.length ? (
                 <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
                   {checklist.map((item: any, i: number) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm font-medium text-ink">
-                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
+                    <li key={i} className="flex items-start gap-2.5 text-sm font-medium text-white">
+                      <CheckIcon className="mt-0.5 size-4 shrink-0 text-[#FF5500]" />
                       {item.item}
                     </li>
                   ))}
@@ -1016,7 +1070,7 @@ const config: Config<BlockProps> = {
                 <div className="mt-8">
                   <Link
                     href={ctaHref}
-                    className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
+                    className={`inline-flex items-center gap-2 ${buttonRadius || "rounded-[3px]"} bg-[#FF5500] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#E04B00]`}
                   >
                     {ctaLabel}
                     <ArrowUpRightIcon className="size-4" />
@@ -1025,7 +1079,7 @@ const config: Config<BlockProps> = {
               ) : null}
             </div>
             <div
-              className={`relative w-full overflow-hidden rounded-[3px] border border-line bg-mist ${
+              className={`relative w-full overflow-hidden rounded-[3px] border border-[#1E293B] bg-[#111827] ${
                 flip === "true" ? "lg:order-1" : ""
               }`}
               style={{ aspectRatio: "4 / 3" }}
@@ -1070,16 +1124,16 @@ const config: Config<BlockProps> = {
       render: ({ eyebrow, title, dark, items = [] }) => {
         const isDark = dark === "true";
         return (
-          <Section className={isDark ? "bg-ink text-white" : "bg-white"}>
+          <Section className={isDark ? "" : "bg-white"}>
             <SectionHeading eyebrow={eyebrow} title={title} dark={isDark} />
-            <dl className={`mt-12 grid gap-8 border-t pt-10 sm:grid-cols-3 ${isDark ? "border-white/20" : "border-line"}`}>
+            <dl className={`mt-12 grid gap-8 border-t pt-10 sm:grid-cols-3 ${isDark ? "border-white/20" : "border-[#1E293B]"}`}>
               {items.map((stat: any, i: number) => (
                 <div key={i} className="flex flex-col gap-1">
                   <dt className="sr-only">{stat.label}</dt>
                   <dd className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-                    <span className={isDark ? "text-brand-bright" : "text-brand"}>{stat.value}</span>
+                    <span className={isDark ? "text-[#FF6B1A]" : "text-[#FF5500]"}>{stat.value}</span>
                   </dd>
-                  <dd className={isDark ? "text-sm text-white/70" : "text-sm text-ink/60"}>
+                  <dd className={isDark ? "text-sm text-white/70" : "text-sm text-[#64748B]"}>
                     {stat.label}
                   </dd>
                 </div>
@@ -1121,17 +1175,17 @@ const config: Config<BlockProps> = {
       render: ({ eyebrow, title, subtitle, dark, items = [] }) => {
         const isDark = dark === "true";
         return (
-          <Section className={isDark ? "bg-ink text-white" : "bg-mist"}>
+          <Section className={isDark ? "" : "bg-mist"}>
             <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} dark={isDark} />
             <ul className="mt-12 grid gap-x-12 gap-y-8 md:grid-cols-2">
               {items.map((feature: any, i: number) => (
                 <li key={i} className="flex items-start gap-4">
-                  <span className={`mt-1 grid size-7 shrink-0 place-items-center rounded-full ${isDark ? "bg-brand-bright text-ink" : "bg-brand text-white"}`}>
+                  <span className={`mt-1 grid size-7 shrink-0 place-items-center rounded-full ${isDark ? "bg-[#FF5500] text-white" : "bg-[#FF5500] text-white"}`}>
                     <CheckIcon className="size-3.5" />
                   </span>
                   <div>
                     <h3 className="font-display text-base font-semibold">{feature.title}</h3>
-                    <p className={`mt-1 text-sm leading-relaxed ${isDark ? "text-white/65" : "text-ink/65"}`}>
+                    <p className={`mt-1 text-sm leading-relaxed ${isDark ? "text-white/65" : "text-[#64748B]"}`}>
                       {feature.body}
                     </p>
                   </div>
@@ -1151,13 +1205,20 @@ const config: Config<BlockProps> = {
         title: { type: "textarea" },
         subtitle: { type: "textarea" },
         note: { type: "textarea" },
+        buttonRadius: { type: "radio", options: [
+          { value: "rounded-none", label: "Square" },
+          { value: "rounded-[3px]", label: "Slight" },
+          { value: "rounded-lg", label: "Rounded" },
+          { value: "rounded-xl", label: "Extra rounded" },
+          { value: "rounded-full", label: "Pill" },
+        ] },
         items: {
           type: "array",
           arrayFields: {
             name: { type: "text" },
             price: { type: "text" },
             period: { type: "text" },
-            blurb: { type: "textarea" },
+            blurb: { type: "richtext", contentEditable: true },
             featured: { type: "radio", options: [
               { value: "false", label: "Standard" },
               { value: "true", label: "Highlighted" },
@@ -1189,8 +1250,8 @@ const config: Config<BlockProps> = {
           },
         ],
       },
-      render: ({ eyebrow, title, subtitle, note, items = [] }) => (
-        <Section className="bg-white">
+      render: ({ eyebrow, title, subtitle, note, buttonRadius, items = [] }) => (
+        <Section>
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {items.map((plan: any, i: number) => {
@@ -1199,23 +1260,23 @@ const config: Config<BlockProps> = {
                 <div
                   key={i}
                   className={`flex h-full flex-col justify-between gap-8 rounded-[3px] p-8 ${
-                    featured ? "bg-ink text-white shadow-xl" : "border border-line bg-white"
+                    featured ? "bg-[#111827] text-white shadow-xl" : "border border-[#1E293B] bg-[#111827]"
                   }`}
                 >
                   <div className="flex flex-col gap-3">
-                    <p className={`font-mono text-xs font-bold uppercase tracking-[0.18em] ${featured ? "text-brand-bright" : "text-brand"}`}>
+                    <p className={`font-mono text-xs font-bold uppercase tracking-[0.18em] ${featured ? "text-[#FF6B1A]" : "text-[#FF5500]"}`}>
                       {plan.name}
                     </p>
                     <p className="flex items-baseline gap-1">
-                      <span className="font-display text-4xl font-semibold">{plan.price}</span>
+                      <span className="font-display text-4xl font-semibold text-white">{plan.price}</span>
                       {plan.period ? (
-                        <span className={`text-sm ${featured ? "text-white/60" : "text-ink/50"}`}>
+                        <span className={`text-sm ${featured ? "text-white/60" : "text-white/50"}`}>
                           {plan.period}
                         </span>
                       ) : null}
                     </p>
                     {plan.blurb ? (
-                      <p className={`text-sm leading-relaxed ${featured ? "text-white/65" : "text-ink/60"}`}>
+                      <p className={`text-sm leading-relaxed ${featured ? "text-white/65" : "text-white/60"}`}>
                         {plan.blurb}
                       </p>
                     ) : null}
@@ -1223,18 +1284,18 @@ const config: Config<BlockProps> = {
                   <ul className="flex flex-col gap-2.5">
                     {(plan.features ?? []).map((feature: any, j: number) => (
                       <li key={j} className="flex items-start gap-2.5 text-sm font-medium">
-                        <CheckIcon className={`mt-0.5 size-4 shrink-0 ${featured ? "text-brand-bright" : "text-brand"}`} />
-                        <span className={featured ? "text-white/85" : "text-ink/80"}>{feature.feature}</span>
+                        <CheckIcon className={`mt-0.5 size-4 shrink-0 ${featured ? "text-[#FF6B1A]" : "text-[#FF5500]"}`} />
+                        <span className={featured ? "text-white/85" : "text-white/80"}>{feature.feature}</span>
                       </li>
                     ))}
                   </ul>
                   {plan.ctaLabel ? (
                     <Link
                       href={plan.ctaHref || "/contact"}
-                      className={`inline-flex items-center justify-center gap-2 rounded-[3px] px-5 py-3 text-sm font-bold transition-colors ${
+                      className={`inline-flex items-center justify-center gap-2 ${buttonRadius || "rounded-[3px]"} px-5 py-3 text-sm font-bold transition-colors ${
                         featured
-                          ? "bg-brand text-white hover:bg-brand-dark"
-                          : "border-2 border-ink text-ink hover:bg-ink hover:text-white"
+                          ? "bg-[#FF5500] text-white hover:bg-[#E04B00]"
+                          : "border-2 border-[#1E293B] text-white hover:bg-[#FF5500] hover:border-[#FF5500]"
                       }`}
                     >
                       {plan.ctaLabel}
@@ -1245,7 +1306,7 @@ const config: Config<BlockProps> = {
               );
             })}
           </div>
-          {note ? <p className="mt-8 max-w-2xl text-sm text-ink/55">{note}</p> : null}
+          {note ? <p className="mt-8 max-w-2xl text-sm text-white/55">{note}</p> : null}
         </Section>
       ),
     },
@@ -1278,23 +1339,23 @@ const config: Config<BlockProps> = {
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((member: any, i: number) => (
-              <div key={i} className="flex h-full flex-col overflow-hidden rounded-[3px] border border-line bg-white">
-                <div className="relative aspect-[4/5] w-full bg-mist">
+              <div key={i} className="flex h-full flex-col overflow-hidden rounded-[3px] border border-[#1E293B] bg-[#111827]">
+                <div className="relative aspect-[4/5] w-full bg-[#0F172A]">
                   {member.photo ? (
                     <Image src={member.photo} alt={member.name || ""} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 33vw" />
                   ) : (
-                    <span className="absolute inset-0 grid place-items-center font-display text-5xl font-semibold text-ink/15">
+                    <span className="absolute inset-0 grid place-items-center font-display text-5xl font-semibold text-white/15">
                       {(member.name || "?").charAt(0)}
                     </span>
                   )}
                 </div>
                 <div className="flex flex-col gap-1 p-6">
-                  <h3 className="font-display text-lg font-semibold text-ink">{member.name}</h3>
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand">
+                  <h3 className="font-display text-lg font-semibold text-white">{member.name}</h3>
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[#FF5500]">
                     {member.role}
                   </p>
                   {member.bio ? (
-                    <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-white/65">{member.bio}</p>
                   ) : null}
                 </div>
               </div>
@@ -1331,14 +1392,14 @@ const config: Config<BlockProps> = {
           <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((img: any, i: number) => (
-              <figure key={i} className="overflow-hidden rounded-[3px] border border-line bg-mist">
+              <figure key={i} className="overflow-hidden rounded-[3px] border border-[#1E293B] bg-[#111827]">
                 <div className="relative aspect-square w-full">
                   {img.src ? (
                     <Image src={img.src} alt={img.alt || ""} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 33vw" />
                   ) : null}
                 </div>
                 {img.caption ? (
-                  <figcaption className="px-5 py-3 text-sm text-ink/60">{img.caption}</figcaption>
+                  <figcaption className="px-5 py-3 text-sm text-[#64748B]">{img.caption}</figcaption>
                 ) : null}
               </figure>
             ))}
@@ -1374,12 +1435,12 @@ const config: Config<BlockProps> = {
       render: ({ eyebrow, title, sub, buttonLabel, whatsappMessage, subline, tone }) => {
         const isDark = tone === "true";
         return (
-          <Section className={isDark ? "bg-ink text-white" : "bg-mist"}>
+          <Section className={isDark ? "" : "bg-mist"}>
             <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
               <div className="max-w-xl">
                 <SectionHeading eyebrow={eyebrow} title={title} subtitle={sub} dark={isDark} />
               </div>
-              <div className={isDark ? "rounded-[3px] bg-white/5 p-8" : ""}>
+              <div className={isDark ? "rounded-[3px] bg-[#111827] p-8" : ""}>
                 <ContactForm
                   message={whatsappMessage}
                   buttonLabel={buttonLabel}
@@ -1410,9 +1471,9 @@ const config: Config<BlockProps> = {
         return (
           <Section className="bg-white">
             <div className="max-w-4xl">
-              {title ? <h2 className="mb-6 font-display text-2xl font-semibold text-ink">{title}</h2> : null}
+              {title ? <h2 className="mb-6 font-display text-2xl font-semibold text-[#111827]">{title}</h2> : null}
               {embed ? (
-                <div className="aspect-video w-full overflow-hidden rounded-[3px] border border-line bg-ink">
+                <div className="aspect-video w-full overflow-hidden rounded-[3px] border border-[#1E293B] bg-[#111827]">
                   <iframe
                     src={embed}
                     title={title || "Video"}
@@ -1422,10 +1483,10 @@ const config: Config<BlockProps> = {
                   />
                 </div>
               ) : src ? (
-                <video src={src} controls className="aspect-video w-full rounded-[3px] border border-line bg-ink" />
+                <video src={src} controls className="aspect-video w-full rounded-[3px] border border-[#1E293B] bg-[#111827]" />
               ) : null}
               {caption ? (
-                <p className="mt-4 text-sm text-ink/60">{caption}</p>
+                <p className="mt-4 text-sm text-[#64748B]">{caption}</p>
               ) : null}
             </div>
           </Section>
@@ -1456,12 +1517,12 @@ const config: Config<BlockProps> = {
         readTime: "6 min read",
       },
       render: ({ category, title, excerpt, author, date, coverImage, readTime }) => (
-        <section className="relative overflow-hidden bg-ink pt-16 pb-14 sm:pt-20 sm:pb-20">
+        <section className="relative overflow-hidden pt-16 pb-14 sm:pt-20 sm:pb-20">
           <Container>
             <div className="max-w-3xl">
               <div className="flex flex-wrap items-center gap-3">
                 {category ? (
-                  <span className="rounded-full border border-brand-bright px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-brand-bright">
+                  <span className="rounded-full border border-[#FF6B1A] px-4 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#FF6B1A]">
                     {category}
                   </span>
                 ) : null}
@@ -1515,12 +1576,12 @@ const config: Config<BlockProps> = {
       },
       render: ({ quote, attribution }) => (
         <Section className="bg-mist">
-          <blockquote className="mx-auto max-w-3xl border-l-4 border-brand pl-8 sm:pl-12">
-            <p className="font-display text-2xl font-medium leading-snug text-ink sm:text-3xl">
-              “{quote}”
+          <blockquote className="mx-auto max-w-3xl border-l-4 border-[#FF5500] pl-8 sm:pl-12">
+            <p className="font-display text-2xl font-medium leading-snug text-white sm:text-3xl">
+              &ldquo;{quote}&rdquo;
             </p>
             {attribution ? (
-              <footer className="mt-5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-ink/60">
+              <footer className="mt-5 font-mono text-xs font-semibold uppercase tracking-[0.2em] text-white/60">
                 — {attribution}
               </footer>
             ) : null}
@@ -1545,8 +1606,8 @@ const config: Config<BlockProps> = {
         bio: "We build trend-native brands — producing content, running social, and turning attention into WhatsApp conversations.",
       },
       render: ({ name, role, photo, bio }) => (
-        <Section className="bg-white">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-[3px] border border-line bg-mist p-8 text-center sm:flex-row sm:items-start sm:text-left">
+        <Section>
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-[3px] border border-[#1E293B] bg-[#111827] p-8 text-center sm:flex-row sm:items-start sm:text-left">
             {photo ? (
               <Image
                 src={photo}
@@ -1556,14 +1617,14 @@ const config: Config<BlockProps> = {
                 className="size-24 shrink-0 rounded-full object-cover"
               />
             ) : (
-              <div className="grid size-24 shrink-0 place-items-center rounded-full bg-brand font-display text-3xl font-semibold text-white">
+              <div className="grid size-24 shrink-0 place-items-center rounded-full bg-[#FF5500] font-display text-3xl font-semibold text-white">
                 {name?.charAt(0) || "S"}
               </div>
             )}
             <div>
-              <p className="font-display text-lg font-semibold text-ink">{name}</p>
-              {role ? <p className="mt-0.5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-brand">{role}</p> : null}
-              {bio ? <p className="mt-3 text-sm leading-relaxed text-ink/70">{bio}</p> : null}
+              <p className="font-display text-lg font-semibold text-white">{name}</p>
+              {role ? <p className="mt-0.5 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#FF5500]">{role}</p> : null}
+              {bio ? <p className="mt-3 text-sm leading-relaxed text-white/70">{bio}</p> : null}
             </div>
           </div>
         </Section>
@@ -1588,7 +1649,7 @@ const config: Config<BlockProps> = {
             {tags.map((item: any, i: number) => (
               <span
                 key={i}
-                className="rounded-full bg-mist px-4 py-1.5 font-mono text-xs font-semibold text-ink/80"
+                className="rounded-full bg-[#111827] px-4 py-1.5 font-mono text-xs font-semibold text-white/80"
               >
                 #{item.tag}
               </span>
@@ -1617,14 +1678,14 @@ const config: Config<BlockProps> = {
         color: "#ff4d00",
       },
       render: ({ label, href, style, color }) => (
-        <Section className="bg-white">
+        <Section>
           <div className="flex flex-wrap gap-4">
             <Link
               href={href}
               className={`inline-flex items-center gap-2 rounded-[3px] px-6 py-3 text-sm font-bold transition-colors ${
                 style === "outline"
                   ? "border-2 border-[var(--link)] text-[var(--link)] hover:bg-[var(--link)] hover:text-white"
-                  : `bg-[var(--link)] ${/^#(f[0-9a-f]{5}|f{6}|e[0-9a-f]{5})$/i.test(color || "") ? "text-ink" : "text-white"} hover:bg-[color-mix(in_srgb,var(--link),#000_14%)]`
+                  : `bg-[var(--link)] ${/^#(f[0-9a-f]{5}|f{6}|e[0-9a-f]{5})$/i.test(color || "") ? "text-[#111827]" : "text-white"} hover:bg-[color-mix(in_srgb,var(--link),#000_14%)]`
               }`}
               style={{ "--link": color || "#ff4d00" } as React.CSSProperties}
             >
