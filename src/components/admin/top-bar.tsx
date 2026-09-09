@@ -19,14 +19,14 @@ export default function TopBar({ userName }: { userName: string }) {
   const pageTitle = sectionNames[section] || "Admin";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-line bg-white px-8">
-      <div className="flex items-center gap-2 text-sm text-ink/50">
-        <span className="font-medium text-ink">Sociolab</span>
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#1E293B] bg-[#111827] px-8">
+      <div className="flex items-center gap-2 text-sm text-white/50">
+        <span className="font-medium text-white">Sociolab</span>
         <span>/</span>
         <span>{pageTitle}</span>
       </div>
       <div className="flex items-center gap-4">
-        <span className="text-sm text-ink/60">{userName}</span>
+        <span className="text-sm text-white/60">{userName}</span>
       </div>
     </header>
   );

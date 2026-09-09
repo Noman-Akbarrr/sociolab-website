@@ -30,7 +30,7 @@ export function Positioning() {
       <div className="mt-12 grid gap-5 md:grid-cols-3">
         {edges.map((edge, i) => (
           <Reveal key={edge.num} delay={i * 0.08}>
-            <div className="group flex h-full flex-col justify-between gap-6 rounded-[3px] bg-ink p-7 text-white transition-transform duration-200 hover:-translate-y-1">
+            <div className="group flex h-full flex-col justify-between gap-6 rounded-[3px] bg-[#111827] p-7 text-white transition-transform duration-200 hover:-translate-y-1">
               <span className="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-brand-bright">
                 {edge.num}
               </span>

@@ -16,7 +16,7 @@ export function FinalCta() {
           </p>
           <WhatsAppLink
             cta="final"
-            className="mt-2 inline-flex items-center gap-2.5 rounded-[3px] bg-ink px-8 py-4 text-base font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="mt-2 inline-flex items-center gap-2.5 rounded-[3px] bg-[#111827] px-8 py-4 text-base font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <WhatsAppIcon className="size-5" />
             Chat on WhatsApp

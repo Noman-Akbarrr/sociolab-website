@@ -589,7 +589,7 @@ const config: Config<BlockProps> = {
                       ) : null}
                     </span>
                     <div className="pb-4">
-                      <h3 className="font-display text-xl font-semibold">{step.title}</h3>
+                      <h3 className={`font-display text-xl font-semibold ${isDark ? "text-white" : "text-[#111827]"}`}>{step.title}</h3>
                       <p
                         className={`mt-2 text-sm leading-relaxed ${
                           isDark ? "text-white/65" : "text-[#64748B]"
@@ -617,7 +617,7 @@ const config: Config<BlockProps> = {
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="font-display text-lg font-semibold">{step.title}</h3>
+                    <h3 className={`font-display text-lg font-semibold ${isDark ? "text-white" : "text-[#111827]"}`}>{step.title}</h3>
                     <p
                       className={`text-sm leading-relaxed ${
                         isDark ? "text-white/60" : "text-[#64748B]"
@@ -659,7 +659,7 @@ const config: Config<BlockProps> = {
       },
       render: ({ eyebrow, title, subtitle, items = [] }) => (
         <Section>
-          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
+          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} dark />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {items.map((c: any, i: number) => (
               <div key={i} className="flex h-full flex-col justify-between gap-10 rounded-[3px] border border-[#1E293B] bg-[#111827] p-7">
@@ -700,7 +700,7 @@ const config: Config<BlockProps> = {
       },
       render: ({ eyebrow, title, items = [] }) => (
         <Section className="bg-mist">
-          <SectionHeading eyebrow={eyebrow} title={title} />
+          <SectionHeading eyebrow={eyebrow} title={title} dark />
           <div className="mt-12 grid gap-5 md:grid-cols-2">
             {items.map((t: any, i: number) => (
               <figure key={i} className="flex h-full flex-col justify-between gap-8 rounded-[3px] bg-[#111827] p-8">
@@ -746,7 +746,7 @@ const config: Config<BlockProps> = {
       },
       render: ({ eyebrow, title, subtitle, items = [] }) => (
         <Section>
-          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
+          <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} dark />
           <div className="mt-12 max-w-3xl divide-y divide-line border-y border-line">
             {items.map((faq: any, i: number) => (
               <details key={i} className="group py-5">

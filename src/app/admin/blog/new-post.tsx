@@ -43,7 +43,7 @@ export function NewPostForm() {
                 type: "TextBlock",
                 props: {
                   align: "left",
-                  paragraphs: [{ paragraph: "Start writing your post here — replace this with the real content." }],
+                  paragraphs: [{ paragraph: "Start writing your post here â€” replace this with the real content." }],
                 },
               },
               {
@@ -76,26 +76,26 @@ export function NewPostForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3 rounded-[3px] border border-line bg-white p-5">
-      <label className="text-xs font-bold uppercase tracking-[0.14em] text-ink/50">
+    <form onSubmit={onSubmit} className="flex flex-col gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+      <label className="text-xs font-bold uppercase tracking-[0.14em] text-white/50">
         New blog post
       </label>
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Post title — e.g. 7 content ideas for restaurants"
-          className="w-full flex-1 rounded-[3px] border border-line bg-white px-4 py-3 text-sm text-ink outline-none placeholder:text-ink/35 focus:border-brand"
+          placeholder="Post title â€” e.g. 7 content ideas for restaurants"
+          className="w-full flex-1 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-3 text-sm text-white outline-none placeholder:text-white/35 focus:border-brand"
         />
         <button
           type="submit"
           disabled={loading}
           className="shrink-0 rounded-[3px] bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
         >
-          {loading ? "Creating…" : "Create post"}
+          {loading ? "Creatingâ€¦" : "Create post"}
         </button>
       </div>
-      <p className="font-mono text-xs text-ink/45">
+      <p className="font-mono text-xs text-white/45">
         URL will be /resources/{slugify(title) || "your-post-slug"}
       </p>
       {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}

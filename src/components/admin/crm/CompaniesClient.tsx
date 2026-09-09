@@ -53,12 +53,12 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
     <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Companies</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Companies</h1>
           <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
             + New Company
           </button>
         </div>
-        <p className="text-sm text-ink/60">Manage your accounts and prospects.</p>
+        <p className="text-sm text-white/60">Manage your accounts and prospects.</p>
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
@@ -68,34 +68,34 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
             placeholder="Search companies..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); fetchCompanies(); }}
-            className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           />
         </div>
       </div>
 
       {showNew && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-white p-6 shadow-xl">
-            <h2 className="font-display text-xl font-semibold text-ink">New Company</h2>
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+            <h2 className="font-display text-xl font-semibold text-white">New Company</h2>
             <form onSubmit={handleNewCompany} className="mt-4 flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Name *</label>
-                <input type="text" required value={newCompany.name} onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">Name *</label>
+                <input type="text" required value={newCompany.name} onChange={(e) => setNewCompany({ ...newCompany, name: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-ink/60 mb-1">Domain</label>
-                  <input type="text" value={newCompany.domain} onChange={(e) => setNewCompany({ ...newCompany, domain: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                  <label className="block text-xs font-semibold text-white/60 mb-1">Domain</label>
+                  <input type="text" value={newCompany.domain} onChange={(e) => setNewCompany({ ...newCompany, domain: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-ink/60 mb-1">Industry</label>
-                  <input type="text" value={newCompany.industry} onChange={(e) => setNewCompany({ ...newCompany, industry: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                  <label className="block text-xs font-semibold text-white/60 mb-1">Industry</label>
+                  <input type="text" value={newCompany.industry} onChange={(e) => setNewCompany({ ...newCompany, industry: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-semibold text-ink/60 mb-1">Size</label>
-                  <select value={newCompany.size} onChange={(e) => setNewCompany({ ...newCompany, size: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand">
+                  <label className="block text-xs font-semibold text-white/60 mb-1">Size</label>
+                  <select value={newCompany.size} onChange={(e) => setNewCompany({ ...newCompany, size: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
                     <option value="">Select</option>
                     <option value="1-10">1-10</option>
                     <option value="11-50">11-50</option>
@@ -106,24 +106,24 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-ink/60 mb-1">Website</label>
-                  <input type="url" value={newCompany.website} onChange={(e) => setNewCompany({ ...newCompany, website: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                  <label className="block text-xs font-semibold text-white/60 mb-1">Website</label>
+                  <input type="url" value={newCompany.website} onChange={(e) => setNewCompany({ ...newCompany, website: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">LinkedIn</label>
-                <input type="url" value={newCompany.linkedin} onChange={(e) => setNewCompany({ ...newCompany, linkedin: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">LinkedIn</label>
+                <input type="url" value={newCompany.linkedin} onChange={(e) => setNewCompany({ ...newCompany, linkedin: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Tags (comma separated)</label>
-                <input type="text" value={newCompany.tags} onChange={(e) => setNewCompany({ ...newCompany, tags: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" placeholder="enterprise, warm-lead, partner" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">Tags (comma separated)</label>
+                <input type="text" value={newCompany.tags} onChange={(e) => setNewCompany({ ...newCompany, tags: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" placeholder="enterprise, warm-lead, partner" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Notes</label>
-                <textarea value={newCompany.notes} onChange={(e) => setNewCompany({ ...newCompany, notes: e.target.value })} rows={3} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">Notes</label>
+                <textarea value={newCompany.notes} onChange={(e) => setNewCompany({ ...newCompany, notes: e.target.value })} rows={3} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setShowNew(false)} className="rounded-[3px] border border-line px-4 py-2 text-sm font-bold text-ink transition-colors hover:border-brand">Cancel</button>
+                <button type="button" onClick={() => setShowNew(false)} className="rounded-[3px] border border-[#1E293B] px-4 py-2 text-sm font-bold text-white transition-colors hover:border-brand">Cancel</button>
                 <button type="submit" className="rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-dark">Create Company</button>
               </div>
             </form>
@@ -131,16 +131,16 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
         </div>
       )}
 
-      <div className="mt-6 rounded-[3px] border border-line bg-white overflow-hidden">
+      <div className="mt-6 rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
         {companies.length === 0 ? (
-          <p className="p-8 text-center text-sm text-ink/50">No companies yet. Create your first one.</p>
+          <p className="p-8 text-center text-sm text-white/50">No companies yet. Create your first one.</p>
         ) : (
-          <ul className="divide-y divide-line">
+          <ul className="divide-y divide-[#1E293B]">
             {companies.map((company: any) => (
-              <li key={company.id} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+              <li key={company.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                 <Link href={`/admin/crm/companies/${company.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
-                  <span className="truncate font-display text-sm font-semibold text-ink">{company.name}</span>
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                  <span className="truncate font-display text-sm font-semibold text-white">{company.name}</span>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                     {company.domain && <span>{company.domain}</span>}
                     {company.industry && <span>· {company.industry}</span>}
                     {company.size && <span>· {company.size}</span>}
@@ -152,7 +152,7 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
                 {company.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {company.tags.map((tag: string) => (
-                      <span key={tag} className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-ink/60">{tag}</span>
+                      <span key={tag} className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium text-white/60">{tag}</span>
                     ))}
                   </div>
                 )}
@@ -164,10 +164,10 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
 
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between">
-          <span className="text-sm text-ink/60">Page {page} of {totalPages} — {total} companies</span>
+          <span className="text-sm text-white/60">Page {page} of {totalPages} — {total} companies</span>
           <div className="flex gap-2">
-            <button onClick={() => { setPage(p => Math.max(1, p - 1)); fetchCompanies(); }} disabled={page === 1 || loading} className="rounded-[3px] border border-line px-3 py-1.5 text-sm text-ink disabled:opacity-50">Prev</button>
-            <button onClick={() => { setPage(p => Math.min(totalPages, p + 1)); fetchCompanies(); }} disabled={page === totalPages || loading} className="rounded-[3px] border border-line px-3 py-1.5 text-sm text-ink disabled:opacity-50">Next</button>
+            <button onClick={() => { setPage(p => Math.max(1, p - 1)); fetchCompanies(); }} disabled={page === 1 || loading} className="rounded-[3px] border border-[#1E293B] px-3 py-1.5 text-sm text-white disabled:opacity-50">Prev</button>
+            <button onClick={() => { setPage(p => Math.min(totalPages, p + 1)); fetchCompanies(); }} disabled={page === totalPages || loading} className="rounded-[3px] border border-[#1E293B] px-3 py-1.5 text-sm text-white disabled:opacity-50">Next</button>
           </div>
         </div>
       )}

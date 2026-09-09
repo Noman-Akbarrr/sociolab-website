@@ -18,11 +18,11 @@ export default async function BlogAdmin() {
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-white">
           Blog
         </h1>
-        <p className="text-sm text-ink/60">
-          Posts live at /resources/… and are fully editable in the same visual editor.
+        <p className="text-sm text-white/60">
+          Posts live at /resources/â€¦ and are fully editable in the same visual editor.
         </p>
       </div>
 
@@ -32,7 +32,7 @@ export default async function BlogAdmin() {
 
       <div className="mt-10 flex flex-col gap-4">
         {posts.length === 0 ? (
-          <p className="rounded-[3px] border border-dashed border-line p-8 text-center text-sm text-ink/50">
+          <p className="rounded-[3px] border border-dashed border-[#1E293B] p-8 text-center text-sm text-white/50">
             No posts yet. Create your first one above.
           </p>
         ) : null}
@@ -40,17 +40,17 @@ export default async function BlogAdmin() {
           <Link
             key={post.path}
             href={`/admin/edit${post.path}`}
-            className="group flex items-center justify-between gap-4 rounded-[3px] border border-line bg-white px-5 py-4 transition-colors hover:border-brand"
+            className="group flex items-center justify-between gap-4 rounded-[3px] border border-[#1E293B] bg-[#111827] px-5 py-4 transition-colors hover:border-brand"
           >
             <div className="flex min-w-0 flex-col gap-1">
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand">
                 {post.path.replace("/resources/", "")}
               </span>
-              <span className="truncate font-display text-base font-semibold text-ink group-hover:text-brand">
+              <span className="truncate font-display text-base font-semibold text-white group-hover:text-brand">
                 {post.title || "Untitled post"}
               </span>
             </div>
-            <span className="shrink-0 text-xs text-ink/50">
+            <span className="shrink-0 text-xs text-white/50">
               {post.updatedAt
                 ? `Edited ${new Date(post.updatedAt).toLocaleDateString()}`
                 : "Not edited yet"}

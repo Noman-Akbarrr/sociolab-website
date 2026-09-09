@@ -48,7 +48,7 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
             </WhatsAppLink>
             <a
               href="/method"
-              className="inline-flex items-center gap-2 rounded-[3px] border-2 border-ink px-7 py-[14px] text-base font-bold text-ink transition-colors hover:bg-ink hover:text-white"
+              className="inline-flex items-center gap-2 rounded-[3px] border-2 border-white px-7 py-[14px] text-base font-bold text-white transition-colors hover:bg-white hover:text-[#111827]"
             >
               See how we work
             </a>
@@ -87,12 +87,12 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
         <ol className="mt-12 grid gap-5 md:grid-cols-2">
           {content.steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 0.06}>
-              <li className="flex h-full flex-col gap-3 rounded-[3px] border border-line bg-white p-7">
+              <li className="flex h-full flex-col gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] p-7">
                 <span className="font-display text-2xl font-semibold text-brand">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="font-display text-lg font-semibold text-ink">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-ink/65">{step.body}</p>
+                <h3 className="font-display text-lg font-semibold text-white">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-white/65">{step.body}</p>
               </li>
             </Reveal>
           ))}
@@ -113,10 +113,10 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
             {content.deliverables.items.map((item) => (
               <li
                 key={item}
-                className="flex items-start gap-3 rounded-[3px] border border-line bg-white px-5 py-4"
+                className="flex items-start gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] px-5 py-4"
               >
                 <CheckIcon className="mt-0.5 size-4 shrink-0 text-brand" />
-                <span className="text-sm font-medium text-ink">{item}</span>
+                <span className="text-sm font-medium text-white">{item}</span>
               </li>
             ))}
           </ul>
@@ -124,7 +124,7 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
       </Section>
 
       {/* Expectation setting */}
-      <Section className="bg-ink text-white">
+      <Section className="bg-[#111827] text-white">
         <div className="max-w-3xl">
           <Eyebrow>{content.expectationTitle}</Eyebrow>
           <p className="mt-6 text-xl leading-relaxed text-white/80">{content.expectationBody}</p>
@@ -140,7 +140,7 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink/70">{content.proofBody}</p>
         <a
           href="/work"
-          className="mt-7 inline-flex items-center gap-2 rounded-[3px] border-2 border-ink px-6 py-3 text-sm font-bold text-ink transition-colors hover:bg-ink hover:text-white"
+          className="mt-7 inline-flex items-center gap-2 rounded-[3px] border-2 border-white px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white hover:text-[#111827]"
         >
           See full case studies
         </a>
@@ -153,16 +153,16 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
           <h2 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
             Questions before you reach out
           </h2>
-          <div className="mt-10 divide-y divide-line border-y border-line">
+          <div className="mt-10 divide-y divide-[#1E293B] border-y border-[#1E293B]">
             {content.faqs.map((faq) => (
               <details key={faq.q} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-base font-semibold text-ink">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-base font-semibold text-white">
                   {faq.q}
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-ink/30 text-ink transition-transform group-open:rotate-45">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/30 text-white transition-transform group-open:rotate-45">
                     +
                   </span>
                 </summary>
-                <p className="pb-2 pt-3 text-sm leading-relaxed text-ink/70">{faq.a}</p>
+                <p className="pb-2 pt-3 text-sm leading-relaxed text-white/70">{faq.a}</p>
               </details>
             ))}
           </div>
@@ -180,7 +180,7 @@ export function ServicePage({ content, whatsappMessage }: { content: ServiceCont
             <WhatsAppLink
               cta="service-final"
               message={whatsappMessage}
-              className="mt-2 inline-flex items-center gap-2.5 rounded-[3px] bg-ink px-8 py-4 text-base font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="mt-2 inline-flex items-center gap-2.5 rounded-[3px] bg-[#111827] px-8 py-4 text-base font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <WhatsAppIcon className="size-5" />
               Chat on WhatsApp

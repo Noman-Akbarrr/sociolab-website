@@ -60,10 +60,10 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="fixed inset-y-0 left-0 w-64 bg-ink text-white flex flex-col z-40">
+    <aside className="fixed inset-y-0 left-0 w-64 bg-[#111827] text-white flex flex-col z-40">
       <div className="px-6 py-5 border-b border-white/10">
         <Link href="/admin" className="flex items-center gap-3">
-          <span className="w-8 h-8 rounded-lg bg-brand text-ink flex items-center justify-center font-display font-bold text-sm">
+          <span className="w-8 h-8 rounded-lg bg-brand text-white flex items-center justify-center font-display font-bold text-sm">
             S
           </span>
           <span className="font-display font-semibold text-lg">Sociolab</span>

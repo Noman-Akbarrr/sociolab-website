@@ -53,11 +53,11 @@ export default async function CRMDashboard() {
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-white">
           CRM Dashboard
         </h1>
-        <p className="text-sm text-ink/60">
-          Sales pipeline, projects, tickets & tasks — all in one place.
+        <p className="text-sm text-white/60">
+          Sales pipeline, projects, tickets & tasks â€” all in one place.
         </p>
       </div>
 
@@ -67,9 +67,9 @@ export default async function CRMDashboard() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="group flex flex-col gap-2 rounded-[3px] border border-line bg-white p-5 transition-colors hover:border-brand"
+            className="group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5 transition-colors hover:border-brand"
           >
-            <span className="text-xs text-ink/50">{stat.label}</span>
+            <span className="text-xs text-white/50">{stat.label}</span>
             <span className={`font-display text-2xl font-semibold ${stat.color} group-hover:text-brand`}>
               {stat.value}
             </span>
@@ -87,19 +87,19 @@ export default async function CRMDashboard() {
         </Link>
         <Link
           href="/admin/crm/companies/new"
-          className="inline-flex items-center gap-2 rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:border-brand"
+          className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
         >
           + New Company
         </Link>
         <Link
           href="/admin/crm/projects/new"
-          className="inline-flex items-center gap-2 rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:border-brand"
+          className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
         >
           + New Project
         </Link>
         <Link
           href="/admin/crm/tickets/new"
-          className="inline-flex items-center gap-2 rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:border-brand"
+          className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
         >
           + New Ticket
         </Link>
@@ -110,19 +110,19 @@ export default async function CRMDashboard() {
         {/* Recent Deals */}
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Recent Deals</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-white">Recent Deals</h2>
             <Link href="/admin/crm/deals" className="text-xs font-semibold text-brand hover:underline">View all</Link>
           </div>
-          <div className="rounded-[3px] border border-line bg-white overflow-hidden">
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
             {recentDeals.length === 0 ? (
-              <p className="p-8 text-center text-sm text-ink/50">No deals yet. Create your first one.</p>
+              <p className="p-8 text-center text-sm text-white/50">No deals yet. Create your first one.</p>
             ) : (
-              <ul className="divide-y divide-line">
+              <ul className="divide-y divide-[#1E293B]">
                 {recentDeals.map((deal: any) => (
-                  <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <Link href={`/admin/crm/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
-                      <span className="truncate font-display text-sm font-semibold text-ink">{deal.title}</span>
-                      <span className="truncate text-xs text-ink/50">{deal.company?.name || "Unknown"}</span>
+                      <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
+                      <span className="truncate text-xs text-white/50">{deal.company?.name || "Unknown"}</span>
                     </Link>
                     <span
                       className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${
@@ -146,26 +146,26 @@ export default async function CRMDashboard() {
         {/* Recent Activity */}
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Recent Activity</h2>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-white">Recent Activity</h2>
             <Link href="/admin/crm/activity" className="text-xs font-semibold text-brand hover:underline">View all</Link>
           </div>
-          <div className="rounded-[3px] border border-line bg-white overflow-hidden">
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
             {recentActivities.length === 0 ? (
-              <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
+              <p className="p-8 text-center text-sm text-white/50">No activity yet.</p>
             ) : (
-              <ul className="divide-y divide-line">
+              <ul className="divide-y divide-[#1E293B]">
                 {recentActivities.map((activity: any) => (
-                  <li key={activity.id} className="flex flex-col gap-1 p-4 hover:bg-mist/50">
+                  <li key={activity.id} className="flex flex-col gap-1 p-4 hover:bg-white/5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">
-                        <span className="font-display text-sm font-semibold text-ink">{activity.subject}</span>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                        <span className="font-display text-sm font-semibold text-white">{activity.subject}</span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                           <span className="font-mono">{activity.user.name}</span>
-                          <span>·</span>
+                          <span>Â·</span>
                           <span>{new Date(activity.createdAt).toLocaleString()}</span>
                           {activity.deal && (
                             <>
-                              <span>·</span>
+                              <span>Â·</span>
                               <Link href={`/admin/crm/deals/${activity.deal.id}`} className="text-brand hover:underline">
                                 {activity.deal.title}
                               </Link>
@@ -173,7 +173,7 @@ export default async function CRMDashboard() {
                           )}
                           {activity.company && (
                             <>
-                              <span>·</span>
+                              <span>Â·</span>
                               <Link href={`/admin/crm/companies/${activity.company.id}`} className="text-brand hover:underline">
                                 {activity.company.name}
                               </Link>
@@ -181,7 +181,7 @@ export default async function CRMDashboard() {
                           )}
                           {activity.project && (
                             <>
-                              <span>·</span>
+                              <span>Â·</span>
                               <Link href={`/admin/crm/projects/${activity.project.id}`} className="text-brand hover:underline">
                                 {activity.project.name}
                               </Link>
@@ -189,7 +189,7 @@ export default async function CRMDashboard() {
                           )}
                           {activity.ticket && (
                             <>
-                              <span>·</span>
+                              <span>Â·</span>
                               <Link href={`/admin/crm/tickets/${activity.ticket.id}`} className="text-brand hover:underline">
                                 {activity.ticket.number}
                               </Link>
@@ -197,11 +197,11 @@ export default async function CRMDashboard() {
                           )}
                         </div>
                       </div>
-                      <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">
+                      <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-white/40">
                         {activity.type.replace(/-/g, " ")}
                       </span>
                     </div>
-                    {activity.body && <p className="text-sm text-ink/60 line-clamp-2">{activity.body}</p>}
+                    {activity.body && <p className="text-sm text-white/60 line-clamp-2">{activity.body}</p>}
                   </li>
                 ))}
               </ul>

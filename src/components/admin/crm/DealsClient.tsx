@@ -92,12 +92,12 @@ export function DealsClient({
     <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Deals</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Deals</h1>
           <button onClick={() => setShowNew(true)} className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
             + New Deal
           </button>
         </div>
-        <p className="text-sm text-ink/60">Manage your sales pipeline. {viewMode === "kanban" ? "Drag deals between stages." : "Filter by stage to see list view."}</p>
+        <p className="text-sm text-white/60">Manage your sales pipeline. {viewMode === "kanban" ? "Drag deals between stages." : "Filter by stage to see list view."}</p>
       </div>
 
       {/* Filters */}
@@ -106,7 +106,7 @@ export function DealsClient({
           <select
             value={stageFilter}
             onChange={(e) => { setStageFilter(e.target.value); setPage(1); fetchDeals(); }}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="">All Stages</option>
             {stages.map((s: any) => (
@@ -118,7 +118,7 @@ export function DealsClient({
           <select
             value={companyFilter}
             onChange={(e) => { setCompanyFilter(e.target.value); setPage(1); fetchDeals(); }}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="">All Companies</option>
             {companies.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -130,7 +130,7 @@ export function DealsClient({
             placeholder="Search deals..."
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); fetchDeals(); }}
-            className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           />
         </div>
       </div>
@@ -138,32 +138,32 @@ export function DealsClient({
       {/* New Deal Modal */}
       {showNew && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-white p-6 shadow-xl">
-            <h2 className="font-display text-xl font-semibold text-ink">New Deal</h2>
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+            <h2 className="font-display text-xl font-semibold text-white">New Deal</h2>
             <form onSubmit={handleNewDeal} className="mt-4 flex flex-col gap-4">
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Title *</label>
-                <input type="text" required value={newDeal.title} onChange={(e) => setNewDeal({ ...newDeal, title: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">Title *</label>
+                <input type="text" required value={newDeal.title} onChange={(e) => setNewDeal({ ...newDeal, title: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Company *</label>
-                <select required value={newDeal.companyId} onChange={(e) => setNewDeal({ ...newDeal, companyId: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand">
+                <label className="block text-xs font-semibold text-white/60 mb-1">Company *</label>
+                <select required value={newDeal.companyId} onChange={(e) => setNewDeal({ ...newDeal, companyId: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
                   <option value="">Select company</option>
                   {companies.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Value (USD)</label>
-                <input type="number" value={newDeal.value} onChange={(e) => setNewDeal({ ...newDeal, value: parseInt(e.target.value) || 0 })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
+                <label className="block text-xs font-semibold text-white/60 mb-1">Value (USD)</label>
+                <input type="number" value={newDeal.value} onChange={(e) => setNewDeal({ ...newDeal, value: parseInt(e.target.value) || 0 })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-ink/60 mb-1">Stage</label>
-                <select value={newDeal.stageId} onChange={(e) => setNewDeal({ ...newDeal, stageId: e.target.value })} className="w-full rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand">
+                <label className="block text-xs font-semibold text-white/60 mb-1">Stage</label>
+                <select value={newDeal.stageId} onChange={(e) => setNewDeal({ ...newDeal, stageId: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
                   {stages.map((s: any) => <option key={s.id} value={s.id}>{s.label}</option>)}
                 </select>
               </div>
               <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setShowNew(false)} className="rounded-[3px] border border-line px-4 py-2 text-sm font-bold text-ink transition-colors hover:border-brand">Cancel</button>
+                <button type="button" onClick={() => setShowNew(false)} className="rounded-[3px] border border-[#1E293B] px-4 py-2 text-sm font-bold text-white transition-colors hover:border-brand">Cancel</button>
                 <button type="submit" className="rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-dark">Create Deal</button>
               </div>
             </form>
@@ -180,16 +180,16 @@ export function DealsClient({
                 <span>{stage.label}</span>
                 <span className="text-[11px] opacity-80">{dealsByStage.find((d: any) => d.stage.id === stage.id)?.deals.length || 0}</span>
               </div>
-              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-line bg-white p-3 min-h-[400px]">
+              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-[#1E293B] bg-[#111827] p-3 min-h-[400px]">
                 {dealsByStage.find((d: any) => d.stage.id === stage.id)?.deals.map((deal: any) => (
                   <Link
                     key={deal.id}
                     href={`/admin/crm/deals/${deal.id}`}
-                    className="group flex flex-col gap-2 rounded-[3px] border border-line bg-white p-3 transition-shadow hover:shadow-md"
+                    className="group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-shadow hover:shadow-md"
                     onDragStart={(e) => e.dataTransfer.setData("dealId", deal.id)}
                   >
-                    <span className="font-display text-sm font-semibold text-ink group-hover:text-brand">{deal.title}</span>
-                    <div className="flex items-center justify-between text-xs text-ink/50">
+                    <span className="font-display text-sm font-semibold text-white group-hover:text-brand">{deal.title}</span>
+                    <div className="flex items-center justify-between text-xs text-white/50">
                       <span>{deal.company.name}</span>
                       <span>{formatCurrency(deal.value)}</span>
                     </div>
@@ -200,16 +200,16 @@ export function DealsClient({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-[3px] border border-line bg-white overflow-hidden">
+        <div className="mt-6 rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
           {deals.length === 0 ? (
-            <p className="p-8 text-center text-sm text-ink/50">No deals found.</p>
+            <p className="p-8 text-center text-sm text-white/50">No deals found.</p>
           ) : (
-            <ul className="divide-y divide-line">
+            <ul className="divide-y divide-[#1E293B]">
               {deals.map((deal: any) => (
-                <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                   <Link href={`/admin/crm/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="truncate font-display text-sm font-semibold text-ink">{deal.title}</span>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                    <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                       <span>{deal.company.name}</span>
                       <span>·</span>
                       <span>{formatCurrency(deal.value)}</span>
@@ -234,10 +234,10 @@ export function DealsClient({
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between">
-          <span className="text-sm text-ink/60">Page {page} of {totalPages} — {total} deals</span>
+          <span className="text-sm text-white/60">Page {page} of {totalPages} — {total} deals</span>
           <div className="flex gap-2">
-            <button onClick={() => { setPage(p => Math.max(1, p - 1)); fetchDeals(); }} disabled={page === 1 || loading} className="rounded-[3px] border border-line px-3 py-1.5 text-sm text-ink disabled:opacity-50">Prev</button>
-            <button onClick={() => { setPage(p => Math.min(totalPages, p + 1)); fetchDeals(); }} disabled={page === totalPages || loading} className="rounded-[3px] border border-line px-3 py-1.5 text-sm text-ink disabled:opacity-50">Next</button>
+            <button onClick={() => { setPage(p => Math.max(1, p - 1)); fetchDeals(); }} disabled={page === 1 || loading} className="rounded-[3px] border border-[#1E293B] px-3 py-1.5 text-sm text-white disabled:opacity-50">Prev</button>
+            <button onClick={() => { setPage(p => Math.min(totalPages, p + 1)); fetchDeals(); }} disabled={page === totalPages || loading} className="rounded-[3px] border border-[#1E293B] px-3 py-1.5 text-sm text-white disabled:opacity-50">Next</button>
           </div>
         </div>
       )}

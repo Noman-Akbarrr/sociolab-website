@@ -37,7 +37,7 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-ink">
+        <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-white">
           Email
         </label>
         <input
@@ -47,11 +47,11 @@ export function LoginForm() {
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-[3px] border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-brand"
+          className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-3 text-sm text-white outline-none transition-colors focus:border-brand"
         />
       </div>
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-ink">
+        <label htmlFor="password" className="mb-1.5 block text-sm font-semibold text-white">
           Password
         </label>
         <input
@@ -61,7 +61,7 @@ export function LoginForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-[3px] border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-brand"
+          className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-3 text-sm text-white outline-none transition-colors focus:border-brand"
         />
       </div>
       {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}

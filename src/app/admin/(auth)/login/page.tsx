@@ -14,13 +14,13 @@ export default async function LoginPage() {
   return (
     <div className="w-full max-w-md px-5">
       <div className="mb-8 flex items-center gap-3">
-        <span className="w-10 h-10 rounded-lg bg-brand text-ink flex items-center justify-center font-display font-bold text-lg">
+        <span className="w-10 h-10 rounded-lg bg-brand text-white flex items-center justify-center font-display font-bold text-lg">
           S
         </span>
         <span className="font-display text-xl font-semibold">Sociolab</span>
       </div>
-      <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Sign in</h1>
-      <p className="mt-2 text-sm text-ink/60">
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Sign in</h1>
+      <p className="mt-2 text-sm text-white/60">
         Internal team access only.
       </p>
 
@@ -28,11 +28,11 @@ export default async function LoginPage() {
         <LoginForm />
       ) : (
         <>
-          <div className="mt-6 rounded-[3px] border border-line bg-white p-6">
+          <div className="mt-6 rounded-[3px] border border-[#1E293B] bg-[#111827] p-6">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand">
               No admin yet
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-ink/70">
+            <p className="mt-2 text-sm leading-relaxed text-white/70">
               Create the first admin account to get started.
             </p>
           </div>

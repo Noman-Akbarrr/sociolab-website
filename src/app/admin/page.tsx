@@ -43,9 +43,9 @@ export default async function Dashboard() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="group rounded-[3px] border border-line bg-white p-5 transition-colors hover:border-brand"
+            className="group rounded-[3px] border border-[#1E293B] bg-[#111827] p-5 transition-colors hover:border-brand"
           >
-            <span className="text-xs text-ink/50">{stat.label}</span>
+            <span className="text-xs text-white/50">{stat.label}</span>
             <span className={`mt-1 block font-display text-2xl font-semibold ${stat.color}`}>
               {stat.value}
             </span>
@@ -62,13 +62,13 @@ export default async function Dashboard() {
         </Link>
         <Link
           href="/admin/pipeline"
-          className="inline-flex items-center gap-2 rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:border-brand"
+          className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
         >
           View Pipeline
         </Link>
         <Link
           href="/admin/clients"
-          className="inline-flex items-center gap-2 rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink transition-colors hover:border-brand"
+          className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
         >
           View Clients
         </Link>
@@ -77,21 +77,21 @@ export default async function Dashboard() {
       <div className="mt-10 grid gap-8 lg:grid-cols-2">
         <section className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-lg font-semibold text-ink">Recent Deals</h2>
+            <h2 className="font-display text-lg font-semibold text-white">Recent Deals</h2>
             <Link href="/admin/deals" className="text-xs font-semibold text-brand hover:underline">
               View all
             </Link>
           </div>
-          <div className="rounded-[3px] border border-line bg-white overflow-hidden">
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
             {stats.recentDeals.length === 0 ? (
-              <p className="p-8 text-center text-sm text-ink/50">No deals yet.</p>
+              <p className="p-8 text-center text-sm text-white/50">No deals yet.</p>
             ) : (
               <ul className="divide-y divide-line">
                 {stats.recentDeals.map((deal: any) => (
-                  <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <li key={deal.id} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <Link href={`/admin/deals/${deal.id}`} className="flex min-w-0 flex-1 flex-col gap-1">
-                      <span className="truncate font-display text-sm font-semibold text-ink">{deal.title}</span>
-                      <span className="truncate text-xs text-ink/50">{deal.company?.name}</span>
+                      <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
+                      <span className="truncate text-xs text-white/50">{deal.company?.name}</span>
                     </Link>
                     <span
                       className="shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em]"
@@ -107,18 +107,18 @@ export default async function Dashboard() {
         </section>
 
         <section className="flex flex-col gap-4">
-          <h2 className="font-display text-lg font-semibold text-ink">Recent Activity</h2>
-          <div className="rounded-[3px] border border-line bg-white overflow-hidden">
+          <h2 className="font-display text-lg font-semibold text-white">Recent Activity</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
             {stats.recentActivities.length === 0 ? (
-              <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
+              <p className="p-8 text-center text-sm text-white/50">No activity yet.</p>
             ) : (
               <ul className="divide-y divide-line">
                 {stats.recentActivities.map((a: any) => (
-                  <li key={a.id} className="p-4 hover:bg-mist/50">
+                  <li key={a.id} className="p-4 hover:bg-white/5">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">
-                        <span className="font-display text-sm font-semibold text-ink">{a.subject}</span>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                        <span className="font-display text-sm font-semibold text-white">{a.subject}</span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                           <span>{a.user?.name}</span>
                           <span>&middot;</span>
                           <span>{new Date(a.createdAt).toLocaleDateString()}</span>
@@ -140,7 +140,7 @@ export default async function Dashboard() {
                           )}
                         </div>
                       </div>
-                      <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">
+                      <span className="shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-white/40">
                         {a.type.replace(/-/g, " ")}
                       </span>
                     </div>
@@ -154,29 +154,29 @@ export default async function Dashboard() {
 
       <div className="mt-12">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-lg font-semibold text-ink">Pages</h2>
+          <h2 className="font-display text-lg font-semibold text-white">Pages</h2>
           <Link href="/admin/pages" className="text-xs font-semibold text-brand hover:underline">
             Manage all
           </Link>
         </div>
-        <div className="rounded-[3px] border border-line bg-white overflow-hidden">
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
           {groups.slice(0, 2).map((group) => (
             <div key={group.key}>
-              <div className="border-b border-line bg-mist/50 px-4 py-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-ink/50">{group.label}</span>
+              <div className="border-b border-[#1E293B] bg-white/5 px-4 py-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-white/50">{group.label}</span>
               </div>
               <ul className="divide-y divide-line">
                 {group.pages.slice(0, 4).map((page) => (
-                  <li key={page.path}>
+                    <li key={page.path}>
                     <Link
                       href={`/admin/edit${page.path === "/" ? "" : page.path}`}
-                      className="flex items-center justify-between p-4 hover:bg-mist/50"
+                      className="flex items-center justify-between p-4 hover:bg-white/5"
                     >
                       <div>
-                        <span className="font-display text-sm font-semibold text-ink">{page.title || "Untitled"}</span>
-                        <span className="ml-2 font-mono text-xs text-ink/40">{page.path}</span>
+                        <span className="font-display text-sm font-semibold text-white">{page.title || "Untitled"}</span>
+                        <span className="ml-2 font-mono text-xs text-white/40">{page.path}</span>
                       </div>
-                      <span className="text-xs text-ink/40">
+                      <span className="text-xs text-white/40">
                         {page.updatedAt ? new Date(page.updatedAt).toLocaleDateString() : "Not edited"}
                       </span>
                     </Link>

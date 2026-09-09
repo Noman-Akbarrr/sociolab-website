@@ -62,22 +62,22 @@ export function TwoFactorSetup() {
 
   if (state === "qr") {
     return (
-      <div className="mt-8 rounded-[3px] border border-line bg-white p-6">
-        <h2 className="font-display text-lg font-semibold text-ink">Enable two-factor auth</h2>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-ink/70">
+      <div className="mt-8 rounded-[3px] border border-[#1E293B] bg-[#111827] p-6">
+        <h2 className="font-display text-lg font-semibold text-white">Enable two-factor auth</h2>
+        <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/70">
           Scan this QR with your authenticator app (Google Authenticator, Authy, or similar). Can&apos;t
           scan? Use the manual code below.
         </p>
         <div className="mt-5 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
           {qr ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={qr} alt="QR code for authenticator" width={180} height={180} className="rounded-[3px] border border-line" />
+            <img src={qr} alt="QR code for authenticator" width={180} height={180} className="rounded-[3px] border border-[#1E293B]" />
           ) : null}
           <div className="flex flex-col gap-2">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-ink/50">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white/50">
               Manual setup
             </p>
-            <code className="break-all rounded-[3px] bg-mist px-3 py-2 font-mono text-xs text-ink">
+            <code className="break-all rounded-[3px] bg-mist px-3 py-2 font-mono text-xs text-white">
               {otpauth}
             </code>
           </div>
@@ -88,7 +88,7 @@ export function TwoFactorSetup() {
             onChange={(e) => setCode(e.target.value)}
             placeholder="6-digit code"
             inputMode="numeric"
-            className="w-full rounded-[3px] border border-line bg-white px-4 py-3 font-mono text-sm tracking-widest text-ink outline-none focus:border-brand"
+            className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-3 font-mono text-sm tracking-widest text-white outline-none focus:border-brand"
           />
           {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
           <button
@@ -97,7 +97,7 @@ export function TwoFactorSetup() {
             disabled={loading || code.length === 0}
             className="rounded-[3px] bg-brand px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
           >
-            {loading ? "Checking…" : "Verify & enable"}
+            {loading ? "Checkingâ€¦" : "Verify & enable"}
           </button>
         </div>
       </div>
@@ -106,15 +106,15 @@ export function TwoFactorSetup() {
 
   if (state === "codes") {
     return (
-      <div className="mt-8 rounded-[3px] border-2 border-brand bg-white p-6">
-        <h2 className="font-display text-lg font-semibold text-ink">Save these recovery codes</h2>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-ink/70">
-          Two-factor is now on. These 10 one-time codes are your backup if you lose your phone —
+      <div className="mt-8 rounded-[3px] border-2 border-brand bg-[#111827] p-6">
+        <h2 className="font-display text-lg font-semibold text-white">Save these recovery codes</h2>
+        <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/70">
+          Two-factor is now on. These 10 one-time codes are your backup if you lose your phone â€”
           store them somewhere safe. Each code works once.
         </p>
         <div className="mt-4 grid max-w-md grid-cols-2 gap-2">
           {codes.map((c) => (
-            <code key={c} className="rounded-[3px] bg-mist px-3 py-2 text-center font-mono text-sm text-ink">
+            <code key={c} className="rounded-[3px] bg-mist px-3 py-2 text-center font-mono text-sm text-white">
               {c}
             </code>
           ))}
@@ -122,19 +122,19 @@ export function TwoFactorSetup() {
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-6 rounded-[3px] bg-ink px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand"
+          className="mt-6 rounded-[3px] bg-[#111827] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand"
         >
-          I&apos;ve saved them — done
+          I&apos;ve saved them â€” done
         </button>
       </div>
     );
   }
 
   return (
-    <div className="mt-8 flex flex-col gap-3 rounded-[3px] border border-line bg-white p-6">
+    <div className="mt-8 flex flex-col gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] p-6">
       <div>
-        <h2 className="font-display text-lg font-semibold text-ink">Two-factor authentication is off</h2>
-        <p className="mt-1 text-sm text-ink/70">
+        <h2 className="font-display text-lg font-semibold text-white">Two-factor authentication is off</h2>
+        <p className="mt-1 text-sm text-white/70">
           Recommended before you invite anyone else. Takes 30 seconds.
         </p>
       </div>
@@ -143,9 +143,9 @@ export function TwoFactorSetup() {
         type="button"
         onClick={start}
         disabled={loading}
-        className="w-fit rounded-[3px] bg-ink px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand disabled:opacity-60"
+        className="w-fit rounded-[3px] bg-[#111827] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand disabled:opacity-60"
       >
-        {loading ? "Preparing…" : "Enable two-factor"}
+        {loading ? "Preparingâ€¦" : "Enable two-factor"}
       </button>
     </div>
   );

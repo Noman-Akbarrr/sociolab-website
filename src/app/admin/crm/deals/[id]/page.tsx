@@ -47,14 +47,14 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Link href="/admin/crm/deals" className="text-sm text-ink/50 hover:underline">&larr; Back to Deals</Link>
-          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-ink">{deal.title}</h1>
+          <Link href="/admin/crm/deals" className="text-sm text-white/50 hover:underline">&larr; Back to Deals</Link>
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-white">{deal.title}</h1>
         </div>
         <div className="flex items-center gap-3">
           <select
             defaultValue={deal.stageId}
             onChange={(e) => fetch(`/admin/api/crm/deals/${deal.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stageId: e.target.value }) }).then(() => window.location.reload())}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             {stages.map((s: any) => (
               <option key={s.id} value={s.id} style={{ color: s.color }}>{s.label}</option>
@@ -67,15 +67,15 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
         {/* Main Column */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Deal Header */}
-          <div className="flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5">
+          <div className="flex flex-col gap-4 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 {company && (
-                  <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
+                  <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-white hover:text-brand">
                     {company.name}
                   </Link>
                 )}
-                <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-ink/50">
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-white/50">
                   <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${
                     stage?.isWon ? "bg-green-100 text-green-700" : stage?.isClosed ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
                   }`} style={{ backgroundColor: `${stage?.color}20`, color: stage?.color }}>
@@ -87,7 +87,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
                   {deal.closedAt && <span>Closed: <span className="font-semibold">{new Date(deal.closedAt).toLocaleDateString()}</span></span>}
                 </div>
               </div>
-              <div className="text-right text-sm text-ink/50">
+              <div className="text-right text-sm text-white/50">
                 <div>Owner: {owner?.name || "Unknown"}</div>
                 <div>Created: {new Date(deal.createdAt).toLocaleDateString()}</div>
               </div>
@@ -95,13 +95,13 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
 
             {/* Contacts */}
             {dealContacts.length > 0 && (
-              <div className="pt-4 border-t border-line">
-                <h3 className="font-display text-sm font-semibold text-ink mb-2">Contacts</h3>
+              <div className="pt-4 border-t border-[#1E293B]">
+                <h3 className="font-display text-sm font-semibold text-white mb-2">Contacts</h3>
                 <div className="flex flex-wrap gap-2">
                   {dealContacts.map((contact: any) => (
-                    <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="inline-flex items-center gap-1 rounded-full bg-mist px-3 py-1 text-sm text-ink hover:bg-mist/80">
+                    <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="inline-flex items-center gap-1 rounded-full bg-mist px-3 py-1 text-sm text-white hover:bg-mist/80">
                       {contact.firstName} {contact.lastName}
-                      {contact.email && <span className="text-ink/50">({contact.email})</span>}
+                      {contact.email && <span className="text-white/50">({contact.email})</span>}
                     </Link>
                   ))}
                 </div>
@@ -110,28 +110,28 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
           </div>
 
           {/* Activity Timeline */}
-          <div className="flex flex-col gap-4 rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4">
-              <h2 className="font-display text-lg font-semibold text-ink">Activity</h2>
+          <div className="flex flex-col gap-4 rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4">
+              <h2 className="font-display text-lg font-semibold text-white">Activity</h2>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {dealActivities.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No activity yet.</p>
               ) : (
                 dealActivities.map((activity: any) => (
                   <div key={activity.id} className="flex flex-col gap-1 p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">
-                        <span className="font-display text-sm font-semibold text-ink">{activity.subject}</span>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                        <span className="font-display text-sm font-semibold text-white">{activity.subject}</span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                           <span className="font-mono">{activity.user.name}</span>
                           <span>·</span>
                           <span>{new Date(activity.createdAt).toLocaleString()}</span>
                         </div>
                       </div>
-                      <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">{activity.type.replace(/-/g, " ")}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-white/40">{activity.type.replace(/-/g, " ")}</span>
                     </div>
-                    {activity.body && <p className="text-sm text-ink/60">{activity.body}</p>}
+                    {activity.body && <p className="text-sm text-white/60">{activity.body}</p>}
                   </div>
                 ))
               )}
@@ -142,30 +142,30 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
         {/* Sidebar */}
         <div className="flex flex-col gap-6">
           {/* Deal Info */}
-          <div className="rounded-[3px] border border-line bg-white p-5">
-            <h3 className="font-display text-sm font-semibold text-ink mb-4">Deal Details</h3>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+            <h3 className="font-display text-sm font-semibold text-white mb-4">Deal Details</h3>
             <dl className="space-y-4 text-sm">
               <div>
-                <dt className="text-ink/50">Value</dt>
+                <dt className="text-white/50">Value</dt>
                 <dd className="font-display text-xl font-semibold text-brand">{formatCurrency(deal.value)}</dd>
               </div>
               <div>
-                <dt className="text-ink/50">Probability</dt>
+                <dt className="text-white/50">Probability</dt>
                 <dd className="font-semibold">{deal.probability}%</dd>
               </div>
               <div>
-                <dt className="text-ink/50">Weighted Value</dt>
+                <dt className="text-white/50">Weighted Value</dt>
                 <dd className="font-display text-xl font-semibold text-brand">{formatCurrency(Math.round(deal.value * deal.probability / 100))}</dd>
               </div>
               {deal.expectedClose && (
                 <div>
-                  <dt className="text-ink/50">Expected Close</dt>
+                  <dt className="text-white/50">Expected Close</dt>
                   <dd className="font-semibold">{new Date(deal.expectedClose).toLocaleDateString()}</dd>
                 </div>
               )}
               {deal.lostReason && (
                 <div>
-                  <dt className="text-ink/50">Lost Reason</dt>
+                  <dt className="text-white/50">Lost Reason</dt>
                   <dd className="font-semibold text-red-600">{deal.lostReason}</dd>
                 </div>
               )}
@@ -173,10 +173,10 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
           </div>
 
           {/* Quick Actions */}
-          <div className="rounded-[3px] border border-line bg-white p-5">
-            <h3 className="font-display text-sm font-semibold text-ink mb-4">Quick Actions</h3>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+            <h3 className="font-display text-sm font-semibold text-white mb-4">Quick Actions</h3>
             <div className="flex flex-col gap-2">
-              <Link href={`/admin/crm/deals/${deal.id}/edit`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-mist">
+              <Link href={`/admin/crm/deals/${deal.id}/edit`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white transition-colors hover:border-brand hover:bg-mist">
                 Edit Deal
               </Link>
               {dealProjects.length === 0 && stage?.isWon && (
@@ -185,7 +185,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
                 </button>
               )}
               {dealProjects.length > 0 && (
-                <Link href={`/admin/crm/projects/${dealProjects[0].id}`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:bg-mist">
+                <Link href={`/admin/crm/projects/${dealProjects[0].id}`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white transition-colors hover:border-brand hover:bg-mist">
                   View Project
                 </Link>
               )}
@@ -193,10 +193,10 @@ export default async function DealDetailPage({ params }: { params: Promise<{ id:
           </div>
 
           {/* Add Note Form */}
-          <div className="rounded-[3px] border border-line bg-white p-5">
-            <h3 className="font-display text-sm font-semibold text-ink mb-4">Add Note</h3>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+            <h3 className="font-display text-sm font-semibold text-white mb-4">Add Note</h3>
             <form onSubmit={async (e) => { e.preventDefault(); const formData = new FormData(e.currentTarget); await fetch("/admin/api/crm/activities", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type: "note", subject: "Note added", body: formData.get("body"), dealId: deal.id }) }); window.location.reload(); }} className="flex flex-col gap-2">
-              <textarea name="body" rows={3} required className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" placeholder="Add a note..." />
+              <textarea name="body" rows={3} required className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" placeholder="Add a note..." />
               <button type="submit" className="rounded-[3px] bg-brand px-3 py-2 text-sm font-bold text-white hover:bg-brand-dark">Add Note</button>
             </form>
           </div>

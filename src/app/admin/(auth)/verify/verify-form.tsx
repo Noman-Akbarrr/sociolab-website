@@ -37,7 +37,7 @@ export function VerifyForm() {
   return (
     <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
       <div>
-        <label htmlFor="code" className="mb-1.5 block text-sm font-semibold text-ink">
+        <label htmlFor="code" className="mb-1.5 block text-sm font-semibold text-white">
           {isRecovery ? "Recovery code" : "Authenticator code"}
         </label>
         <input
@@ -49,7 +49,7 @@ export function VerifyForm() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder={isRecovery ? "XXXX-XXXX" : "000000"}
-          className="w-full rounded-[3px] border border-line bg-white px-4 py-3 font-mono text-sm tracking-widest text-ink outline-none transition-colors focus:border-brand"
+          className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-3 font-mono text-sm tracking-widest text-white outline-none transition-colors focus:border-brand"
         />
       </div>
       <button
@@ -58,7 +58,7 @@ export function VerifyForm() {
           setIsRecovery((v) => !v);
           setCode("");
         }}
-        className="self-start text-xs font-semibold text-ink/55 underline-offset-2 hover:underline"
+        className="self-start text-xs font-semibold text-white/55 underline-offset-2 hover:underline"
       >
         {isRecovery ? "Use authenticator code instead" : "Use a recovery code instead"}
       </button>

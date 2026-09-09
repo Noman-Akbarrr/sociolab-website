@@ -73,8 +73,8 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
   return (
     <div className="mx-auto w-full max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-col gap-2">
-        <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Tasks</h1>
-        <p className="text-sm text-ink/60">Manage project tasks and deliverables.</p>
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Tasks</h1>
+        <p className="text-sm text-white/60">Manage project tasks and deliverables.</p>
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
@@ -82,7 +82,7 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
           <select
             value={projectId}
             onChange={(e) => { setProjectId(e.target.value); setPage(1); fetchTasks(); }}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="">All Projects</option>
             {projects.map((p: any) => <option key={p.id} value={p.id}>{p.name}</option>)}
@@ -92,7 +92,7 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
           <select
             value={status}
             onChange={(e) => { setStatus(e.target.value); setPage(1); fetchTasks(); }}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="">All Statuses</option>
             <option value="todo">To Do</option>
@@ -105,7 +105,7 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
           <select
             value={assigneeId}
             onChange={(e) => { setAssigneeId(e.target.value); setPage(1); fetchTasks(); }}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="">All Assignees</option>
             <option value="mine">{currentUserId === assigneeId ? "My Tasks" : "My Tasks"}</option>
@@ -124,9 +124,9 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
                 <span>{statusKey === "in-progress" ? "In Progress" : statusKey.charAt(0).toUpperCase() + statusKey.slice(1)}</span>
                 <span className="text-[11px] opacity-90">{statusTasks.length}</span>
               </div>
-              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-line bg-white p-3 min-h-[500px]">
+              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-[#1E293B] bg-[#111827] p-3 min-h-[500px]">
                 {statusTasks.length === 0 && (
-                  <div className="flex flex-col items-center justify-center h-full text-ink/40">
+                  <div className="flex flex-col items-center justify-center h-full text-white/40">
                     <p className="text-sm">No tasks</p>
                   </div>
                 )}
@@ -134,11 +134,11 @@ export function TasksClient({ initialTasks, initialTotal, initialPage, initialTo
                   <Link
                     key={task.id}
                     href={`/admin/crm/projects/${task.project.id}`}
-                    className="group flex flex-col gap-2 rounded-[3px] border border-line bg-white p-3 transition-shadow hover:shadow-md"
+                    className="group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-shadow hover:shadow-md"
                     onClick={(e) => { e.preventDefault(); updateTaskStatus(task.id, statusKey === "todo" ? "in-progress" : statusKey === "in-progress" ? "review" : statusKey === "review" ? "done" : "todo"); }}
                   >
-                    <span className="font-display text-sm font-semibold text-ink group-hover:text-brand">{task.title}</span>
-                    <div className="flex items-center justify-between text-xs text-ink/50">
+                    <span className="font-display text-sm font-semibold text-white group-hover:text-brand">{task.title}</span>
+                    <div className="flex items-center justify-between text-xs text-white/50">
                       <span className="truncate">{task.project.name}</span>
                       <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-bold ${priorityColors[task.priority] || priorityColors[0]}`}>
                         P{task.priority}

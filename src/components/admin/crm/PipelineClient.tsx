@@ -67,8 +67,8 @@ export function PipelineClient({ initialDealsByStage, initialStages }: PipelineC
     <div className="mx-auto w-full max-w-[1400px] px-5 py-12 sm:px-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">Pipeline</h1>
-          <p className="text-sm text-ink/60">Drag deals between stages. Pipeline value: <span className="font-semibold text-brand">{formatCurrency(totalPipelineValue)}</span> | Won this period: <span className="font-semibold text-green-600">{formatCurrency(wonValue)}</span></p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Pipeline</h1>
+          <p className="text-sm text-white/60">Drag deals between stages. Pipeline value: <span className="font-semibold text-brand">{formatCurrency(totalPipelineValue)}</span> | Won this period: <span className="font-semibold text-green-600">{formatCurrency(wonValue)}</span></p>
         </div>
         <Link href="/admin/crm/deals/new" className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
           + New Deal
@@ -96,9 +96,9 @@ export function PipelineClient({ initialDealsByStage, initialStages }: PipelineC
                   <span>{formatCurrency(stageValue)}</span>
                 </div>
               </div>
-              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-line bg-white p-3 min-h-[500px]">
+              <div className="flex-1 flex flex-col gap-3 rounded-b-[3px] border border-[#1E293B] bg-[#111827] p-3 min-h-[500px]">
                 {deals.length === 0 && (
-                  <div className="flex flex-col items-center justify-center h-full text-ink/40">
+                  <div className="flex flex-col items-center justify-center h-full text-white/40">
                     <p className="text-sm">No deals</p>
                     <p className="text-xs">Drop deals here</p>
                   </div>
@@ -107,12 +107,12 @@ export function PipelineClient({ initialDealsByStage, initialStages }: PipelineC
                   <Link
                     key={deal.id}
                     href={`/admin/crm/deals/${deal.id}`}
-                    className={`group flex flex-col gap-2 rounded-[3px] border border-line bg-white p-3 transition-shadow hover:shadow-md ${draggedDeal?.id === deal.id ? "opacity-50" : ""}`}
+                    className={`group flex flex-col gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-shadow hover:shadow-md ${draggedDeal?.id === deal.id ? "opacity-50" : ""}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, deal.id, group.stage.id)}
                   >
-                    <span className="font-display text-sm font-semibold text-ink group-hover:text-brand">{deal.title}</span>
-                    <div className="flex items-center justify-between text-xs text-ink/50">
+                    <span className="font-display text-sm font-semibold text-white group-hover:text-brand">{deal.title}</span>
+                    <div className="flex items-center justify-between text-xs text-white/50">
                       <span className="truncate">{deal.company.name}</span>
                       <span className="shrink-0">{formatCurrency(deal.value)}</span>
                     </div>

@@ -27,8 +27,8 @@ export function Testimonials() {
       <div className="mt-12 grid gap-5 md:grid-cols-2">
         {testimonials.map((t, i) => (
           <Reveal key={t.name + i} delay={i * 0.08}>
-            <figure className="flex h-full flex-col justify-between gap-8 rounded-[3px] bg-white p-8">
-              <blockquote className="font-display text-xl font-medium leading-snug text-ink">
+            <figure className="flex h-full flex-col justify-between gap-8 rounded-[3px] bg-[#111827] p-8">
+              <blockquote className="font-display text-xl font-medium leading-snug text-white">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
               <figcaption className="flex items-center gap-3">
@@ -36,8 +36,8 @@ export function Testimonials() {
                   {t.name.charAt(0)}
                 </span>
                 <span>
-                  <span className="block text-sm font-bold text-ink">{t.name}</span>
-                  <span className="block text-xs text-ink/55">{t.role}</span>
+                  <span className="block text-sm font-bold text-white">{t.name}</span>
+                  <span className="block text-xs text-white/55">{t.role}</span>
                 </span>
               </figcaption>
             </figure>

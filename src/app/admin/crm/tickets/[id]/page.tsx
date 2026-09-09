@@ -55,9 +55,9 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Link href="/admin/crm/tickets" className="text-sm text-ink/50 hover:underline">&larr; Back to Tickets</Link>
+          <Link href="/admin/crm/tickets" className="text-sm text-white/50 hover:underline">&larr; Back to Tickets</Link>
           <div className="mt-1 flex items-center gap-2">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-ink">{ticket.subject}</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-white">{ticket.subject}</h1>
             <span className="font-mono text-[11px] font-bold text-brand">{ticket.number}</span>
           </div>
         </div>
@@ -65,7 +65,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
           <select
             defaultValue={ticket.status}
             onChange={(e) => fetch(`/admin/api/crm/tickets/${ticket.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status: e.target.value }) }).then(() => window.location.reload())}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="open">Open</option>
             <option value="waiting-client">Waiting Client</option>
@@ -76,7 +76,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
           <select
             defaultValue={ticket.priority}
             onChange={(e) => fetch(`/admin/api/crm/tickets/${ticket.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ priority: e.target.value }) }).then(() => window.location.reload())}
-            className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+            className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
           >
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -87,14 +87,14 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
       </div>
 
       {/* Ticket Header */}
-      <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
           {company && (
-            <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-ink hover:text-brand">
+            <Link href={`/admin/crm/companies/${company.id}`} className="font-display text-lg font-semibold text-white hover:text-brand">
               {company.name}
             </Link>
           )}
-          <div className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-white/50">
             {contact && <span>Contact: <span className="font-medium">{contact.firstName} {contact.lastName}</span></span>}
             {project && <span>Project: <Link href={`/admin/crm/projects/${project.id}`} className="font-medium text-brand hover:underline">{project.name}</Link></span>}
             <span>Priority: <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold ${priorityColors[ticket.priority]}`}>{ticket.priority}</span></span>
@@ -108,7 +108,7 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
         <select
           defaultValue={ticket.assigneeId || ""}
           onChange={(e) => fetch(`/admin/api/crm/tickets/${ticket.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ assigneeId: e.target.value || null }) }).then(() => window.location.reload())}
-          className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand"
+          className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand"
         >
           <option value="">Unassigned</option>
           {teamMembers.map((m: any) => <option key={m.id} value={m.id}>{m.name}</option>)}
@@ -116,40 +116,40 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
       </div>
 
       {/* Description */}
-      <div className="mb-6 rounded-[3px] border border-line bg-white p-5">
-        <h2 className="font-display text-sm font-semibold text-ink mb-3">Description</h2>
-        <p className="text-sm text-ink/70 whitespace-pre-line">{ticket.description}</p>
+      <div className="mb-6 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+        <h2 className="font-display text-sm font-semibold text-white mb-3">Description</h2>
+        <p className="text-sm text-white/70 whitespace-pre-line">{ticket.description}</p>
       </div>
 
       {/* Thread */}
       <div className="flex flex-col gap-6">
-        <div className="rounded-[3px] border border-line bg-white">
-          <div className="border-b border-line px-5 py-4">
-            <h2 className="font-display text-lg font-semibold text-ink">Conversation</h2>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+          <div className="border-b border-[#1E293B] px-5 py-4">
+            <h2 className="font-display text-lg font-semibold text-white">Conversation</h2>
           </div>
-          <div className="divide-y divide-line">
+          <div className="divide-y divide-[#1E293B]">
             {messages.map((msg: any) => (
               <div key={msg.id} className={`flex flex-col gap-2 p-5 ${msg.internal ? "bg-amber-50 border-l-4 border-amber-400" : ""}`}>
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2">
-                    <span className="font-display text-sm font-semibold text-ink">{msg.authorType === "user" ? "Team Member" : "Client"}</span>
+                    <span className="font-display text-sm font-semibold text-white">{msg.authorType === "user" ? "Team Member" : "Client"}</span>
                     {msg.internal && <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold bg-amber-100 text-amber-700">Internal</span>}
-                    <span className="text-xs text-ink/50">{new Date(msg.createdAt).toLocaleString()}</span>
+                    <span className="text-xs text-white/50">{new Date(msg.createdAt).toLocaleString()}</span>
                   </div>
                 </div>
-                <p className="text-sm text-ink/70 whitespace-pre-line">{msg.body}</p>
+                <p className="text-sm text-white/70 whitespace-pre-line">{msg.body}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Add Message Form */}
-        <div className="rounded-[3px] border border-line bg-white p-5">
-          <h3 className="font-display text-sm font-semibold text-ink mb-4">Add Message</h3>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+          <h3 className="font-display text-sm font-semibold text-white mb-4">Add Message</h3>
           <form onSubmit={async (e) => { e.preventDefault(); const formData = new FormData(e.currentTarget); await fetch(`/admin/api/crm/tickets/${ticket.id}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body: formData.get("body"), internal: formData.get("internal") === "on" }) }); window.location.reload(); }} className="flex flex-col gap-2">
-            <textarea name="body" rows={3} required placeholder="Write a message..." className="rounded-[3px] border border-line bg-white px-3 py-2 text-sm text-ink focus:outline-none focus:border-brand" />
-            <label className="flex items-center gap-2 text-sm text-ink/70">
-              <input name="internal" type="checkbox" className="rounded border-line" />
+            <textarea name="body" rows={3} required placeholder="Write a message..." className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
+            <label className="flex items-center gap-2 text-sm text-white/70">
+              <input name="internal" type="checkbox" className="rounded border-[#1E293B]" />
               Internal note (not visible to client)
             </label>
             <button type="submit" className="w-fit rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white hover:bg-brand-dark">Send</button>
@@ -157,28 +157,28 @@ export default async function TicketDetailPage({ params }: { params: Promise<{ i
         </div>
 
         {/* Activity */}
-        <div className="rounded-[3px] border border-line bg-white">
-          <div className="border-b border-line px-5 py-4">
-            <h2 className="font-display text-lg font-semibold text-ink">Activity</h2>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+          <div className="border-b border-[#1E293B] px-5 py-4">
+            <h2 className="font-display text-lg font-semibold text-white">Activity</h2>
           </div>
-          <div className="divide-y divide-line">
+          <div className="divide-y divide-[#1E293B]">
             {activities.length === 0 ? (
-              <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
+              <p className="p-8 text-center text-sm text-white/50">No activity yet.</p>
             ) : (
               activities.map((activity: any) => (
                 <div key={activity.id} className="flex flex-col gap-1 p-5">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="font-display text-sm font-semibold text-ink">{activity.subject}</span>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                      <span className="font-display text-sm font-semibold text-white">{activity.subject}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                         <span className="font-mono">{activity.user.name}</span>
                         <span>·</span>
                         <span>{new Date(activity.createdAt).toLocaleString()}</span>
                       </div>
                     </div>
-                    <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">{activity.type.replace(/-/g, " ")}</span>
+                    <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-white/40">{activity.type.replace(/-/g, " ")}</span>
                   </div>
-                  {activity.body && <p className="text-sm text-ink/60">{activity.body}</p>}
+                  {activity.body && <p className="text-sm text-white/60">{activity.body}</p>}
                 </div>
               ))
             )}

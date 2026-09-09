@@ -62,8 +62,8 @@ export default function PeoplePage() {
     <div className="px-8 py-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">People</h1>
-          <p className="mt-1 text-sm text-ink/50">Team members displayed on your website.</p>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-white">People</h1>
+          <p className="mt-1 text-sm text-white/50">Team members displayed on your website.</p>
         </div>
         <button
           onClick={() => { setShowForm(true); setEditing(null); setForm({ name: "", role: "", photo: "", bio: "", linkedin: "", twitter: "", instagram: "" }); }}
@@ -74,21 +74,21 @@ export default function PeoplePage() {
       </div>
 
       {showForm && (
-        <form onSubmit={onSubmit} className="mt-6 rounded-[3px] border border-line bg-white p-6">
-          <h2 className="font-display text-lg font-semibold text-ink mb-4">{editing ? "Edit Member" : "Add Member"}</h2>
+        <form onSubmit={onSubmit} className="mt-6 rounded-[3px] border border-[#1E293B] bg-[#111827] p-6">
+          <h2 className="font-display text-lg font-semibold text-white mb-4">{editing ? "Edit Member" : "Add Member"}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" required className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
-            <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="Role (e.g. Founder)" required className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
-            <input value={form.photo} onChange={(e) => setForm({ ...form, photo: e.target.value })} placeholder="Photo URL" className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
-            <input value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
-            <input value={form.linkedin} onChange={(e) => setForm({ ...form, linkedin: e.target.value })} placeholder="LinkedIn URL" className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
-            <input value={form.twitter} onChange={(e) => setForm({ ...form, twitter: e.target.value })} placeholder="Twitter/X URL" className="rounded-[3px] border border-line bg-white px-3 py-2.5 text-sm text-ink focus:outline-none focus:border-brand" />
+            <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" required className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
+            <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder="Role (e.g. Founder)" required className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
+            <input value={form.photo} onChange={(e) => setForm({ ...form, photo: e.target.value })} placeholder="Photo URL" className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
+            <input value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
+            <input value={form.linkedin} onChange={(e) => setForm({ ...form, linkedin: e.target.value })} placeholder="LinkedIn URL" className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
+            <input value={form.twitter} onChange={(e) => setForm({ ...form, twitter: e.target.value })} placeholder="Twitter/X URL" className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand" />
           </div>
           <div className="mt-4 flex gap-3">
             <button type="submit" className="rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-dark">
               {editing ? "Save Changes" : "Add Member"}
             </button>
-            <button type="button" onClick={() => { setShowForm(false); setEditing(null); }} className="rounded-[3px] border border-line bg-white px-4 py-2.5 text-sm font-bold text-ink hover:border-brand">
+            <button type="button" onClick={() => { setShowForm(false); setEditing(null); }} className="rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white hover:border-brand">
               Cancel
             </button>
           </div>
@@ -97,43 +97,43 @@ export default function PeoplePage() {
 
       <div className="mt-8">
         {loading ? (
-          <p className="text-sm text-ink/50">Loading...</p>
+          <p className="text-sm text-white/50">Loading...</p>
         ) : members.length === 0 ? (
-          <div className="rounded-[3px] border border-line bg-white p-12 text-center">
-            <p className="text-sm text-ink/50">No team members yet. Add your first one.</p>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-12 text-center">
+            <p className="text-sm text-white/50">No team members yet. Add your first one.</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {members.map((member) => (
-              <div key={member.id} className="rounded-[3px] border border-line bg-white p-5">
+              <div key={member.id} className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     {member.photo ? (
                       <img src={member.photo} alt={member.name} className="w-12 h-12 rounded-full object-cover" />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-mist flex items-center justify-center font-display text-lg font-semibold text-ink/40">
+                      <div className="w-12 h-12 rounded-full bg-mist flex items-center justify-center font-display text-lg font-semibold text-white/40">
                         {member.name.charAt(0)}
                       </div>
                     )}
                     <div>
-                      <h3 className="font-display text-sm font-semibold text-ink">{member.name}</h3>
-                      <p className="text-xs text-ink/50">{member.role}</p>
+                      <h3 className="font-display text-sm font-semibold text-white">{member.name}</h3>
+                      <p className="text-xs text-white/50">{member.role}</p>
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => startEdit(member)} className="p-1.5 text-ink/40 hover:text-brand">
+                    <button onClick={() => startEdit(member)} className="p-1.5 text-white/40 hover:text-brand">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                       </svg>
                     </button>
-                    <button onClick={() => onDelete(member.id)} className="p-1.5 text-ink/40 hover:text-red-600">
+                    <button onClick={() => onDelete(member.id)} className="p-1.5 text-white/40 hover:text-red-600">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                       </svg>
                     </button>
                   </div>
                 </div>
-                {member.bio && <p className="mt-3 text-xs text-ink/60 line-clamp-2">{member.bio}</p>}
+                {member.bio && <p className="mt-3 text-xs text-white/60 line-clamp-2">{member.bio}</p>}
               </div>
             ))}
           </div>

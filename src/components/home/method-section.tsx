@@ -26,7 +26,7 @@ const steps = [
 
 export function MethodSection() {
   return (
-    <Section className="bg-ink text-white">
+    <Section className="bg-[#111827] text-white">
       <SectionHeading
         dark
         eyebrow="The Sociolab Method"

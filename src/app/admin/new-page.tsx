@@ -13,7 +13,7 @@ export function NewPageForm() {
     e.preventDefault();
     const trimmed = path.trim().toLowerCase().replace(/\s+/g, "-");
     if (!trimmed.startsWith("/")) {
-      setError("Path must start with a / — e.g. /industries/restaurants");
+      setError("Path must start with a / â€” e.g. /industries/restaurants");
       return;
     }
     setError("");
@@ -44,22 +44,22 @@ export function NewPageForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-3 rounded-[3px] border border-line bg-white p-5 sm:flex-row">
-      <div className="flex flex-1 items-center gap-2 rounded-[3px] border border-line bg-white px-3 focus-within:border-brand">
-        <span className="font-mono text-sm text-ink/50">/</span>
+    <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-3 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5 sm:flex-row">
+      <div className="flex flex-1 items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 focus-within:border-brand">
+        <span className="font-mono text-sm text-white/50">/</span>
         <input
           value={path}
           onChange={(e) => setPath(e.target.value)}
           placeholder="new-page-slug"
-          className="w-full py-3 font-mono text-sm text-ink outline-none placeholder:text-ink/35"
+          className="w-full py-3 font-mono text-sm text-white outline-none placeholder:text-white/35"
         />
       </div>
       <button
         type="submit"
         disabled={loading}
-        className="shrink-0 rounded-[3px] bg-ink px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand disabled:opacity-60"
+        className="shrink-0 rounded-[3px] bg-[#111827] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-brand disabled:opacity-60"
       >
-        {loading ? "Creating…" : "Create new page"}
+        {loading ? "Creatingâ€¦" : "Create new page"}
       </button>
       {error ? <p className="w-full text-sm font-medium text-red-600 sm:w-auto">{error}</p> : null}
     </form>

@@ -55,16 +55,16 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
     <div className="mx-auto w-full max-w-4xl px-5 py-12 sm:px-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Link href="/admin/crm/companies" className="text-sm text-ink/50 hover:underline">&larr; Back to Companies</Link>
-          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-ink">{company.name}</h1>
+          <Link href="/admin/crm/companies" className="text-sm text-white/50 hover:underline">&larr; Back to Companies</Link>
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-white">{company.name}</h1>
         </div>
       </div>
 
       {/* Company Header */}
-      <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-line bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-[3px] border border-[#1E293B] bg-[#111827] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          {company.domain && <span className="text-sm text-ink/50">{company.domain}</span>}
-          <div className="flex flex-wrap items-center gap-2 text-sm text-ink/50">
+          {company.domain && <span className="text-sm text-white/50">{company.domain}</span>}
+          <div className="flex flex-wrap items-center gap-2 text-sm text-white/50">
             {company.industry && <span>Industry: <span className="font-medium">{company.industry}</span></span>}
             {company.size && <span>Size: <span className="font-medium">{company.size}</span></span>}
             {company.website && <span><a href={company.website} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">Website</a></span>}
@@ -73,32 +73,32 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
         <div className="flex flex-wrap gap-2">
           {company.tags.map((tag: string) => (
-            <span key={tag} className="rounded-full bg-mist px-3 py-1 text-sm font-medium text-ink/60">{tag}</span>
+            <span key={tag} className="rounded-full bg-mist px-3 py-1 text-sm font-medium text-white/60">{tag}</span>
           ))}
         </div>
       </div>
 
       {/* Stats */}
       <div className="mb-6 grid gap-4 sm:grid-cols-4">
-        <div className="rounded-[3px] border border-line bg-white p-5">
-          <span className="text-xs text-ink/50">Pipeline Value</span>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+          <span className="text-xs text-white/50">Pipeline Value</span>
           <div className="font-display text-2xl font-semibold text-brand">{formatCurrency(pipelineValue)}</div>
-          <span className="text-xs text-ink/50">{openDeals.length} open deals</span>
+          <span className="text-xs text-white/50">{openDeals.length} open deals</span>
         </div>
-        <div className="rounded-[3px] border border-line bg-white p-5">
-          <span className="text-xs text-ink/50">Won Revenue</span>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+          <span className="text-xs text-white/50">Won Revenue</span>
           <div className="font-display text-2xl font-semibold text-green-600">{formatCurrency(wonValue)}</div>
-          <span className="text-xs text-ink/50">{wonDeals.length} won deals</span>
+          <span className="text-xs text-white/50">{wonDeals.length} won deals</span>
         </div>
-        <div className="rounded-[3px] border border-line bg-white p-5">
-          <span className="text-xs text-ink/50">Active Projects</span>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+          <span className="text-xs text-white/50">Active Projects</span>
           <div className="font-display text-2xl font-semibold text-blue-600">{projects.filter((p: any) => p.status === "active").length}</div>
-          <span className="text-xs text-ink/50">{projects.length} total</span>
+          <span className="text-xs text-white/50">{projects.length} total</span>
         </div>
-        <div className="rounded-[3px] border border-line bg-white p-5">
-          <span className="text-xs text-ink/50">Open Tickets</span>
+        <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+          <span className="text-xs text-white/50">Open Tickets</span>
           <div className="font-display text-2xl font-semibold text-orange-600">{tickets.filter((t: any) => ["open", "waiting-client", "in-progress"].includes(t.status)).length}</div>
-          <span className="text-xs text-ink/50">{tickets.length} total</span>
+          <span className="text-xs text-white/50">{tickets.length} total</span>
         </div>
       </div>
 
@@ -106,27 +106,27 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         {/* Main Column */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Contacts */}
-          <div className="rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Contacts ({contacts.length})</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-white">Contacts ({contacts.length})</h2>
               <Link href="/admin/crm/contacts/new" className="text-xs font-semibold text-brand hover:underline">+ Add</Link>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {contacts.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No contacts yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No contacts yet.</p>
               ) : (
                 contacts.map((contact: any) => (
-                  <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <Link key={contact.id} href={`/admin/crm/contacts/${contact.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="font-display text-sm font-semibold text-ink">{contact.firstName} {contact.lastName}</span>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                      <span className="font-display text-sm font-semibold text-white">{contact.firstName} {contact.lastName}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                         {contact.title && <span>{contact.title}</span>}
                         {contact.email && <span>{contact.email}</span>}
                         {contact.phone && <span>{contact.phone}</span>}
                         {contact.role && <span className="rounded-full bg-mist px-2 py-0.5 text-[11px] font-medium">{contact.role}</span>}
                       </div>
                     </div>
-                    <span className="shrink-0 text-xs text-ink/50">{new Date(contact.createdAt).toLocaleDateString()}</span>
+                    <span className="shrink-0 text-xs text-white/50">{new Date(contact.createdAt).toLocaleDateString()}</span>
                   </Link>
                 ))
               )}
@@ -134,20 +134,20 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Deals */}
-          <div className="rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Deals ({deals.length})</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-white">Deals ({deals.length})</h2>
               <Link href={`/admin/crm/deals?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {deals.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No deals yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No deals yet.</p>
               ) : (
                 deals.map((deal: any) => (
-                  <Link key={deal.id} href={`/admin/crm/deals/${deal.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <Link key={deal.id} href={`/admin/crm/deals/${deal.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="truncate font-display text-sm font-semibold text-ink">{deal.title}</span>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                      <span className="truncate font-display text-sm font-semibold text-white">{deal.title}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                         <span>{formatCurrency(deal.value)}</span>
                         <span>·</span>
                         <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${
@@ -164,20 +164,20 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Projects */}
-          <div className="rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Projects ({projects.length})</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-white">Projects ({projects.length})</h2>
               <Link href={`/admin/crm/projects?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {projects.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No projects yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No projects yet.</p>
               ) : (
                 projects.map((project: any) => (
-                  <Link key={project.id} href={`/admin/crm/projects/${project.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <Link key={project.id} href={`/admin/crm/projects/${project.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <div className="flex min-w-0 flex-col gap-1">
-                      <span className="truncate font-display text-sm font-semibold text-ink">{project.name}</span>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                      <span className="truncate font-display text-sm font-semibold text-white">{project.name}</span>
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                         <span>{project.status}</span>
                         {project.budget && <span>{formatCurrency(project.budget)}</span>}
                       </div>
@@ -189,23 +189,23 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Tickets */}
-          <div className="rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4 flex items-center justify-between">
-              <h2 className="font-display text-lg font-semibold text-ink">Tickets ({tickets.length})</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4 flex items-center justify-between">
+              <h2 className="font-display text-lg font-semibold text-white">Tickets ({tickets.length})</h2>
               <Link href={`/admin/crm/tickets?companyId=${company.id}`} className="text-xs font-semibold text-brand hover:underline">View all</Link>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {tickets.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No tickets yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No tickets yet.</p>
               ) : (
                 tickets.map((ticket: any) => (
-                  <Link key={ticket.id} href={`/admin/crm/tickets/${ticket.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-mist/50">
+                  <Link key={ticket.id} href={`/admin/crm/tickets/${ticket.id}`} className="flex items-center justify-between gap-4 p-4 hover:bg-white/5">
                     <div className="flex min-w-0 flex-col gap-1">
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-[11px] font-bold text-brand">{ticket.number}</span>
-                        <span className="truncate font-display text-sm font-semibold text-ink">{ticket.subject}</span>
+                        <span className="truncate font-display text-sm font-semibold text-white">{ticket.subject}</span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                      <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                         <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.1em] ${["open", "waiting-client"].includes(ticket.status) ? "bg-red-100 text-red-700" : ticket.status === "in-progress" ? "bg-blue-100 text-blue-700" : "bg-green-100 text-green-700"}`}>
                           {ticket.status.replace("-", " ")}
                         </span>
@@ -219,28 +219,28 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Activity */}
-          <div className="rounded-[3px] border border-line bg-white">
-            <div className="border-b border-line px-5 py-4">
-              <h2 className="font-display text-lg font-semibold text-ink">Recent Activity</h2>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827]">
+            <div className="border-b border-[#1E293B] px-5 py-4">
+              <h2 className="font-display text-lg font-semibold text-white">Recent Activity</h2>
             </div>
-            <div className="divide-y divide-line">
+            <div className="divide-y divide-[#1E293B]">
               {activities.length === 0 ? (
-                <p className="p-8 text-center text-sm text-ink/50">No activity yet.</p>
+                <p className="p-8 text-center text-sm text-white/50">No activity yet.</p>
               ) : (
                 activities.map((activity: any) => (
                   <div key={activity.id} className="flex flex-col gap-1 p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex min-w-0 flex-col gap-1">
-                        <span className="font-display text-sm font-semibold text-ink">{activity.subject}</span>
-                        <div className="flex flex-wrap items-center gap-2 text-xs text-ink/50">
+                        <span className="font-display text-sm font-semibold text-white">{activity.subject}</span>
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
                           <span className="font-mono">{activity.user.name}</span>
                           <span>·</span>
                           <span>{new Date(activity.createdAt).toLocaleString()}</span>
                         </div>
                       </div>
-                      <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">{activity.type.replace(/-/g, " ")}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-white/40">{activity.type.replace(/-/g, " ")}</span>
                     </div>
-                    {activity.body && <p className="text-sm text-ink/60">{activity.body}</p>}
+                    {activity.body && <p className="text-sm text-white/60">{activity.body}</p>}
                   </div>
                 ))
               )}
@@ -251,35 +251,35 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         {/* Sidebar */}
         <div className="flex flex-col gap-6">
           {/* Company Info */}
-          <div className="rounded-[3px] border border-line bg-white p-5">
-            <h3 className="font-display text-sm font-semibold text-ink mb-4">Details</h3>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+            <h3 className="font-display text-sm font-semibold text-white mb-4">Details</h3>
             <dl className="space-y-4 text-sm">
               {company.industry && (
                 <div>
-                  <dt className="text-ink/50">Industry</dt>
+                  <dt className="text-white/50">Industry</dt>
                   <dd className="font-medium">{company.industry}</dd>
                 </div>
               )}
               {company.size && (
                 <div>
-                  <dt className="text-ink/50">Size</dt>
+                  <dt className="text-white/50">Size</dt>
                   <dd className="font-medium">{company.size}</dd>
                 </div>
               )}
               {company.website && (
                 <div>
-                  <dt className="text-ink/50">Website</dt>
+                  <dt className="text-white/50">Website</dt>
                   <dd className="font-medium"><a href={company.website} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">{company.website}</a></dd>
                 </div>
               )}
               {company.linkedin && (
                 <div>
-                  <dt className="text-ink/50">LinkedIn</dt>
+                  <dt className="text-white/50">LinkedIn</dt>
                   <dd className="font-medium"><a href={company.linkedin} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">LinkedIn</a></dd>
                 </div>
               )}
               <div>
-                <dt className="text-ink/50">Created</dt>
+                <dt className="text-white/50">Created</dt>
                 <dd className="font-medium">{new Date(company.createdAt).toLocaleDateString()}</dd>
               </div>
             </dl>
@@ -287,19 +287,19 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
 
           {/* Notes */}
           {company.notes && (
-            <div className="rounded-[3px] border border-line bg-white p-5">
-              <h3 className="font-display text-sm font-semibold text-ink mb-2">Notes</h3>
-              <p className="text-sm text-ink/70 whitespace-pre-line">{company.notes}</p>
+            <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+              <h3 className="font-display text-sm font-semibold text-white mb-2">Notes</h3>
+              <p className="text-sm text-white/70 whitespace-pre-line">{company.notes}</p>
             </div>
           )}
 
           {/* Quick Actions */}
-          <div className="rounded-[3px] border border-line bg-white p-5">
-            <h3 className="font-display text-sm font-semibold text-ink mb-4">Quick Actions</h3>
+          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-5">
+            <h3 className="font-display text-sm font-semibold text-white mb-4">Quick Actions</h3>
             <div className="flex flex-col gap-2">
               <Link href={`/admin/crm/deals/new?companyId=${company.id}`} className="rounded-[3px] bg-brand px-3 py-2 text-sm font-medium text-white text-center hover:bg-brand-dark">+ New Deal</Link>
-              <Link href={`/admin/crm/projects/new?companyId=${company.id}`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink text-center hover:border-brand hover:bg-mist">+ New Project</Link>
-              <Link href={`/admin/crm/tickets/new?companyId=${company.id}`} className="rounded-[3px] border border-line px-3 py-2 text-sm font-medium text-ink text-center hover:border-brand hover:bg-mist">+ New Ticket</Link>
+              <Link href={`/admin/crm/projects/new?companyId=${company.id}`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white text-center hover:border-brand hover:bg-mist">+ New Project</Link>
+              <Link href={`/admin/crm/tickets/new?companyId=${company.id}`} className="rounded-[3px] border border-[#1E293B] px-3 py-2 text-sm font-medium text-white text-center hover:border-brand hover:bg-mist">+ New Ticket</Link>
             </div>
           </div>
         </div>
