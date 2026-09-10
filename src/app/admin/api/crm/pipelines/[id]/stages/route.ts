@@ -5,18 +5,22 @@ import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
 
-export async function GET(request: NextRequest) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
-  const pipelineId = request.nextUrl.searchParams.get("pipelineId");
-  if (!pipelineId) return NextResponse.json({ error: "pipelineId required." }, { status: 400 });
-
+  const { id: pipelineId } = await params;
   const stages = await store.getStages(pipelineId);
   return NextResponse.json({ stages });
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
@@ -29,8 +33,7 @@ export async function POST(request: NextRequest) {
 
   if (!body.name || !body.label) return NextResponse.json({ error: "Name and label required." }, { status: 400 });
 
-  const pipelineId = request.nextUrl.searchParams.get("pipelineId");
-  if (!pipelineId) return NextResponse.json({ error: "pipelineId required." }, { status: 400 });
+  const { id: pipelineId } = await params;
 
   const pipeline = await store.getPipeline(pipelineId);
   if (!pipeline) return NextResponse.json({ error: "Pipeline not found." }, { status: 404 });

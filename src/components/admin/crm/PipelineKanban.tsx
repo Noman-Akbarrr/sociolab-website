@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DealPanel from "./DealPanel";
@@ -25,13 +25,13 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
   const [activeStageMenu, setActiveStageMenu] = useState<string | null>(null);
   const [colorPickerStage, setColorPickerStage] = useState<string | null>(null);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
+  const [deletingDealId, setDeletingDealId] = useState<string | null>(null);
 
-  // Stage drag state
+  // Stage drag state — simplified: only track dragging ID and drop target
   const [stageDragging, setStageDragging] = useState<string | null>(null);
-  const [stageDragOverTarget, setStageDragOverTarget] = useState<string | null>(null);
-  const [stageDragInsertSide, setStageDragInsertSide] = useState<"left" | "right">("right");
-  const stageDragRef = useRef<string | null>(null);
-  const stageDragInsertBefore = useRef<boolean>(true);
+  const [stageDropTarget, setStageDropTarget] = useState<string | null>(null);
+  const [stageDropSide, setStageDropSide] = useState<"left" | "right">("right");
+  const stageDragId = useRef<string | null>(null);
 
   // Deal drag state
   const [dealDragging, setDealDragging] = useState<{ dealId: string; sourceStageId: string } | null>(null);
@@ -39,22 +39,9 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
 
   // New deal form
   const [newDeal, setNewDeal] = useState({
-    title: "",
-    companyName: "",
-    contactName: "",
-    contactEmail: "",
-    contactPhone: "",
-    value: 0,
-    currency: "PKR",
-    stageId: "",
-    expectedClose: "",
-    address: "",
-    city: "",
-    country: "",
-    source: "",
-    dealType: "",
-    priority: "medium",
-    notes: "",
+    title: "", companyName: "", contactName: "", contactEmail: "", contactPhone: "",
+    value: 0, currency: "PKR", stageId: "", expectedClose: "", address: "", city: "",
+    country: "", source: "", dealType: "", priority: "medium", notes: "",
   });
 
   const formatCurrency = (cents: number) =>
@@ -68,9 +55,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
 
   const getStageDeals = (stageId: string) =>
     dealsByStage.find((g) => g.stage.id === stageId)?.deals || [];
-
-  const getStageTotal = (stageId: string) =>
-    getStageDeals(stageId).reduce((sum: number, d: any) => sum + (d.value || 0), 0);
 
   function isCloseDateSoon(dateStr: string) {
     if (!dateStr) return false;
@@ -87,75 +71,66 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
   const wonDeals = allDeals.filter((d: any) => stages.find((st) => st.id === d.stageId)?.isWon);
   const wonCount = wonDeals.length;
 
-  // ── Stage Reorder ──
+  // ── Stage Reorder (simplified) ──
   function handleStageDragStart(e: React.DragEvent, stageId: string) {
-    stageDragRef.current = stageId;
+    stageDragId.current = stageId;
     setStageDragging(stageId);
     e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", `stage:${stageId}`);
-    // Create a custom drag image
+    e.dataTransfer.setData("text/plain", stageId);
+    // Minimal ghost
     const el = e.currentTarget.closest("[data-stage-col]") as HTMLElement;
     if (el) {
       const ghost = el.cloneNode(true) as HTMLElement;
-      ghost.style.width = el.offsetWidth + "px";
-      ghost.style.opacity = "0.8";
+      ghost.style.width = "200px";
+      ghost.style.opacity = "0.7";
       ghost.style.position = "absolute";
       ghost.style.top = "-9999px";
-      ghost.style.transform = "rotate(2deg)";
+      ghost.style.pointerEvents = "none";
       document.body.appendChild(ghost);
-      e.dataTransfer.setDragImage(ghost, 40, 20);
-      setTimeout(() => document.body.removeChild(ghost), 0);
+      e.dataTransfer.setDragImage(ghost, 100, 20);
+      requestAnimationFrame(() => document.body.removeChild(ghost));
     }
   }
 
-  function handleStageDragOver(e: React.DragEvent, stageId: string) {
+  function handleHeaderDragOver(e: React.DragEvent, stageId: string) {
+    if (!stageDragId.current || stageDragId.current === stageId) return;
     e.preventDefault();
-    if (!stageDragRef.current || stageDragRef.current === stageId) return;
     e.dataTransfer.dropEffect = "move";
-    setStageDragOverTarget(stageId);
-    // Determine insert position based on mouse X relative to the element
-    const el = e.currentTarget.closest("[data-stage-col]") as HTMLElement;
+    setStageDropTarget(stageId);
+    // Determine side
+    const el = (e.currentTarget as HTMLElement).closest("[data-stage-col]") as HTMLElement;
     if (el) {
       const rect = el.getBoundingClientRect();
-      const midpoint = rect.left + rect.width / 2;
-      const before = e.clientX < midpoint;
-      stageDragInsertBefore.current = before;
-      setStageDragInsertSide(before ? "left" : "right");
+      setStageDropSide(e.clientX < rect.left + rect.width / 2 ? "left" : "right");
     }
   }
 
-  function handleStageDragLeave() {
-    setStageDragOverTarget(null);
+  function handleHeaderDragLeave(e: React.DragEvent) {
+    // Only clear if actually leaving the header (not entering a child)
+    const related = e.relatedTarget as HTMLElement;
+    if (related && e.currentTarget.contains(related)) return;
+    setStageDropTarget(null);
   }
 
-  function handleStageDragEnd() {
-    setStageDragging(null);
-    setStageDragOverTarget(null);
-    stageDragRef.current = null;
-  }
-
-  async function handleStageDrop(e: React.DragEvent, targetStageId: string) {
+  async function handleHeaderDrop(e: React.DragEvent, targetStageId: string) {
     e.preventDefault();
     e.stopPropagation();
-    setStageDragOverTarget(null);
+    setStageDropTarget(null);
     setStageDragging(null);
-    if (!stageDragRef.current) return;
-    const draggedStageId = stageDragRef.current;
-    if (draggedStageId === targetStageId) { stageDragRef.current = null; return; }
+    const draggedId = stageDragId.current;
+    if (!draggedId || draggedId === targetStageId) { stageDragId.current = null; return; }
 
-    const currentIds = stages.map((s) => s.id);
-    const fromIdx = currentIds.indexOf(draggedStageId);
-    const toIdx = currentIds.indexOf(targetStageId);
-    if (fromIdx < 0 || toIdx < 0) { stageDragRef.current = null; return; }
+    const ids = stages.map((s) => s.id);
+    const fromIdx = ids.indexOf(draggedId);
+    const toIdx = ids.indexOf(targetStageId);
+    if (fromIdx < 0 || toIdx < 0) { stageDragId.current = null; return; }
 
-    // Determine insertion index based on mouse position
-    const insertBefore = stageDragInsertBefore.current;
-    let insertIdx = insertBefore ? toIdx : toIdx + 1;
-    // Adjust for removal shifting the array
-    if (fromIdx < insertIdx) insertIdx--;
+    const insertIdx = stageDropSide === "left"
+      ? (fromIdx < toIdx ? toIdx - 1 : toIdx)
+      : (fromIdx < toIdx ? toIdx : toIdx + 1);
 
-    const newIds = currentIds.filter((id) => id !== draggedStageId);
-    newIds.splice(insertIdx, 0, draggedStageId);
+    const newIds = ids.filter((id) => id !== draggedId);
+    newIds.splice(insertIdx, 0, draggedId);
 
     const newStages = newIds.map((id, i) => {
       const s = stages.find((st) => st.id === id);
@@ -168,7 +143,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ stageIds: newIds }),
     });
-    stageDragRef.current = null;
+    stageDragId.current = null;
+    router.refresh();
+  }
+
+  function handleStageDragEnd() {
+    setStageDragging(null);
+    setStageDropTarget(null);
+    stageDragId.current = null;
   }
 
   // ── Deal Drag ──
@@ -193,7 +175,9 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     setDragOverStage(stageId);
   }
 
-  function handleColumnDragLeave() {
+  function handleColumnDragLeave(e: React.DragEvent) {
+    const related = e.relatedTarget as HTMLElement;
+    if (related && e.currentTarget.contains(related)) return;
     setDragOverStage(null);
   }
 
@@ -274,6 +258,15 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     setColorPickerStage(null);
   }
 
+  // ── Delete Deal ──
+  async function handleDeleteDeal(dealId: string) {
+    if (!confirm("Delete this deal? This cannot be undone.")) return;
+    await fetch(`/admin/api/crm/deals/${dealId}`, { method: "DELETE" });
+    setDealsByStage((prev) => prev.map((g) => ({ ...g, deals: g.deals.filter((d: any) => d.id !== dealId) })));
+    setDeletingDealId(null);
+    router.refresh();
+  }
+
   // ── Create Deal ──
   function openNewDealModal(stageId?: string) {
     setNewDeal({
@@ -311,9 +304,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
     } finally { setCreating(false); }
   }
 
-  // ── Stage placeholder for drag ──
-  const draggedStage = stageDragging ? stages.find((s) => s.id === stageDragging) : null;
-
   return (
     <>
       {/* Header */}
@@ -344,7 +334,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
         {stages.map((stage) => {
           const stageDeals = getStageDeals(stage.id);
           const isDragSource = stageDragging === stage.id;
-          const isDropTarget = stageDragOverTarget === stage.id && !isDragSource;
+          const isStageDropTarget = stageDropTarget === stage.id && !isDragSource;
           const isDealDropTarget = dragOverStage === stage.id;
 
           return (
@@ -352,37 +342,35 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
               key={stage.id}
               data-stage-col
               className={`flex w-[320px] min-w-[320px] flex-col transition-all duration-150 ${
-                isDragSource ? "opacity-40 scale-[0.97]" : ""
-              } ${isDropTarget ? "scale-[1.02]" : ""} relative`}
+                isDragSource ? "opacity-40" : ""
+              } relative`}
               onDragOver={(e) => handleColumnDragOver(e, stage.id)}
               onDragLeave={handleColumnDragLeave}
               onDrop={(e) => handleColumnDrop(e, stage.id)}
             >
-              {/* Insert indicator bar */}
-              {isDropTarget && (
-                <div className={`absolute top-0 bottom-0 w-[3px] bg-brand rounded-full z-10 transition-all duration-100 ${
-                  stageDragInsertSide === "left" ? "left-0" : "right-0"
+              {/* Drop indicator bar */}
+              {isStageDropTarget && (
+                <div className={`absolute top-0 bottom-0 w-[3px] bg-brand rounded-full z-20 ${
+                  stageDropSide === "left" ? "left-[-2px]" : "right-[-2px]"
                 }`} />
               )}
-              {/* Column Header */}
+
+              {/* Column Header — drop target for stage reorder */}
               <div
                 className={`flex items-center justify-between rounded-t-[3px] px-4 py-3 transition-all duration-150 ${
-                  isDropTarget ? "bg-brand/15 ring-2 ring-brand/50 shadow-lg shadow-brand/10" : "bg-[#111827]"
+                  isStageDropTarget ? "bg-brand/15 ring-2 ring-brand/50" : "bg-[#111827]"
                 }`}
-                onDragOver={(e) => handleStageDragOver(e, stage.id)}
-                onDragLeave={handleStageDragLeave}
-                onDrop={(e) => handleStageDrop(e, stage.id)}
+                onDragOver={(e) => handleHeaderDragOver(e, stage.id)}
+                onDragLeave={handleHeaderDragLeave}
+                onDrop={(e) => handleHeaderDrop(e, stage.id)}
               >
                 <div className="flex items-center gap-2">
-                  {/* Drag handle */}
+                  {/* Grip — drag source ONLY */}
                   <div
                     draggable
                     onDragStart={(e) => handleStageDragStart(e, stage.id)}
-                    onDragOver={(e) => handleStageDragOver(e, stage.id)}
-                    onDragLeave={handleStageDragLeave}
-                    onDrop={(e) => handleStageDrop(e, stage.id)}
                     onDragEnd={handleStageDragEnd}
-                    className={`cursor-grab active:cursor-grabbing transition-colors ${
+                    className={`cursor-grab active:cursor-grabbing select-none ${
                       isDragSource ? "text-brand" : "text-white/30 hover:text-white/60"
                     }`}
                     title="Drag to reorder"
@@ -438,7 +426,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
 
               {/* Column Body */}
               <div className={`flex flex-1 flex-col gap-2 rounded-b-[3px] border border-t-0 border-[#1E293B] bg-[#090D16] p-2 transition-all duration-150 ${
-                isDropTarget ? "border-brand/50 bg-brand/5" : isDealDropTarget ? "border-brand/30 bg-brand/3" : ""
+                isDealDropTarget ? "border-brand/50 bg-brand/5" : ""
               }`}>
                 {stageDeals.length === 0 ? (
                   <div className="flex flex-1 items-center justify-center py-8">
@@ -452,11 +440,29 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                       onDragStart={(e) => handleDealDragStart(e, deal.id, stage.id)}
                       onDragEnd={handleDealDragEnd}
                       onClick={() => setSelectedDealId(deal.id)}
-                      className={`cursor-grab rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-all hover:border-brand/30 hover:shadow-md active:cursor-grabbing ${
-                        dealDragging?.dealId === deal.id ? "opacity-50 rotate-2 shadow-xl" : ""
+                      className={`group relative cursor-grab rounded-[3px] border border-[#1E293B] bg-[#111827] p-3 transition-all hover:border-brand/30 hover:shadow-md active:cursor-grabbing ${
+                        dealDragging?.dealId === deal.id ? "opacity-50 rotate-1 shadow-xl" : ""
                       }`}
                     >
-                      <p className="font-display text-sm font-bold text-white">{deal.title}</p>
+                      {/* Quick actions */}
+                      <div className="absolute right-2 top-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setSelectedDealId(deal.id); }}
+                          className="rounded bg-[#090D16] p-1 text-white/40 hover:text-white transition-colors"
+                          title="Edit"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDeleteDeal(deal.id); }}
+                          className="rounded bg-[#090D16] p-1 text-white/40 hover:text-red-400 transition-colors"
+                          title="Delete"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                      </div>
+
+                      <p className="font-display text-sm font-bold text-white pr-12">{deal.title}</p>
                       <p className="mt-1 text-xs text-white/50">{deal.company?.name || "Unknown"}</p>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-sm font-semibold text-white">{formatCurrency(deal.value)}</span>
@@ -467,11 +473,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                         )}
                       </div>
                       {deal.probability > 0 && deal.probability < 100 && (
-                        <div className="mt-2">
+                        <div className="mt-2" title={`Win probability: ${deal.probability}%`}>
+                          <div className="flex items-center justify-between mb-0.5">
+                            <span className="text-[10px] text-white/40">Win probability</span>
+                            <span className="text-[10px] text-white/50">{deal.probability}%</span>
+                          </div>
                           <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
                             <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${deal.probability}%` }} />
                           </div>
-                          <p className="mt-0.5 text-[10px] text-white/40">{deal.probability}%</p>
                         </div>
                       )}
                     </div>
@@ -517,7 +526,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
             <p className="text-xs text-white/40 mt-0.5">Fill in what you know. Everything is optional except title and stage.</p>
 
             <form onSubmit={handleCreateDeal} className="mt-5 flex flex-col gap-4">
-              {/* Deal Info */}
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Deal Title *</label>
                 <input type="text" required value={newDeal.title} onChange={(e) => setNewDeal({ ...newDeal, title: e.target.value })}
@@ -546,7 +554,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                 </div>
               </div>
 
-              {/* Company */}
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Company Name</label>
                 <input type="text" value={newDeal.companyName} onChange={(e) => setNewDeal({ ...newDeal, companyName: e.target.value })}
@@ -554,7 +561,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                   className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand" />
               </div>
 
-              {/* Contact */}
               <div className="border-t border-[#1E293B] pt-4">
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Contact Person</p>
                 <div className="grid grid-cols-2 gap-4">
@@ -579,7 +585,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                 </div>
               </div>
 
-              {/* Deal Details */}
               <div className="border-t border-[#1E293B] pt-4">
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Deal Details</p>
                 <div className="grid grid-cols-2 gap-4">
@@ -634,7 +639,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                 </div>
               </div>
 
-              {/* Location */}
               <div className="border-t border-[#1E293B] pt-4">
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Location</p>
                 <div className="grid grid-cols-2 gap-4">
@@ -659,7 +663,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                 </div>
               </div>
 
-              {/* Notes */}
               <div className="border-t border-[#1E293B] pt-4">
                 <label className="block text-xs font-semibold text-white/60 mb-1">Notes</label>
                 <textarea rows={3} value={newDeal.notes} onChange={(e) => setNewDeal({ ...newDeal, notes: e.target.value })}
@@ -667,7 +670,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                   className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand resize-none" />
               </div>
 
-              {/* Actions */}
               <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowNewDeal(false)}
                   className="rounded-[3px] border border-[#1E293B] px-4 py-2 text-sm font-bold text-white transition-colors hover:border-brand">Cancel</button>
