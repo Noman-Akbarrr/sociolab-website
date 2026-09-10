@@ -14,8 +14,8 @@
     "db:migrate": "node ./node_modules/prisma/build/index.js migrate dev"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/adapter-pg": "^6.10.1",
+    "@prisma/client": "^6.10.1",
     "@puckeditor/core": "^0.23.0",
     "@vercel/blob": "^0.25.1",
     "bcryptjs": "^3.0.3",
@@ -23,7 +23,7 @@
     "next": "16.3.1",
     "otplib": "^13.4.1",
     "pg": "^8.23.0",
-    "prisma": "^7.9.1",
+    "prisma": "^6.10.1",
     "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"

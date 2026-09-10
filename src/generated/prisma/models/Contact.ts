@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -217,7 +217,7 @@ export type ContactGroupByOutputType = {
   _max: ContactMaxAggregateOutputType | null
 }
 
-export type GetContactGroupByPayload<T extends ContactGroupByArgs> = Prisma.PrismaPromise<
+type GetContactGroupByPayload<T extends ContactGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ContactGroupByOutputType, T['by']> &
       {
@@ -1866,11 +1866,6 @@ export type ContactFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Contacts.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Contacts.
-   */
   distinct?: Prisma.ContactScalarFieldEnum | Prisma.ContactScalarFieldEnum[]
 }
 

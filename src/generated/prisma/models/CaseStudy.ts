@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -196,7 +196,7 @@ export type CaseStudyGroupByOutputType = {
   _max: CaseStudyMaxAggregateOutputType | null
 }
 
-export type GetCaseStudyGroupByPayload<T extends CaseStudyGroupByArgs> = Prisma.PrismaPromise<
+type GetCaseStudyGroupByPayload<T extends CaseStudyGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CaseStudyGroupByOutputType, T['by']> &
       {
@@ -1245,11 +1245,6 @@ export type CaseStudyFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` CaseStudies.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of CaseStudies.
-   */
   distinct?: Prisma.CaseStudyScalarFieldEnum | Prisma.CaseStudyScalarFieldEnum[]
 }
 

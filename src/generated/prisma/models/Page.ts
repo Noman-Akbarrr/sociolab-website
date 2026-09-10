@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -168,7 +168,7 @@ export type PageGroupByOutputType = {
   _max: PageMaxAggregateOutputType | null
 }
 
-export type GetPageGroupByPayload<T extends PageGroupByArgs> = Prisma.PrismaPromise<
+type GetPageGroupByPayload<T extends PageGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PageGroupByOutputType, T['by']> &
       {
@@ -1004,11 +1004,6 @@ export type PageFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Pages.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Pages.
-   */
   distinct?: Prisma.PageScalarFieldEnum | Prisma.PageScalarFieldEnum[]
 }
 

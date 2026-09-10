@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -221,7 +221,7 @@ export type TicketGroupByOutputType = {
   _max: TicketMaxAggregateOutputType | null
 }
 
-export type GetTicketGroupByPayload<T extends TicketGroupByArgs> = Prisma.PrismaPromise<
+type GetTicketGroupByPayload<T extends TicketGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TicketGroupByOutputType, T['by']> &
       {
@@ -2269,11 +2269,6 @@ export type TicketFindManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Skip the first `n` Tickets.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Tickets.
-   */
   distinct?: Prisma.TicketScalarFieldEnum | Prisma.TicketScalarFieldEnum[]
 }
 

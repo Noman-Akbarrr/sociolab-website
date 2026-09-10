@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -158,7 +158,7 @@ export type NewsletterLeadGroupByOutputType = {
   _max: NewsletterLeadMaxAggregateOutputType | null
 }
 
-export type GetNewsletterLeadGroupByPayload<T extends NewsletterLeadGroupByArgs> = Prisma.PrismaPromise<
+type GetNewsletterLeadGroupByPayload<T extends NewsletterLeadGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<NewsletterLeadGroupByOutputType, T['by']> &
       {
@@ -960,11 +960,6 @@ export type NewsletterLeadFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` NewsletterLeads.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of NewsletterLeads.
-   */
   distinct?: Prisma.NewsletterLeadScalarFieldEnum | Prisma.NewsletterLeadScalarFieldEnum[]
 }
 

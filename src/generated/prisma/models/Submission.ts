@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -189,7 +189,7 @@ export type SubmissionGroupByOutputType = {
   _max: SubmissionMaxAggregateOutputType | null
 }
 
-export type GetSubmissionGroupByPayload<T extends SubmissionGroupByArgs> = Prisma.PrismaPromise<
+type GetSubmissionGroupByPayload<T extends SubmissionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SubmissionGroupByOutputType, T['by']> &
       {
@@ -1300,11 +1300,6 @@ export type SubmissionFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` Submissions.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Submissions.
-   */
   distinct?: Prisma.SubmissionScalarFieldEnum | Prisma.SubmissionScalarFieldEnum[]
 }
 

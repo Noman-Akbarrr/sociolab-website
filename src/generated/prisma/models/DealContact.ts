@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -151,7 +151,7 @@ export type DealContactGroupByOutputType = {
   _max: DealContactMaxAggregateOutputType | null
 }
 
-export type GetDealContactGroupByPayload<T extends DealContactGroupByArgs> = Prisma.PrismaPromise<
+type GetDealContactGroupByPayload<T extends DealContactGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DealContactGroupByOutputType, T['by']> &
       {
@@ -1207,11 +1207,6 @@ export type DealContactFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` DealContacts.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of DealContacts.
-   */
   distinct?: Prisma.DealContactScalarFieldEnum | Prisma.DealContactScalarFieldEnum[]
 }
 

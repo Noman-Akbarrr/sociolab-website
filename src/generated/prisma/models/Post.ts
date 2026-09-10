@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
@@ -189,7 +189,7 @@ export type PostGroupByOutputType = {
   _max: PostMaxAggregateOutputType | null
 }
 
-export type GetPostGroupByPayload<T extends PostGroupByArgs> = Prisma.PrismaPromise<
+type GetPostGroupByPayload<T extends PostGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PostGroupByOutputType, T['by']> &
       {
@@ -1088,11 +1088,6 @@ export type PostFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Posts.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of Posts.
-   */
   distinct?: Prisma.PostScalarFieldEnum | Prisma.PostScalarFieldEnum[]
 }
 
