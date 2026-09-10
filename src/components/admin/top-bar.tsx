@@ -6,6 +6,7 @@ const sectionNames: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/pages": "Pages",
   "/admin/pipeline": "Pipelines",
+  "/admin/projects": "Projects",
   "/admin/people": "People",
   "/admin/clients": "Clients",
 };

@@ -122,3 +122,8 @@ export type Service = Prisma.ServiceModel
  * 
  */
 export type Testimonial = Prisma.TestimonialModel
+/**
+ * Model Submission
+ * 
+ */
+export type Submission = Prisma.SubmissionModel

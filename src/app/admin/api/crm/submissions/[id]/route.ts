@@ -13,9 +13,9 @@ export async function GET(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  const project = await store.getProject(id);
-  if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
-  return NextResponse.json({ project });
+  const submission = await store.getSubmission(id);
+  if (!submission) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  return NextResponse.json({ submission });
 }
 
 export async function PATCH(
@@ -27,15 +27,11 @@ export async function PATCH(
 
   const { id } = await params;
   let body: {
-    name?: string;
-    status?: string;
-    assigneeId?: string | null;
-    startDate?: string | null;
-    endDate?: string | null;
-    budget?: number;
-    currency?: string;
-    billingType?: string;
+    title?: string;
     description?: string;
+    status?: string;
+    files?: string[];
+    feedback?: string;
   };
   try {
     body = await request.json();
@@ -43,17 +39,10 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const project = await store.updateProject(id, body);
-  if (!project) return NextResponse.json({ error: "Not found." }, { status: 404 });
+  const submission = await store.updateSubmission(id, body);
+  if (!submission) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-  await store.createActivity({
-    type: "project-updated",
-    subject: `Updated project "${project.name}"`,
-    projectId: project.id,
-    companyId: project.companyId,
-  }, user.id);
-
-  return NextResponse.json({ project });
+  return NextResponse.json({ submission });
 }
 
 export async function DELETE(
@@ -64,6 +53,6 @@ export async function DELETE(
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
 
   const { id } = await params;
-  await store.deleteProject(id);
+  await store.deleteSubmission(id);
   return NextResponse.json({ ok: true });
 }

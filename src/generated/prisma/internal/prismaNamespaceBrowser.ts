@@ -71,7 +71,8 @@ export const ModelName = {
   Invoice: 'Invoice',
   TeamMember: 'TeamMember',
   Service: 'Service',
-  Testimonial: 'Testimonial'
+  Testimonial: 'Testimonial',
+  Submission: 'Submission'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -200,6 +201,7 @@ export const CompanyScalarFieldEnum = {
   size: 'size',
   website: 'website',
   linkedin: 'linkedin',
+  logo: 'logo',
   notes: 'notes',
   tags: 'tags',
   createdAt: 'createdAt',
@@ -289,6 +291,7 @@ export const ProjectScalarFieldEnum = {
   name: 'name',
   companyId: 'companyId',
   dealId: 'dealId',
+  assigneeId: 'assigneeId',
   status: 'status',
   startDate: 'startDate',
   endDate: 'endDate',
@@ -441,6 +444,22 @@ export const TestimonialScalarFieldEnum = {
 } as const
 
 export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[keyof typeof TestimonialScalarFieldEnum]
+
+
+export const SubmissionScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  files: 'files',
+  feedback: 'feedback',
+  submittedAt: 'submittedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -264,7 +264,16 @@ export async function getProjects(opts: { companyId?: string; status?: string; s
 export async function getProject(id: string) {
   return prisma.project.findUnique({
     where: { id },
-    include: { company: true, tasks: true, _count: { select: { tasks: true } } },
+    include: {
+      company: true,
+      assignee: { select: { id: true, name: true, email: true } },
+      deal: { select: { id: true, title: true, value: true, currency: true } },
+      tasks: { include: { assignee: { select: { id: true, name: true } } } },
+      invoices: { orderBy: { createdAt: "desc" } },
+      submissions: { orderBy: { submittedAt: "desc" } },
+      activities: { include: { user: { select: { id: true, name: true } } }, orderBy: { createdAt: "desc" }, take: 10 },
+      _count: { select: { tasks: true, invoices: true, submissions: true, tickets: true } },
+    },
   });
 }
 
@@ -274,7 +283,10 @@ export async function createProject(data: any) {
       name: data.name,
       companyId: data.companyId,
       dealId: data.dealId,
+      assigneeId: data.assigneeId || null,
       status: data.status || "kickoff",
+      startDate: data.startDate || null,
+      endDate: data.endDate || null,
       budget: data.budget,
       currency: data.currency || "USD",
       billingType: data.billingType || "fixed",
@@ -321,6 +333,75 @@ export async function updateTask(id: string, data: any) {
 
 export async function deleteTask(id: string) {
   await prisma.task.delete({ where: { id } });
+}
+
+// ── Submissions ──
+
+export async function getSubmissions(opts: { projectId?: string; status?: string; page?: number; limit?: number } = {}) {
+  const { projectId, status, page = 1, limit = 50 } = opts;
+  const where: any = {};
+  if (projectId) where.projectId = projectId;
+  if (status) where.status = status;
+  const [submissions, total] = await Promise.all([
+    prisma.submission.findMany({ where, orderBy: { submittedAt: "desc" }, skip: (page - 1) * limit, take: limit }),
+    prisma.submission.count({ where }),
+  ]);
+  return { submissions, total, page, totalPages: Math.ceil(total / limit) };
+}
+
+export async function getSubmission(id: string) {
+  return prisma.submission.findUnique({ where: { id }, include: { project: { select: { id: true, name: true } } } });
+}
+
+export async function createSubmission(data: any) {
+  return prisma.submission.create({
+    data: {
+      projectId: data.projectId,
+      title: data.title,
+      description: data.description || null,
+      status: data.status || "pending",
+      files: data.files || [],
+      feedback: data.feedback || null,
+    },
+  });
+}
+
+export async function updateSubmission(id: string, data: any) {
+  return prisma.submission.update({ where: { id }, data });
+}
+
+export async function deleteSubmission(id: string) {
+  await prisma.submission.delete({ where: { id } });
+}
+
+// ── Invoices ──
+
+export async function getInvoices(opts: { projectId?: string; status?: string } = {}) {
+  const where: any = {};
+  if (opts.projectId) where.projectId = opts.projectId;
+  if (opts.status) where.status = opts.status;
+  return prisma.invoice.findMany({ where, orderBy: { createdAt: "desc" } });
+}
+
+export async function createInvoice(data: any) {
+  return prisma.invoice.create({
+    data: {
+      number: data.number,
+      projectId: data.projectId,
+      amount: data.amount,
+      currency: data.currency || "USD",
+      status: data.status || "draft",
+      dueDate: new Date(data.dueDate),
+    },
+  });
+}
+
+export async function updateInvoice(id: string, data: any) {
+  return prisma.invoice.update({ where: { id }, data });
+}
+
+export async function deleteInvoice(id: string) {
+  await prisma.invoice.delete({ where: { id } });
 }
 
 // ── Tickets ──

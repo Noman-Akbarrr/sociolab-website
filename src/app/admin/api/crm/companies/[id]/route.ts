@@ -68,6 +68,7 @@ export async function PATCH(
     size?: string;
     website?: string;
     linkedin?: string;
+    logo?: string;
     notes?: string;
     tags?: string[];
   };

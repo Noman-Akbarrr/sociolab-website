@@ -32,6 +32,7 @@ export type CompanyMinAggregateOutputType = {
   size: string | null
   website: string | null
   linkedin: string | null
+  logo: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -45,6 +46,7 @@ export type CompanyMaxAggregateOutputType = {
   size: string | null
   website: string | null
   linkedin: string | null
+  logo: string | null
   notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -58,6 +60,7 @@ export type CompanyCountAggregateOutputType = {
   size: number
   website: number
   linkedin: number
+  logo: number
   notes: number
   tags: number
   createdAt: number
@@ -74,6 +77,7 @@ export type CompanyMinAggregateInputType = {
   size?: true
   website?: true
   linkedin?: true
+  logo?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -87,6 +91,7 @@ export type CompanyMaxAggregateInputType = {
   size?: true
   website?: true
   linkedin?: true
+  logo?: true
   notes?: true
   createdAt?: true
   updatedAt?: true
@@ -100,6 +105,7 @@ export type CompanyCountAggregateInputType = {
   size?: true
   website?: true
   linkedin?: true
+  logo?: true
   notes?: true
   tags?: true
   createdAt?: true
@@ -187,6 +193,7 @@ export type CompanyGroupByOutputType = {
   size: string | null
   website: string | null
   linkedin: string | null
+  logo: string | null
   notes: string | null
   tags: string[]
   createdAt: Date
@@ -222,6 +229,7 @@ export type CompanyWhereInput = {
   size?: Prisma.StringNullableFilter<"Company"> | string | null
   website?: Prisma.StringNullableFilter<"Company"> | string | null
   linkedin?: Prisma.StringNullableFilter<"Company"> | string | null
+  logo?: Prisma.StringNullableFilter<"Company"> | string | null
   notes?: Prisma.StringNullableFilter<"Company"> | string | null
   tags?: Prisma.StringNullableListFilter<"Company">
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
@@ -241,6 +249,7 @@ export type CompanyOrderByWithRelationInput = {
   size?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -263,6 +272,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   size?: Prisma.StringNullableFilter<"Company"> | string | null
   website?: Prisma.StringNullableFilter<"Company"> | string | null
   linkedin?: Prisma.StringNullableFilter<"Company"> | string | null
+  logo?: Prisma.StringNullableFilter<"Company"> | string | null
   notes?: Prisma.StringNullableFilter<"Company"> | string | null
   tags?: Prisma.StringNullableListFilter<"Company">
   createdAt?: Prisma.DateTimeFilter<"Company"> | Date | string
@@ -282,6 +292,7 @@ export type CompanyOrderByWithAggregationInput = {
   size?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedin?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -302,6 +313,7 @@ export type CompanyScalarWhereWithAggregatesInput = {
   size?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   linkedin?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
+  logo?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   tags?: Prisma.StringNullableListFilter<"Company">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Company"> | Date | string
@@ -316,6 +328,7 @@ export type CompanyCreateInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -335,6 +348,7 @@ export type CompanyUncheckedCreateInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -354,6 +368,7 @@ export type CompanyUpdateInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -373,6 +388,7 @@ export type CompanyUncheckedUpdateInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,6 +408,7 @@ export type CompanyCreateManyInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -406,6 +423,7 @@ export type CompanyUpdateManyMutationInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,6 +438,7 @@ export type CompanyUncheckedUpdateManyInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,6 +461,7 @@ export type CompanyCountOrderByAggregateInput = {
   size?: Prisma.SortOrder
   website?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -456,6 +476,7 @@ export type CompanyMaxOrderByAggregateInput = {
   size?: Prisma.SortOrder
   website?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -469,6 +490,7 @@ export type CompanyMinOrderByAggregateInput = {
   size?: Prisma.SortOrder
   website?: Prisma.SortOrder
   linkedin?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -575,6 +597,7 @@ export type CompanyCreateWithoutContactsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -593,6 +616,7 @@ export type CompanyUncheckedCreateWithoutContactsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -627,6 +651,7 @@ export type CompanyUpdateWithoutContactsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -645,6 +670,7 @@ export type CompanyUncheckedUpdateWithoutContactsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -663,6 +689,7 @@ export type CompanyCreateWithoutDealsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -681,6 +708,7 @@ export type CompanyUncheckedCreateWithoutDealsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -715,6 +743,7 @@ export type CompanyUpdateWithoutDealsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -733,6 +762,7 @@ export type CompanyUncheckedUpdateWithoutDealsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -751,6 +781,7 @@ export type CompanyCreateWithoutProjectsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -769,6 +800,7 @@ export type CompanyUncheckedCreateWithoutProjectsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -803,6 +835,7 @@ export type CompanyUpdateWithoutProjectsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +854,7 @@ export type CompanyUncheckedUpdateWithoutProjectsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -839,6 +873,7 @@ export type CompanyCreateWithoutTicketsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -857,6 +892,7 @@ export type CompanyUncheckedCreateWithoutTicketsInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -891,6 +927,7 @@ export type CompanyUpdateWithoutTicketsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,6 +946,7 @@ export type CompanyUncheckedUpdateWithoutTicketsInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -927,6 +965,7 @@ export type CompanyCreateWithoutActivitiesInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -945,6 +984,7 @@ export type CompanyUncheckedCreateWithoutActivitiesInput = {
   size?: string | null
   website?: string | null
   linkedin?: string | null
+  logo?: string | null
   notes?: string | null
   tags?: Prisma.CompanyCreatetagsInput | string[]
   createdAt?: Date | string
@@ -979,6 +1019,7 @@ export type CompanyUpdateWithoutActivitiesInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -997,6 +1038,7 @@ export type CompanyUncheckedUpdateWithoutActivitiesInput = {
   size?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.CompanyUpdatetagsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1082,6 +1124,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   size?: boolean
   website?: boolean
   linkedin?: boolean
+  logo?: boolean
   notes?: boolean
   tags?: boolean
   createdAt?: boolean
@@ -1102,6 +1145,7 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   size?: boolean
   website?: boolean
   linkedin?: boolean
+  logo?: boolean
   notes?: boolean
   tags?: boolean
   createdAt?: boolean
@@ -1116,6 +1160,7 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   size?: boolean
   website?: boolean
   linkedin?: boolean
+  logo?: boolean
   notes?: boolean
   tags?: boolean
   createdAt?: boolean
@@ -1130,13 +1175,14 @@ export type CompanySelectScalar = {
   size?: boolean
   website?: boolean
   linkedin?: boolean
+  logo?: boolean
   notes?: boolean
   tags?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "industry" | "size" | "website" | "linkedin" | "notes" | "tags" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "domain" | "industry" | "size" | "website" | "linkedin" | "logo" | "notes" | "tags" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | Prisma.Company$contactsArgs<ExtArgs>
   deals?: boolean | Prisma.Company$dealsArgs<ExtArgs>
@@ -1165,6 +1211,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     size: string | null
     website: string | null
     linkedin: string | null
+    logo: string | null
     notes: string | null
     tags: string[]
     createdAt: Date
@@ -1604,6 +1651,7 @@ export interface CompanyFieldRefs {
   readonly size: Prisma.FieldRef<"Company", 'String'>
   readonly website: Prisma.FieldRef<"Company", 'String'>
   readonly linkedin: Prisma.FieldRef<"Company", 'String'>
+  readonly logo: Prisma.FieldRef<"Company", 'String'>
   readonly notes: Prisma.FieldRef<"Company", 'String'>
   readonly tags: Prisma.FieldRef<"Company", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>

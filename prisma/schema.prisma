@@ -26,6 +26,7 @@ model User {
   ownedDeals             Deal[]         @relation("DealOwner")
   assignedTasks          Task[]         @relation("TaskAssignee")
   assignedTickets        Ticket[]       @relation("TicketAssignee")
+  assignedProjects       Project[]      @relation("ProjectAssignee")
   activities             Activity[]
 }
 
@@ -112,6 +113,7 @@ model Company {
   size        String?
   website     String?
   linkedin    String?
+  logo        String?
   notes       String?
   tags        String[]
   createdAt   DateTime @default(now())
@@ -214,6 +216,8 @@ model Project {
   company     Company  @relation(fields: [companyId], references: [id])
   dealId      String?  @unique
   deal        Deal?    @relation(fields: [dealId], references: [id])
+  assigneeId  String?
+  assignee    User?    @relation("ProjectAssignee", fields: [assigneeId], references: [id])
   status      String   @default("kickoff") // "kickoff", "active", "paused", "done", "archived"
   startDate   DateTime?
   endDate     DateTime?
@@ -228,6 +232,7 @@ model Project {
   activities  Activity[]
   testimonial Testimonial?
   tickets     Ticket[]
+  submissions Submission[]
 }
 
 model Task {
@@ -364,4 +369,18 @@ model Testimonial {
   project      Project?     @relation(fields: [projectId], references: [id])
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+}
+
+model Submission {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      String   @default("pending") // "pending", "review", "approved", "rejected"
+  files       String[]
+  feedback    String?
+  submittedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
