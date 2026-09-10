@@ -22,7 +22,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
   const where: any = {};
   if (status) where.status = status;
 
-  const [projects, total] = await Promise.all([
+  const [projects, total, companies, deals] = await Promise.all([
     prisma.project.findMany({
       where,
       include: {
@@ -35,6 +35,12 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       take: limit,
     }),
     prisma.project.count({ where }),
+    prisma.company.findMany({ orderBy: { name: "asc" }, take: 100 }),
+    prisma.deal.findMany({
+      include: { company: { select: { name: true } }, stage: { select: { isWon: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
   ]);
 
   return (
@@ -44,6 +50,8 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       initialPage={page}
       initialTotalPages={Math.ceil(total / limit)}
       initialStatus={status}
+      initialCompanies={companies}
+      initialDeals={deals}
     />
   );
 }

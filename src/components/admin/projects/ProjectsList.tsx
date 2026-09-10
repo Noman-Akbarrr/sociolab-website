@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 interface ProjectsListProps {
@@ -9,9 +9,11 @@ interface ProjectsListProps {
   initialPage: number;
   initialTotalPages: number;
   initialStatus: string;
+  initialCompanies: any[];
+  initialDeals: any[];
 }
 
-export function ProjectsList({ initialProjects, initialTotal, initialPage, initialTotalPages, initialStatus }: ProjectsListProps) {
+export function ProjectsList({ initialProjects, initialTotal, initialPage, initialTotalPages, initialStatus, initialCompanies, initialDeals }: ProjectsListProps) {
   const [projects, setProjects] = useState(initialProjects);
   const [total, setTotal] = useState(initialTotal);
   const [page, setPage] = useState(initialPage);
@@ -20,13 +22,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   const [loading, setLoading] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [deals, setDeals] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetch("/admin/api/crm/companies?limit=100").then(r => r.json()).then(d => setCompanies(d.companies));
-    fetch("/admin/api/crm/deals?limit=100").then(r => r.json()).then(d => setDeals(d.deals));
-  }, []);
+  const companies = initialCompanies;
+  const deals = initialDeals;
 
   async function fetchProjects() {
     setLoading(true);
