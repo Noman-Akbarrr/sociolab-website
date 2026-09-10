@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerUser } from "@/lib/auth/current";
+import { prisma } from "@/lib/prisma";
 import { ProjectsList } from "@/components/admin/projects/ProjectsList";
 
 export const metadata = {
@@ -14,18 +15,35 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
   const resolvedSearchParams = await searchParams;
   const params = new URLSearchParams(resolvedSearchParams as any);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ""}/admin/api/crm/projects?${params}`, {
-    headers: { cookie: "" },
-  });
-  const data = await res.json();
+  const status = params.get("status") || "";
+  const page = parseInt(params.get("page") || "1");
+  const limit = 20;
+
+  const where: any = {};
+  if (status) where.status = status;
+
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      include: {
+        company: true,
+        deal: { select: { id: true, title: true } },
+        _count: { select: { tasks: true, invoices: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.project.count({ where }),
+  ]);
 
   return (
     <ProjectsList
-      initialProjects={data.projects}
-      initialTotal={data.total}
-      initialPage={data.page}
-      initialTotalPages={data.totalPages}
-      initialStatus={params.get("status") || ""}
+      initialProjects={projects}
+      initialTotal={total}
+      initialPage={page}
+      initialTotalPages={Math.ceil(total / limit)}
+      initialStatus={status}
     />
   );
 }
