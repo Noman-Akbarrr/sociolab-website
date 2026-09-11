@@ -5,4 +5,7 @@ nixPkgs = ["nodejs_22", "openssl"]
 cmds = ["npm ci --ignore-scripts"]
 
 [phases.build]
-cmds = ["npx prisma generate", "npx prisma db push --skip-generate", "npm run build"]
+cmds = ["npx prisma generate", "npm run build"]
+
+[start]
+run = "npx prisma db push --skip-generate && node ./node_modules/next/dist/bin/next start"
