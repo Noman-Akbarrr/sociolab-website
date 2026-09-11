@@ -346,6 +346,11 @@ export type PipelineScalarRelationFilter = {
   isNot?: Prisma.PipelineWhereInput
 }
 
+export type PipelineNullableScalarRelationFilter = {
+  is?: Prisma.PipelineWhereInput | null
+  isNot?: Prisma.PipelineWhereInput | null
+}
+
 export type PipelineCreateNestedOneWithoutDealsInput = {
   create?: Prisma.XOR<Prisma.PipelineCreateWithoutDealsInput, Prisma.PipelineUncheckedCreateWithoutDealsInput>
   connectOrCreate?: Prisma.PipelineCreateOrConnectWithoutDealsInput
@@ -366,10 +371,12 @@ export type PipelineCreateNestedOneWithoutStagesInput = {
   connect?: Prisma.PipelineWhereUniqueInput
 }
 
-export type PipelineUpdateOneRequiredWithoutStagesNestedInput = {
+export type PipelineUpdateOneWithoutStagesNestedInput = {
   create?: Prisma.XOR<Prisma.PipelineCreateWithoutStagesInput, Prisma.PipelineUncheckedCreateWithoutStagesInput>
   connectOrCreate?: Prisma.PipelineCreateOrConnectWithoutStagesInput
   upsert?: Prisma.PipelineUpsertWithoutStagesInput
+  disconnect?: Prisma.PipelineWhereInput | boolean
+  delete?: Prisma.PipelineWhereInput | boolean
   connect?: Prisma.PipelineWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PipelineUpdateToOneWithWhereWithoutStagesInput, Prisma.PipelineUpdateWithoutStagesInput>, Prisma.PipelineUncheckedUpdateWithoutStagesInput>
 }

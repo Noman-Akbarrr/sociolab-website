@@ -196,8 +196,8 @@ model DealContact {
 
 model PipelineStage {
   id         String   @id @default(cuid())
-  pipelineId String
-  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  pipelineId String?
+  pipeline   Pipeline? @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
   name       String
   label      String
   order      Int
