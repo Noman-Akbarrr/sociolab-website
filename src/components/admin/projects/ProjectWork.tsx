@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const statusConfig: Record<string, { label: string; color: string }> = {
   todo: { label: "To Do", color: "text-white/50" },
@@ -19,10 +19,12 @@ const priorityColors: Record<number, string> = {
 
 export function ProjectWork({
   project,
+  projectMembers,
   userRole,
   userId,
 }: {
   project: any;
+  projectMembers: any[];
   userRole: string;
   userId: string;
 }) {
@@ -35,11 +37,7 @@ export function ProjectWork({
   const [form, setForm] = useState({ title: "", description: "", priority: 0, assigneeId: "", dueDate: "" });
   const [submittingTaskId, setSubmittingTaskId] = useState<string | null>(null);
   const [driveLink, setDriveLink] = useState("");
-  const [users, setUsers] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetch("/admin/api/auth/users").then(r => r.ok ? r.json() : []).then(data => setUsers(data)).catch(() => {});
-  }, []);
+  const [users] = useState(projectMembers || []);
 
   const myTasks = isFreelancer
     ? tasks.filter((t: any) => t.assigneeId === userId)

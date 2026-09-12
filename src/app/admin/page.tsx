@@ -15,7 +15,7 @@ export default async function Dashboard() {
   const user = await getServerUser();
   if (!user) redirect("/admin/login");
 
-  const stats = await store.getDashboardStats(user.id);
+  const stats = await store.getDashboardStats(user.id, user.role);
   const pages = await listPages();
   const groups = groupPages(pages);
 

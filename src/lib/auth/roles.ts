@@ -107,6 +107,14 @@ export function getVisibleNavItems(role: string): string[] {
   }
 }
 
+export function canManageProjects(user: { role: string }): boolean {
+  return isAdmin(user);
+}
+
+export function canDeleteProject(user: { role: string }): boolean {
+  return isAdmin(user);
+}
+
 export function canAccessProjectTabs(role: string): {
   profile: boolean;
   work: boolean;

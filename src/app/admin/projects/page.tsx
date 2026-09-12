@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getServerUser } from "@/lib/auth/current";
 import { prisma } from "@/lib/prisma";
+import { isAdmin } from "@/lib/auth/roles";
 import { ProjectsList } from "@/components/admin/projects/ProjectsList";
 
 export const metadata = {
@@ -21,6 +22,15 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
 
   const where: any = {};
   if (status) where.status = status;
+
+  // Non-admin users only see projects they are members of
+  if (!isAdmin(user)) {
+    const memberProjectIds = await prisma.projectMember.findMany({
+      where: { userId: user.id },
+      select: { projectId: true },
+    });
+    where.id = { in: memberProjectIds.map((m) => m.projectId) };
+  }
 
   const [projects, total, companies, deals] = await Promise.all([
     prisma.project.findMany({
@@ -52,6 +62,8 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       initialStatus={status}
       initialCompanies={companies}
       initialDeals={deals}
+      userRole={user.role}
+      userId={user.id}
     />
   );
 }

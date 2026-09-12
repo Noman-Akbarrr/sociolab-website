@@ -9,6 +9,7 @@ interface PipelineKanbanProps {
   pipeline: any;
   initialStages: any[];
   initialDealsByStage: any[];
+  pipelineMembers: any[];
   userRole: string;
   userId: string;
 }
@@ -19,7 +20,7 @@ const PRESET_COLORS = [
   "#f59e0b", "#f97316", "#ef4444", "#ec4899",
 ];
 
-export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, userRole, userId }: PipelineKanbanProps) {
+export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, pipelineMembers, userRole, userId }: PipelineKanbanProps) {
   const router = useRouter();
   const [stages, setStages] = useState(initialStages);
   const [dealsByStage, setDealsByStage] = useState(initialDealsByStage);
@@ -73,8 +74,8 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
   const [companySearchLoading, setCompanySearchLoading] = useState(false);
   const companyDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Users for owner assignment
-  const [users, setUsers] = useState<any[]>([]);
+  // Pipeline members for owner assignment (passed from server)
+  const [users] = useState(pipelineMembers || []);
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-PK", { style: "currency", currency: "PKR", maximumFractionDigits: 0 }).format(cents / 100);
@@ -100,11 +101,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
     high: { label: "High", color: "bg-yellow-500/20 text-yellow-400" },
     urgent: { label: "Urgent", color: "bg-red-500/20 text-red-400" },
   };
-
-  // Fetch users for owner assignment
-  useEffect(() => {
-    fetch("/admin/api/auth/users").then(r => r.ok ? r.json() : []).then(data => setUsers(data)).catch(() => {});
-  }, []);
 
   // Company search with debounce
   const searchCompanies = useCallback(async (query: string) => {

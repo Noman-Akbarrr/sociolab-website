@@ -323,6 +323,7 @@ export async function createTask(data: any) {
       status: data.status || "todo",
       priority: data.priority || 0,
       assigneeId: data.assigneeId || null,
+      dueDate: data.dueDate || null,
     },
   });
 }
@@ -586,17 +587,36 @@ export async function deleteTestimonial(id: string) {
 
 // ── Dashboard Stats ──
 
-export async function getDashboardStats(userId?: string) {
+export async function getDashboardStats(userId?: string, userRole?: string) {
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
+  // For non-admin users, only show deals from pipelines they're members of
+  const dealFilter: any = {};
+  const projectFilter: any = { status: { in: ["kickoff", "active"] } };
+
+  if (userId && userRole && userRole !== "super_admin" && userRole !== "admin") {
+    const memberPipelineIds = await prisma.pipelineMember.findMany({
+      where: { userId },
+      select: { pipelineId: true },
+    });
+    const pipelineIds = memberPipelineIds.map((m) => m.pipelineId);
+    dealFilter.pipelineId = { in: pipelineIds };
+
+    const memberProjectIds = await prisma.projectMember.findMany({
+      where: { userId },
+      select: { projectId: true },
+    });
+    projectFilter.id = { in: memberProjectIds.map((m) => m.projectId) };
+  }
+
   const [dealsCount, openDeals, wonDealsThisMonth, activeProjects, openTickets, recentDeals, recentActivities] = await Promise.all([
-    prisma.deal.count(),
-    prisma.deal.findMany({ where: { stage: { isClosed: false } }, include: { stage: true } }),
-    prisma.deal.count({ where: { stage: { isWon: true }, createdAt: { gte: monthStart } } }),
-    prisma.project.count({ where: { status: { in: ["kickoff", "active"] } } }),
+    prisma.deal.count({ where: dealFilter }),
+    prisma.deal.findMany({ where: { stage: { isClosed: false }, ...dealFilter }, include: { stage: true } }),
+    prisma.deal.count({ where: { stage: { isWon: true }, createdAt: { gte: monthStart }, ...dealFilter } }),
+    prisma.project.count({ where: projectFilter }),
     prisma.ticket.count({ where: { status: { in: ["open", "waiting-client", "in-progress"] } } }),
-    prisma.deal.findMany({ take: 5, orderBy: { createdAt: "desc" }, include: { company: true, stage: true } }),
+    prisma.deal.findMany({ take: 5, orderBy: { createdAt: "desc" }, include: { company: true, stage: true }, where: dealFilter }),
     prisma.activity.findMany({ take: 8, orderBy: { createdAt: "desc" }, include: { user: { select: { id: true, name: true } }, deal: { select: { id: true, title: true } }, company: { select: { id: true, name: true } }, project: { select: { id: true, name: true } } } }),
   ]);
 

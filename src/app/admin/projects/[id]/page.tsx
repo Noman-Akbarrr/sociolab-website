@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getServerUser } from "@/lib/auth/current";
 import { prisma } from "@/lib/prisma";
-import { isAdmin, isFreelancer } from "@/lib/auth/roles";
+import { isAdmin } from "@/lib/auth/roles";
 import { ProjectHeader } from "@/components/admin/projects/ProjectHeader";
 import { ProjectProfile } from "@/components/admin/projects/ProjectProfile";
 import { ProjectWork } from "@/components/admin/projects/ProjectWork";
@@ -28,7 +28,14 @@ export default async function ProjectDetailPage({
   const tab = (resolvedSearchParams.tab as string) || "profile";
 
   const userIsAdmin = isAdmin(user);
-  const userIsFreelancer = isFreelancer(user);
+
+  // Non-admin users must be project members
+  if (!userIsAdmin) {
+    const isMember = await prisma.projectMember.findUnique({
+      where: { projectId_userId: { projectId: id, userId: user.id } },
+    });
+    if (!isMember) redirect("/admin/projects");
+  }
 
   const project = await prisma.project.findUnique({
     where: { id },
@@ -53,6 +60,12 @@ export default async function ProjectDetailPage({
 
   if (!project) redirect("/admin/projects");
 
+  // Fetch project members for task assignment dropdown
+  const projectMembers = await prisma.projectMember.findMany({
+    where: { projectId: id },
+    include: { user: { select: { id: true, name: true, email: true, role: true } } },
+  });
+
   const allowedTabs = ["profile", "work", "submissions"];
   if (userIsAdmin) allowedTabs.push("reports");
 
@@ -63,7 +76,7 @@ export default async function ProjectDetailPage({
       <ProjectHeader project={project} userRole={user.role} activeTab={activeTab} />
       <div className="px-8 py-6">
         {activeTab === "profile" && <ProjectProfile project={project} userRole={user.role} />}
-        {activeTab === "work" && <ProjectWork project={project} userRole={user.role} userId={user.id} />}
+        {activeTab === "work" && <ProjectWork project={project} projectMembers={projectMembers.map((m) => m.user)} userRole={user.role} userId={user.id} />}
         {activeTab === "submissions" && <ProjectSubmissions project={project} userRole={user.role} userId={user.id} />}
         {activeTab === "reports" && <ProjectReports project={project} />}
       </div>
