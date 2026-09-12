@@ -29,6 +29,8 @@ model User {
   assignedTickets        Ticket[]       @relation("TicketAssignee")
   assignedProjects       Project[]      @relation("ProjectAssignee")
   activities             Activity[]
+  projectMembers         ProjectMember[]
+  pipelineMembers        PipelineMember[]
 }
 
 model Session {
@@ -104,6 +106,7 @@ model Pipeline {
   updatedAt   DateTime @updatedAt
   stages      PipelineStage[]
   deals       Deal[]
+  members     PipelineMember[]
 }
 
 model Company {
@@ -234,6 +237,7 @@ model Project {
   testimonial Testimonial?
   tickets     Ticket[]
   submissions Submission[]
+  members     ProjectMember[]
 }
 
 model Task {
@@ -376,12 +380,39 @@ model Submission {
   id          String   @id @default(cuid())
   projectId   String
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  taskId      String?
   title       String
   description String?
   status      String   @default("pending") // "pending", "review", "approved", "rejected"
   files       String[]
   feedback    String?
+  submitterId String?
   submittedAt DateTime @default(now())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  role      String   @default("member") // "owner", "member", "freelancer"
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+}
+
+model PipelineMember {
+  id         String   @id @default(cuid())
+  pipelineId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  pipeline Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pipelineId, userId])
 }

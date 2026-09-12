@@ -1,22 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { isAdmin, isFreelancer } from "@/lib/auth/roles";
 
-const tabs = [
+const allTabs = [
   { label: "Profile", query: "profile" },
   { label: "Work", query: "work" },
   { label: "Submissions", query: "submissions" },
   { label: "Reports", query: "reports" },
 ];
 
-export function ProjectHeader({ project }: { project: any }) {
-  const pathname = usePathname();
+export function ProjectHeader({
+  project,
+  userRole,
+  activeTab,
+}: {
+  project: any;
+  userRole: string;
+  activeTab: string;
+}) {
   const company = project.company;
   const contactEmail = project.deal?.contactEmail || "";
   const assignee = project.assignee;
 
-  const currentTab = "profile";
+  const visibleTabs = allTabs.filter((tab) => {
+    if (tab.query === "reports") return isAdmin({ role: userRole });
+    return true;
+  });
 
   return (
     <div className="border-b border-[#1E293B]">
@@ -59,8 +69,8 @@ export function ProjectHeader({ project }: { project: any }) {
 
       {/* Tab bar */}
       <nav className="flex gap-0 px-8">
-        {tabs.map((tab) => {
-          const isActive = currentTab === tab.query;
+        {visibleTabs.map((tab) => {
+          const isActive = activeTab === tab.query;
           return (
             <Link
               key={tab.query}

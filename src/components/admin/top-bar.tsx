@@ -7,11 +7,19 @@ const sectionNames: Record<string, string> = {
   "/admin/pages": "Pages",
   "/admin/pipeline": "Pipelines",
   "/admin/projects": "Projects",
-  "/admin/people": "People",
+  "/admin/users": "Users",
   "/admin/clients": "Clients",
 };
 
-export default function TopBar({ userName }: { userName: string }) {
+const roleLabels: Record<string, string> = {
+  super_admin: "Super Admin",
+  admin: "Admin",
+  sales_executive: "Sales Executive",
+  salesperson: "Salesperson",
+  freelancer: "Freelancer",
+};
+
+export default function TopBar({ userName, userRole }: { userName: string; userRole: string }) {
   const pathname = usePathname();
 
   const segment = pathname.split("/").filter(Boolean);
@@ -26,6 +34,9 @@ export default function TopBar({ userName }: { userName: string }) {
         <span>{pageTitle}</span>
       </div>
       <div className="flex items-center gap-4">
+        <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white/60">
+          {roleLabels[userRole] || userRole}
+        </span>
         <span className="text-sm text-white/60">{userName}</span>
       </div>
     </header>

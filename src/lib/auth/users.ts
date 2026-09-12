@@ -97,13 +97,14 @@ export async function createUser(input: {
   name: string;
   email: string;
   passwordHash: string;
+  role?: string;
 }): Promise<AdminUser> {
   const user: AdminUser = {
     id: crypto.randomUUID(),
     name: input.name,
     email: input.email.trim().toLowerCase(),
     passwordHash: input.passwordHash,
-    role: "admin",
+    role: input.role || "admin",
     isTwoFactorEnabled: false,
     twoFactorSecret: null,
     recoveryCodes: [],

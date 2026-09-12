@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 
 interface PipelineGridProps {
   pipelines: any[];
+  userRole: string;
+  userId: string;
 }
 
-export function PipelineGrid({ pipelines: initialPipelines }: PipelineGridProps) {
+export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: PipelineGridProps) {
   const router = useRouter();
   const [pipelines, setPipelines] = useState(initialPipelines);
   const [showNew, setShowNew] = useState(false);
@@ -16,6 +18,9 @@ export function PipelineGrid({ pipelines: initialPipelines }: PipelineGridProps)
   const [deleteTarget, setDeleteTarget] = useState<any>(null);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
+
+  const canCreatePipeline = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
+  const canDeletePipeline = userRole === "super_admin" || userRole === "admin";
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-US", { style: "currency", currency: "PKR", maximumFractionDigits: 0 }).format(cents / 100);
@@ -63,12 +68,14 @@ export function PipelineGrid({ pipelines: initialPipelines }: PipelineGridProps)
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-3xl font-semibold tracking-tight text-white">Pipelines</h1>
-          <button
-            onClick={() => setShowNew(true)}
-            className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
-          >
-            + New Pipeline
-          </button>
+          {canCreatePipeline && (
+            <button
+              onClick={() => setShowNew(true)}
+              className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
+            >
+              + New Pipeline
+            </button>
+          )}
         </div>
         <p className="text-sm text-white/60">Manage your sales pipelines and stages.</p>
       </div>
@@ -199,6 +206,7 @@ export function PipelineGrid({ pipelines: initialPipelines }: PipelineGridProps)
                 <span className="font-semibold text-white">{formatCurrency(pipeline.totalValue)}</span>
               </div>
             </button>
+            {canDeletePipeline && (
             <div className="flex items-center justify-end border-t border-[#1E293B] px-5 py-2">
               <button
                 onClick={(e) => { e.stopPropagation(); setDeleteTarget(pipeline); setDeleteConfirmText(""); }}
@@ -210,6 +218,7 @@ export function PipelineGrid({ pipelines: initialPipelines }: PipelineGridProps)
                 </svg>
               </button>
             </div>
+            )}
           </div>
         ))}
       </div>

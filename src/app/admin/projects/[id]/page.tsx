@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getServerUser } from "@/lib/auth/current";
 import { prisma } from "@/lib/prisma";
+import { isAdmin, isFreelancer } from "@/lib/auth/roles";
 import { ProjectHeader } from "@/components/admin/projects/ProjectHeader";
 import { ProjectProfile } from "@/components/admin/projects/ProjectProfile";
 import { ProjectWork } from "@/components/admin/projects/ProjectWork";
@@ -26,6 +27,9 @@ export default async function ProjectDetailPage({
   const resolvedSearchParams = await searchParams;
   const tab = (resolvedSearchParams.tab as string) || "profile";
 
+  const userIsAdmin = isAdmin(user);
+  const userIsFreelancer = isFreelancer(user);
+
   const project = await prisma.project.findUnique({
     where: { id },
     include: {
@@ -49,15 +53,19 @@ export default async function ProjectDetailPage({
 
   if (!project) redirect("/admin/projects");
 
+  const allowedTabs = ["profile", "work", "submissions"];
+  if (userIsAdmin) allowedTabs.push("reports");
+
+  const activeTab = allowedTabs.includes(tab) ? tab : "profile";
+
   return (
     <div className="min-h-screen bg-[#090D16]">
-      <ProjectHeader project={project} />
+      <ProjectHeader project={project} userRole={user.role} activeTab={activeTab} />
       <div className="px-8 py-6">
-        {tab === "profile" && <ProjectProfile project={project} />}
-        {tab === "work" && <ProjectWork project={project} />}
-        {tab === "submissions" && <ProjectSubmissions project={project} />}
-        {tab === "reports" && <ProjectReports project={project} />}
-        {!["profile", "work", "submissions", "reports"].includes(tab) && <ProjectProfile project={project} />}
+        {activeTab === "profile" && <ProjectProfile project={project} userRole={user.role} />}
+        {activeTab === "work" && <ProjectWork project={project} userRole={user.role} userId={user.id} />}
+        {activeTab === "submissions" && <ProjectSubmissions project={project} userRole={user.role} userId={user.id} />}
+        {activeTab === "reports" && <ProjectReports project={project} />}
       </div>
     </div>
   );

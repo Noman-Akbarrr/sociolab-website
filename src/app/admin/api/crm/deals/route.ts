@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
+import { canAddDealsToPipeline } from "@/lib/auth/roles";
 import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser(request);
   if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+  if (!canAddDealsToPipeline(user)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   let body: any;
   try {

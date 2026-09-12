@@ -9,6 +9,8 @@ interface PipelineKanbanProps {
   pipeline: any;
   initialStages: any[];
   initialDealsByStage: any[];
+  userRole: string;
+  userId: string;
 }
 
 const PRESET_COLORS = [
@@ -17,7 +19,7 @@ const PRESET_COLORS = [
   "#f59e0b", "#f97316", "#ef4444", "#ec4899",
 ];
 
-export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }: PipelineKanbanProps) {
+export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, userRole, userId }: PipelineKanbanProps) {
   const router = useRouter();
   const [stages, setStages] = useState(initialStages);
   const [dealsByStage, setDealsByStage] = useState(initialDealsByStage);
@@ -40,6 +42,12 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
   const [editStageColor, setEditStageColor] = useState("#6b7280");
 
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
+
+  // Role-based permissions
+  const canManageStages = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
+  const canAddDeals = userRole !== "freelancer";
+  const canDeleteDeals = userRole === "super_admin" || userRole === "admin";
+  const canReassignDeals = userRole === "super_admin" || userRole === "admin";
 
   // Stage drag
   const [stageDragging, setStageDragging] = useState<string | null>(null);
@@ -349,9 +357,11 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
               {wonCount > 0 && <span className="text-xs text-green-400"><span className="font-semibold">{wonCount}</span> won</span>}
             </div>
           </div>
+          {canAddDeals && (
           <button onClick={() => openNewDealModal()} className="shrink-0 inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-brand-dark">
             + New Deal
           </button>
+          )}
         </div>
       </div>
 
@@ -404,12 +414,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                   <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-white/60 shrink-0">{stageDeals.length}</span>
                 </div>
                 <div className="relative">
+                  {canManageStages && (
                   <button onClick={() => setActiveStageMenu(activeStageMenu === stage.id ? null : stage.id)}
                     className="rounded p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
                       <circle cx="8" cy="3" r="1.5" /><circle cx="8" cy="8" r="1.5" /><circle cx="8" cy="13" r="1.5" />
                     </svg>
                   </button>
+                  )}
                   {activeStageMenu === stage.id && (
                     <div className="absolute right-0 top-full z-20 mt-1 w-40 rounded-[3px] border border-[#1E293B] bg-[#111827] py-1 shadow-xl">
                       <button onClick={() => { setEditingStageId(stage.id); setEditingStageLabel(stage.label); setActiveStageMenu(null); }}
@@ -447,10 +459,12 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                           className="rounded bg-[#090D16] p-1 text-white/40 hover:text-blue-400 transition-colors" title="Edit deal">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
+                        {canDeleteDeals && (
                         <button onClick={(e) => { e.stopPropagation(); handleDeleteDeal(deal.id); }}
                           className="rounded bg-[#090D16] p-1 text-white/40 hover:text-red-400 transition-colors" title="Delete deal">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </button>
+                        )}
                       </div>
 
                       <p className="font-display text-sm font-bold text-white pr-14">{deal.title}</p>
@@ -466,16 +480,19 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
                     </div>
                   ))
                 )}
+                {canAddDeals && (
                 <button onClick={() => openNewDealModal(stage.id)}
                   className="mt-1 flex w-full items-center justify-center gap-1 rounded-[3px] border border-dashed border-[#1E293B] py-2 text-xs text-white/40 transition-colors hover:border-brand/50 hover:text-white/60">
                   + Add Deal
                 </button>
+                )}
               </div>
             </div>
           );
         })}
 
         {/* Add Stage */}
+        {canManageStages && (
         <div className="w-[320px] min-w-[320px]">
           {addingStage ? (
             <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-4">
@@ -518,6 +535,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage }:
             </button>
           )}
         </div>
+        )}
       </div>
 
       {/* New Deal Modal */}

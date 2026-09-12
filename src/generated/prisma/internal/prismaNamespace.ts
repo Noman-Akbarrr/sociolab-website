@@ -411,7 +411,9 @@ export const ModelName = {
   TeamMember: 'TeamMember',
   Service: 'Service',
   Testimonial: 'Testimonial',
-  Submission: 'Submission'
+  Submission: 'Submission',
+  ProjectMember: 'ProjectMember',
+  PipelineMember: 'PipelineMember'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -427,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "page" | "post" | "caseStudy" | "newsletterLead" | "pipeline" | "company" | "contact" | "deal" | "dealContact" | "pipelineStage" | "project" | "task" | "ticket" | "ticketMessage" | "activity" | "invoice" | "teamMember" | "service" | "testimonial" | "submission"
+    modelProps: "user" | "session" | "page" | "post" | "caseStudy" | "newsletterLead" | "pipeline" | "company" | "contact" | "deal" | "dealContact" | "pipelineStage" | "project" | "task" | "ticket" | "ticketMessage" | "activity" | "invoice" | "teamMember" | "service" | "testimonial" | "submission" | "projectMember" | "pipelineMember"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2059,6 +2061,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProjectMember: {
+      payload: Prisma.$ProjectMemberPayload<ExtArgs>
+      fields: Prisma.ProjectMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProjectMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProjectMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.ProjectMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProjectMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        findMany: {
+          args: Prisma.ProjectMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>[]
+        }
+        create: {
+          args: Prisma.ProjectMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        createMany: {
+          args: Prisma.ProjectMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProjectMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.ProjectMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        update: {
+          args: Prisma.ProjectMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProjectMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProjectMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProjectMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProjectMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProjectMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.ProjectMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProjectMember>
+        }
+        groupBy: {
+          args: Prisma.ProjectMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProjectMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProjectMemberCountAggregateOutputType> | number
+        }
+      }
+    }
+    PipelineMember: {
+      payload: Prisma.$PipelineMemberPayload<ExtArgs>
+      fields: Prisma.PipelineMemberFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PipelineMemberFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PipelineMemberFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        findFirst: {
+          args: Prisma.PipelineMemberFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PipelineMemberFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        findMany: {
+          args: Prisma.PipelineMemberFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>[]
+        }
+        create: {
+          args: Prisma.PipelineMemberCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        createMany: {
+          args: Prisma.PipelineMemberCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PipelineMemberCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>[]
+        }
+        delete: {
+          args: Prisma.PipelineMemberDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        update: {
+          args: Prisma.PipelineMemberUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        deleteMany: {
+          args: Prisma.PipelineMemberDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PipelineMemberUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PipelineMemberUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>[]
+        }
+        upsert: {
+          args: Prisma.PipelineMemberUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PipelineMemberPayload>
+        }
+        aggregate: {
+          args: Prisma.PipelineMemberAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePipelineMember>
+        }
+        groupBy: {
+          args: Prisma.PipelineMemberGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PipelineMemberGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PipelineMemberCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PipelineMemberCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2456,17 +2606,40 @@ export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[key
 export const SubmissionScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  taskId: 'taskId',
   title: 'title',
   description: 'description',
   status: 'status',
   files: 'files',
   feedback: 'feedback',
+  submitterId: 'submitterId',
   submittedAt: 'submittedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
+
+
+export const ProjectMemberScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  role: 'role',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)[keyof typeof ProjectMemberScalarFieldEnum]
+
+
+export const PipelineMemberScalarFieldEnum = {
+  id: 'id',
+  pipelineId: 'pipelineId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PipelineMemberScalarFieldEnum = (typeof PipelineMemberScalarFieldEnum)[keyof typeof PipelineMemberScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2708,6 +2881,8 @@ export type GlobalOmitConfig = {
   service?: Prisma.ServiceOmit
   testimonial?: Prisma.TestimonialOmit
   submission?: Prisma.SubmissionOmit
+  projectMember?: Prisma.ProjectMemberOmit
+  pipelineMember?: Prisma.PipelineMemberOmit
 }
 
 /* Types for Logging */

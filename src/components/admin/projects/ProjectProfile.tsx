@@ -24,10 +24,11 @@ const priorityColors: Record<number, string> = {
   3: "bg-red-500/20 text-red-400",
 };
 
-export function ProjectProfile({ project }: { project: any }) {
+export function ProjectProfile({ project, userRole }: { project: any; userRole: string }) {
   const company = project.company;
   const tasks = project.tasks || [];
   const invoices = project.invoices || [];
+  const showFinancials = userRole === "super_admin" || userRole === "admin";
   const activities = project.activities || [];
 
   const openTasks = tasks.filter((t: any) => t.status !== "done").length;
@@ -61,10 +62,12 @@ export function ProjectProfile({ project }: { project: any }) {
           <div className="text-2xl font-bold text-white">{completedTasks}</div>
           <div className="text-xs text-white/50">Completed</div>
         </div>
+        {showFinancials && (
         <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-4">
           <div className="text-2xl font-bold text-white">{outstandingInvoices}</div>
           <div className="text-xs text-white/50">Outstanding Invoices</div>
         </div>
+        )}
         <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] p-4">
           <div className="text-2xl font-bold text-white">{openTickets}</div>
           <div className="text-xs text-white/50">Open Tickets</div>

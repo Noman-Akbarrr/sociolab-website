@@ -27,10 +27,12 @@ export type AggregateSubmission = {
 export type SubmissionMinAggregateOutputType = {
   id: string | null
   projectId: string | null
+  taskId: string | null
   title: string | null
   description: string | null
   status: string | null
   feedback: string | null
+  submitterId: string | null
   submittedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -39,10 +41,12 @@ export type SubmissionMinAggregateOutputType = {
 export type SubmissionMaxAggregateOutputType = {
   id: string | null
   projectId: string | null
+  taskId: string | null
   title: string | null
   description: string | null
   status: string | null
   feedback: string | null
+  submitterId: string | null
   submittedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -51,11 +55,13 @@ export type SubmissionMaxAggregateOutputType = {
 export type SubmissionCountAggregateOutputType = {
   id: number
   projectId: number
+  taskId: number
   title: number
   description: number
   status: number
   files: number
   feedback: number
+  submitterId: number
   submittedAt: number
   createdAt: number
   updatedAt: number
@@ -66,10 +72,12 @@ export type SubmissionCountAggregateOutputType = {
 export type SubmissionMinAggregateInputType = {
   id?: true
   projectId?: true
+  taskId?: true
   title?: true
   description?: true
   status?: true
   feedback?: true
+  submitterId?: true
   submittedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -78,10 +86,12 @@ export type SubmissionMinAggregateInputType = {
 export type SubmissionMaxAggregateInputType = {
   id?: true
   projectId?: true
+  taskId?: true
   title?: true
   description?: true
   status?: true
   feedback?: true
+  submitterId?: true
   submittedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -90,11 +100,13 @@ export type SubmissionMaxAggregateInputType = {
 export type SubmissionCountAggregateInputType = {
   id?: true
   projectId?: true
+  taskId?: true
   title?: true
   description?: true
   status?: true
   files?: true
   feedback?: true
+  submitterId?: true
   submittedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -176,11 +188,13 @@ export type SubmissionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type SubmissionGroupByOutputType = {
   id: string
   projectId: string
+  taskId: string | null
   title: string
   description: string | null
   status: string
   files: string[]
   feedback: string | null
+  submitterId: string | null
   submittedAt: Date
   createdAt: Date
   updatedAt: Date
@@ -210,11 +224,13 @@ export type SubmissionWhereInput = {
   NOT?: Prisma.SubmissionWhereInput | Prisma.SubmissionWhereInput[]
   id?: Prisma.StringFilter<"Submission"> | string
   projectId?: Prisma.StringFilter<"Submission"> | string
+  taskId?: Prisma.StringNullableFilter<"Submission"> | string | null
   title?: Prisma.StringFilter<"Submission"> | string
   description?: Prisma.StringNullableFilter<"Submission"> | string | null
   status?: Prisma.StringFilter<"Submission"> | string
   files?: Prisma.StringNullableListFilter<"Submission">
   feedback?: Prisma.StringNullableFilter<"Submission"> | string | null
+  submitterId?: Prisma.StringNullableFilter<"Submission"> | string | null
   submittedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
@@ -224,11 +240,13 @@ export type SubmissionWhereInput = {
 export type SubmissionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   files?: Prisma.SortOrder
   feedback?: Prisma.SortOrderInput | Prisma.SortOrder
+  submitterId?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -241,11 +259,13 @@ export type SubmissionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SubmissionWhereInput[]
   NOT?: Prisma.SubmissionWhereInput | Prisma.SubmissionWhereInput[]
   projectId?: Prisma.StringFilter<"Submission"> | string
+  taskId?: Prisma.StringNullableFilter<"Submission"> | string | null
   title?: Prisma.StringFilter<"Submission"> | string
   description?: Prisma.StringNullableFilter<"Submission"> | string | null
   status?: Prisma.StringFilter<"Submission"> | string
   files?: Prisma.StringNullableListFilter<"Submission">
   feedback?: Prisma.StringNullableFilter<"Submission"> | string | null
+  submitterId?: Prisma.StringNullableFilter<"Submission"> | string | null
   submittedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
@@ -255,11 +275,13 @@ export type SubmissionWhereUniqueInput = Prisma.AtLeast<{
 export type SubmissionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   files?: Prisma.SortOrder
   feedback?: Prisma.SortOrderInput | Prisma.SortOrder
+  submitterId?: Prisma.SortOrderInput | Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -274,11 +296,13 @@ export type SubmissionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SubmissionScalarWhereWithAggregatesInput | Prisma.SubmissionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Submission"> | string
   projectId?: Prisma.StringWithAggregatesFilter<"Submission"> | string
+  taskId?: Prisma.StringNullableWithAggregatesFilter<"Submission"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"Submission"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Submission"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"Submission"> | string
   files?: Prisma.StringNullableListFilter<"Submission">
   feedback?: Prisma.StringNullableWithAggregatesFilter<"Submission"> | string | null
+  submitterId?: Prisma.StringNullableWithAggregatesFilter<"Submission"> | string | null
   submittedAt?: Prisma.DateTimeWithAggregatesFilter<"Submission"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Submission"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Submission"> | Date | string
@@ -286,11 +310,13 @@ export type SubmissionScalarWhereWithAggregatesInput = {
 
 export type SubmissionCreateInput = {
   id?: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -300,11 +326,13 @@ export type SubmissionCreateInput = {
 export type SubmissionUncheckedCreateInput = {
   id?: string
   projectId: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -312,11 +340,13 @@ export type SubmissionUncheckedCreateInput = {
 
 export type SubmissionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -326,11 +356,13 @@ export type SubmissionUpdateInput = {
 export type SubmissionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,11 +371,13 @@ export type SubmissionUncheckedUpdateInput = {
 export type SubmissionCreateManyInput = {
   id?: string
   projectId: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -351,11 +385,13 @@ export type SubmissionCreateManyInput = {
 
 export type SubmissionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -364,11 +400,13 @@ export type SubmissionUpdateManyMutationInput = {
 export type SubmissionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,11 +425,13 @@ export type SubmissionOrderByRelationAggregateInput = {
 export type SubmissionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   files?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
+  submitterId?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -400,10 +440,12 @@ export type SubmissionCountOrderByAggregateInput = {
 export type SubmissionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
+  submitterId?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -412,10 +454,12 @@ export type SubmissionMaxOrderByAggregateInput = {
 export type SubmissionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  taskId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   status?: Prisma.SortOrder
   feedback?: Prisma.SortOrder
+  submitterId?: Prisma.SortOrder
   submittedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -474,11 +518,13 @@ export type SubmissionUpdatefilesInput = {
 
 export type SubmissionCreateWithoutProjectInput = {
   id?: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -486,11 +532,13 @@ export type SubmissionCreateWithoutProjectInput = {
 
 export type SubmissionUncheckedCreateWithoutProjectInput = {
   id?: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -528,11 +576,13 @@ export type SubmissionScalarWhereInput = {
   NOT?: Prisma.SubmissionScalarWhereInput | Prisma.SubmissionScalarWhereInput[]
   id?: Prisma.StringFilter<"Submission"> | string
   projectId?: Prisma.StringFilter<"Submission"> | string
+  taskId?: Prisma.StringNullableFilter<"Submission"> | string | null
   title?: Prisma.StringFilter<"Submission"> | string
   description?: Prisma.StringNullableFilter<"Submission"> | string | null
   status?: Prisma.StringFilter<"Submission"> | string
   files?: Prisma.StringNullableListFilter<"Submission">
   feedback?: Prisma.StringNullableFilter<"Submission"> | string | null
+  submitterId?: Prisma.StringNullableFilter<"Submission"> | string | null
   submittedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Submission"> | Date | string
@@ -540,11 +590,13 @@ export type SubmissionScalarWhereInput = {
 
 export type SubmissionCreateManyProjectInput = {
   id?: string
+  taskId?: string | null
   title: string
   description?: string | null
   status?: string
   files?: Prisma.SubmissionCreatefilesInput | string[]
   feedback?: string | null
+  submitterId?: string | null
   submittedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -552,11 +604,13 @@ export type SubmissionCreateManyProjectInput = {
 
 export type SubmissionUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -564,11 +618,13 @@ export type SubmissionUpdateWithoutProjectInput = {
 
 export type SubmissionUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -576,11 +632,13 @@ export type SubmissionUncheckedUpdateWithoutProjectInput = {
 
 export type SubmissionUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  taskId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   files?: Prisma.SubmissionUpdatefilesInput | string[]
   feedback?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  submitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   submittedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -591,11 +649,13 @@ export type SubmissionUncheckedUpdateManyWithoutProjectInput = {
 export type SubmissionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
+  taskId?: boolean
   title?: boolean
   description?: boolean
   status?: boolean
   files?: boolean
   feedback?: boolean
+  submitterId?: boolean
   submittedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -605,11 +665,13 @@ export type SubmissionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type SubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
+  taskId?: boolean
   title?: boolean
   description?: boolean
   status?: boolean
   files?: boolean
   feedback?: boolean
+  submitterId?: boolean
   submittedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -619,11 +681,13 @@ export type SubmissionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type SubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   projectId?: boolean
+  taskId?: boolean
   title?: boolean
   description?: boolean
   status?: boolean
   files?: boolean
   feedback?: boolean
+  submitterId?: boolean
   submittedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -633,17 +697,19 @@ export type SubmissionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
 export type SubmissionSelectScalar = {
   id?: boolean
   projectId?: boolean
+  taskId?: boolean
   title?: boolean
   description?: boolean
   status?: boolean
   files?: boolean
   feedback?: boolean
+  submitterId?: boolean
   submittedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "title" | "description" | "status" | "files" | "feedback" | "submittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["submission"]>
+export type SubmissionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "projectId" | "taskId" | "title" | "description" | "status" | "files" | "feedback" | "submitterId" | "submittedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["submission"]>
 export type SubmissionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.ProjectDefaultArgs<ExtArgs>
 }
@@ -662,11 +728,13 @@ export type $SubmissionPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     projectId: string
+    taskId: string | null
     title: string
     description: string | null
     status: string
     files: string[]
     feedback: string | null
+    submitterId: string | null
     submittedAt: Date
     createdAt: Date
     updatedAt: Date
@@ -1096,11 +1164,13 @@ export interface Prisma__SubmissionClient<T, Null = never, ExtArgs extends runti
 export interface SubmissionFieldRefs {
   readonly id: Prisma.FieldRef<"Submission", 'String'>
   readonly projectId: Prisma.FieldRef<"Submission", 'String'>
+  readonly taskId: Prisma.FieldRef<"Submission", 'String'>
   readonly title: Prisma.FieldRef<"Submission", 'String'>
   readonly description: Prisma.FieldRef<"Submission", 'String'>
   readonly status: Prisma.FieldRef<"Submission", 'String'>
   readonly files: Prisma.FieldRef<"Submission", 'String[]'>
   readonly feedback: Prisma.FieldRef<"Submission", 'String'>
+  readonly submitterId: Prisma.FieldRef<"Submission", 'String'>
   readonly submittedAt: Prisma.FieldRef<"Submission", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Submission", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Submission", 'DateTime'>

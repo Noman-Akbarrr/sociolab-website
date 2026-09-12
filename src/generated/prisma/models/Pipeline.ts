@@ -192,6 +192,7 @@ export type PipelineWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Pipeline"> | Date | string
   stages?: Prisma.PipelineStageListRelationFilter
   deals?: Prisma.DealListRelationFilter
+  members?: Prisma.PipelineMemberListRelationFilter
 }
 
 export type PipelineOrderByWithRelationInput = {
@@ -203,6 +204,7 @@ export type PipelineOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   stages?: Prisma.PipelineStageOrderByRelationAggregateInput
   deals?: Prisma.DealOrderByRelationAggregateInput
+  members?: Prisma.PipelineMemberOrderByRelationAggregateInput
 }
 
 export type PipelineWhereUniqueInput = Prisma.AtLeast<{
@@ -217,6 +219,7 @@ export type PipelineWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Pipeline"> | Date | string
   stages?: Prisma.PipelineStageListRelationFilter
   deals?: Prisma.DealListRelationFilter
+  members?: Prisma.PipelineMemberListRelationFilter
 }, "id">
 
 export type PipelineOrderByWithAggregationInput = {
@@ -252,6 +255,7 @@ export type PipelineCreateInput = {
   updatedAt?: Date | string
   stages?: Prisma.PipelineStageCreateNestedManyWithoutPipelineInput
   deals?: Prisma.DealCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineUncheckedCreateInput = {
@@ -263,6 +267,7 @@ export type PipelineUncheckedCreateInput = {
   updatedAt?: Date | string
   stages?: Prisma.PipelineStageUncheckedCreateNestedManyWithoutPipelineInput
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineUpdateInput = {
@@ -274,6 +279,7 @@ export type PipelineUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.PipelineStageUpdateManyWithoutPipelineNestedInput
   deals?: Prisma.DealUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUpdateManyWithoutPipelineNestedInput
 }
 
 export type PipelineUncheckedUpdateInput = {
@@ -285,6 +291,7 @@ export type PipelineUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.PipelineStageUncheckedUpdateManyWithoutPipelineNestedInput
   deals?: Prisma.DealUncheckedUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUncheckedUpdateManyWithoutPipelineNestedInput
 }
 
 export type PipelineCreateManyInput = {
@@ -381,6 +388,20 @@ export type PipelineUpdateOneWithoutStagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PipelineUpdateToOneWithWhereWithoutStagesInput, Prisma.PipelineUpdateWithoutStagesInput>, Prisma.PipelineUncheckedUpdateWithoutStagesInput>
 }
 
+export type PipelineCreateNestedOneWithoutMembersInput = {
+  create?: Prisma.XOR<Prisma.PipelineCreateWithoutMembersInput, Prisma.PipelineUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.PipelineCreateOrConnectWithoutMembersInput
+  connect?: Prisma.PipelineWhereUniqueInput
+}
+
+export type PipelineUpdateOneRequiredWithoutMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.PipelineCreateWithoutMembersInput, Prisma.PipelineUncheckedCreateWithoutMembersInput>
+  connectOrCreate?: Prisma.PipelineCreateOrConnectWithoutMembersInput
+  upsert?: Prisma.PipelineUpsertWithoutMembersInput
+  connect?: Prisma.PipelineWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PipelineUpdateToOneWithWhereWithoutMembersInput, Prisma.PipelineUpdateWithoutMembersInput>, Prisma.PipelineUncheckedUpdateWithoutMembersInput>
+}
+
 export type PipelineCreateWithoutDealsInput = {
   id?: string
   name: string
@@ -389,6 +410,7 @@ export type PipelineCreateWithoutDealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.PipelineStageCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineUncheckedCreateWithoutDealsInput = {
@@ -399,6 +421,7 @@ export type PipelineUncheckedCreateWithoutDealsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   stages?: Prisma.PipelineStageUncheckedCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineCreateOrConnectWithoutDealsInput = {
@@ -425,6 +448,7 @@ export type PipelineUpdateWithoutDealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.PipelineStageUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUpdateManyWithoutPipelineNestedInput
 }
 
 export type PipelineUncheckedUpdateWithoutDealsInput = {
@@ -435,6 +459,7 @@ export type PipelineUncheckedUpdateWithoutDealsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   stages?: Prisma.PipelineStageUncheckedUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUncheckedUpdateManyWithoutPipelineNestedInput
 }
 
 export type PipelineCreateWithoutStagesInput = {
@@ -445,6 +470,7 @@ export type PipelineCreateWithoutStagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineUncheckedCreateWithoutStagesInput = {
@@ -455,6 +481,7 @@ export type PipelineUncheckedCreateWithoutStagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   deals?: Prisma.DealUncheckedCreateNestedManyWithoutPipelineInput
+  members?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutPipelineInput
 }
 
 export type PipelineCreateOrConnectWithoutStagesInput = {
@@ -481,6 +508,7 @@ export type PipelineUpdateWithoutStagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deals?: Prisma.DealUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUpdateManyWithoutPipelineNestedInput
 }
 
 export type PipelineUncheckedUpdateWithoutStagesInput = {
@@ -490,6 +518,67 @@ export type PipelineUncheckedUpdateWithoutStagesInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deals?: Prisma.DealUncheckedUpdateManyWithoutPipelineNestedInput
+  members?: Prisma.PipelineMemberUncheckedUpdateManyWithoutPipelineNestedInput
+}
+
+export type PipelineCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  description?: string | null
+  color?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stages?: Prisma.PipelineStageCreateNestedManyWithoutPipelineInput
+  deals?: Prisma.DealCreateNestedManyWithoutPipelineInput
+}
+
+export type PipelineUncheckedCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  description?: string | null
+  color?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  stages?: Prisma.PipelineStageUncheckedCreateNestedManyWithoutPipelineInput
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutPipelineInput
+}
+
+export type PipelineCreateOrConnectWithoutMembersInput = {
+  where: Prisma.PipelineWhereUniqueInput
+  create: Prisma.XOR<Prisma.PipelineCreateWithoutMembersInput, Prisma.PipelineUncheckedCreateWithoutMembersInput>
+}
+
+export type PipelineUpsertWithoutMembersInput = {
+  update: Prisma.XOR<Prisma.PipelineUpdateWithoutMembersInput, Prisma.PipelineUncheckedUpdateWithoutMembersInput>
+  create: Prisma.XOR<Prisma.PipelineCreateWithoutMembersInput, Prisma.PipelineUncheckedCreateWithoutMembersInput>
+  where?: Prisma.PipelineWhereInput
+}
+
+export type PipelineUpdateToOneWithWhereWithoutMembersInput = {
+  where?: Prisma.PipelineWhereInput
+  data: Prisma.XOR<Prisma.PipelineUpdateWithoutMembersInput, Prisma.PipelineUncheckedUpdateWithoutMembersInput>
+}
+
+export type PipelineUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.PipelineStageUpdateManyWithoutPipelineNestedInput
+  deals?: Prisma.DealUpdateManyWithoutPipelineNestedInput
+}
+
+export type PipelineUncheckedUpdateWithoutMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  stages?: Prisma.PipelineStageUncheckedUpdateManyWithoutPipelineNestedInput
   deals?: Prisma.DealUncheckedUpdateManyWithoutPipelineNestedInput
 }
 
@@ -501,11 +590,13 @@ export type PipelineUncheckedUpdateWithoutStagesInput = {
 export type PipelineCountOutputType = {
   stages: number
   deals: number
+  members: number
 }
 
 export type PipelineCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stages?: boolean | PipelineCountOutputTypeCountStagesArgs
   deals?: boolean | PipelineCountOutputTypeCountDealsArgs
+  members?: boolean | PipelineCountOutputTypeCountMembersArgs
 }
 
 /**
@@ -532,6 +623,13 @@ export type PipelineCountOutputTypeCountDealsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.DealWhereInput
 }
 
+/**
+ * PipelineCountOutputType without action
+ */
+export type PipelineCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PipelineMemberWhereInput
+}
+
 
 export type PipelineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -542,6 +640,7 @@ export type PipelineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updatedAt?: boolean
   stages?: boolean | Prisma.Pipeline$stagesArgs<ExtArgs>
   deals?: boolean | Prisma.Pipeline$dealsArgs<ExtArgs>
+  members?: boolean | Prisma.Pipeline$membersArgs<ExtArgs>
   _count?: boolean | Prisma.PipelineCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pipeline"]>
 
@@ -576,6 +675,7 @@ export type PipelineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 export type PipelineInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   stages?: boolean | Prisma.Pipeline$stagesArgs<ExtArgs>
   deals?: boolean | Prisma.Pipeline$dealsArgs<ExtArgs>
+  members?: boolean | Prisma.Pipeline$membersArgs<ExtArgs>
   _count?: boolean | Prisma.PipelineCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PipelineIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -586,6 +686,7 @@ export type $PipelinePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     stages: Prisma.$PipelineStagePayload<ExtArgs>[]
     deals: Prisma.$DealPayload<ExtArgs>[]
+    members: Prisma.$PipelineMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -990,6 +1091,7 @@ export interface Prisma__PipelineClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   stages<T extends Prisma.Pipeline$stagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pipeline$stagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PipelineStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deals<T extends Prisma.Pipeline$dealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pipeline$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  members<T extends Prisma.Pipeline$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Pipeline$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PipelineMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1458,6 +1560,30 @@ export type Pipeline$dealsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.DealScalarFieldEnum | Prisma.DealScalarFieldEnum[]
+}
+
+/**
+ * Pipeline.members
+ */
+export type Pipeline$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PipelineMember
+   */
+  select?: Prisma.PipelineMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PipelineMember
+   */
+  omit?: Prisma.PipelineMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PipelineMemberInclude<ExtArgs> | null
+  where?: Prisma.PipelineMemberWhereInput
+  orderBy?: Prisma.PipelineMemberOrderByWithRelationInput | Prisma.PipelineMemberOrderByWithRelationInput[]
+  cursor?: Prisma.PipelineMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PipelineMemberScalarFieldEnum | Prisma.PipelineMemberScalarFieldEnum[]
 }
 
 /**

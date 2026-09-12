@@ -29,6 +29,8 @@ export default async function PipelineDetailPage({ params }: { params: Promise<{
         pipeline={pipeline}
         initialStages={stages}
         initialDealsByStage={dealsByStage}
+        userRole={user.role}
+        userId={user.id}
       />
     </div>
   );

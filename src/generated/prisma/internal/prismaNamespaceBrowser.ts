@@ -70,7 +70,9 @@ export const ModelName = {
   TeamMember: 'TeamMember',
   Service: 'Service',
   Testimonial: 'Testimonial',
-  Submission: 'Submission'
+  Submission: 'Submission',
+  ProjectMember: 'ProjectMember',
+  PipelineMember: 'PipelineMember'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -447,17 +449,40 @@ export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[key
 export const SubmissionScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
+  taskId: 'taskId',
   title: 'title',
   description: 'description',
   status: 'status',
   files: 'files',
   feedback: 'feedback',
+  submitterId: 'submitterId',
   submittedAt: 'submittedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
+
+
+export const ProjectMemberScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  userId: 'userId',
+  role: 'role',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectMemberScalarFieldEnum = (typeof ProjectMemberScalarFieldEnum)[keyof typeof ProjectMemberScalarFieldEnum]
+
+
+export const PipelineMemberScalarFieldEnum = {
+  id: 'id',
+  pipelineId: 'pipelineId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PipelineMemberScalarFieldEnum = (typeof PipelineMemberScalarFieldEnum)[keyof typeof PipelineMemberScalarFieldEnum]
 
 
 export const SortOrder = {

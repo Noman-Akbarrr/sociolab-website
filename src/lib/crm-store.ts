@@ -322,7 +322,7 @@ export async function createTask(data: any) {
       description: data.description,
       status: data.status || "todo",
       priority: data.priority || 0,
-      assigneeId: data.assigneeId,
+      assigneeId: data.assigneeId || null,
     },
   });
 }
@@ -384,9 +384,21 @@ export async function getInvoices(opts: { projectId?: string; status?: string } 
 }
 
 export async function createInvoice(data: any) {
+  let number = data.number;
+  if (!number) {
+    const count = await prisma.invoice.count();
+    const year = new Date().getFullYear();
+    number = `INV-${year}-${String(count + 1).padStart(3, "0")}`;
+  }
+  const existing = await prisma.invoice.findUnique({ where: { number } });
+  if (existing) {
+    const count = await prisma.invoice.count();
+    const year = new Date().getFullYear();
+    number = `INV-${year}-${String(count + 1).padStart(3, "0")}`;
+  }
   return prisma.invoice.create({
     data: {
-      number: data.number,
+      number,
       projectId: data.projectId,
       amount: data.amount,
       currency: data.currency || "USD",

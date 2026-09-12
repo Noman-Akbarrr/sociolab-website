@@ -127,3 +127,13 @@ export type Testimonial = Prisma.TestimonialModel
  * 
  */
 export type Submission = Prisma.SubmissionModel
+/**
+ * Model ProjectMember
+ * 
+ */
+export type ProjectMember = Prisma.ProjectMemberModel
+/**
+ * Model PipelineMember
+ * 
+ */
+export type PipelineMember = Prisma.PipelineMemberModel

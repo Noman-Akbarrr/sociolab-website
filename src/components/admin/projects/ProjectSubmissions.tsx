@@ -9,8 +9,20 @@ const statusColors: Record<string, string> = {
   rejected: "bg-red-500/20 text-red-400",
 };
 
-export function ProjectSubmissions({ project }: { project: any }) {
-  const [submissions, setSubmissions] = useState(project.submissions || []);
+export function ProjectSubmissions({
+  project,
+  userRole,
+  userId,
+}: {
+  project: any;
+  userRole: string;
+  userId: string;
+}) {
+  const isFreelancer = userRole === "freelancer";
+  const allSubmissions = project.submissions || [];
+  const [submissions, setSubmissions] = useState(
+    isFreelancer ? allSubmissions.filter((s: any) => s.submitterId === userId) : allSubmissions
+  );
   const [showAdd, setShowAdd] = useState(false);
   const [selected, setSelected] = useState<any>(null);
   const [newSub, setNewSub] = useState({ title: "", description: "", files: "" });

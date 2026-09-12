@@ -290,6 +290,8 @@ export type UserWhereInput = {
   assignedTickets?: Prisma.TicketListRelationFilter
   assignedProjects?: Prisma.ProjectListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  projectMembers?: Prisma.ProjectMemberListRelationFilter
+  pipelineMembers?: Prisma.PipelineMemberListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -313,6 +315,8 @@ export type UserOrderByWithRelationInput = {
   assignedTickets?: Prisma.TicketOrderByRelationAggregateInput
   assignedProjects?: Prisma.ProjectOrderByRelationAggregateInput
   activities?: Prisma.ActivityOrderByRelationAggregateInput
+  projectMembers?: Prisma.ProjectMemberOrderByRelationAggregateInput
+  pipelineMembers?: Prisma.PipelineMemberOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -339,6 +343,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   assignedTickets?: Prisma.TicketListRelationFilter
   assignedProjects?: Prisma.ProjectListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
+  projectMembers?: Prisma.ProjectMemberListRelationFilter
+  pipelineMembers?: Prisma.PipelineMemberListRelationFilter
 }, "id" | "email" | "resetTokenHash">
 
 export type UserOrderByWithAggregationInput = {
@@ -404,6 +410,8 @@ export type UserCreateInput = {
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -427,6 +435,8 @@ export type UserUncheckedCreateInput = {
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -450,6 +460,8 @@ export type UserUpdateInput = {
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -473,6 +485,8 @@ export type UserUncheckedUpdateInput = {
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -713,6 +727,34 @@ export type UserUpdateOneWithoutActivitiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivitiesInput, Prisma.UserUpdateWithoutActivitiesInput>, Prisma.UserUncheckedUpdateWithoutActivitiesInput>
 }
 
+export type UserCreateNestedOneWithoutProjectMembersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProjectMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProjectMembersInput
+  upsert?: Prisma.UserUpsertWithoutProjectMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProjectMembersInput, Prisma.UserUpdateWithoutProjectMembersInput>, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+}
+
+export type UserCreateNestedOneWithoutPipelineMembersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPipelineMembersInput, Prisma.UserUncheckedCreateWithoutPipelineMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPipelineMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPipelineMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPipelineMembersInput, Prisma.UserUncheckedCreateWithoutPipelineMembersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPipelineMembersInput
+  upsert?: Prisma.UserUpsertWithoutPipelineMembersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPipelineMembersInput, Prisma.UserUpdateWithoutPipelineMembersInput>, Prisma.UserUncheckedUpdateWithoutPipelineMembersInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   name: string
@@ -733,6 +775,8 @@ export type UserCreateWithoutSessionsInput = {
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -755,6 +799,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -793,6 +839,8 @@ export type UserUpdateWithoutSessionsInput = {
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -815,6 +863,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOwnedDealsInput = {
@@ -837,6 +887,8 @@ export type UserCreateWithoutOwnedDealsInput = {
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedDealsInput = {
@@ -859,6 +911,8 @@ export type UserUncheckedCreateWithoutOwnedDealsInput = {
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedDealsInput = {
@@ -897,6 +951,8 @@ export type UserUpdateWithoutOwnedDealsInput = {
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedDealsInput = {
@@ -919,6 +975,8 @@ export type UserUncheckedUpdateWithoutOwnedDealsInput = {
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedProjectsInput = {
@@ -941,6 +999,8 @@ export type UserCreateWithoutAssignedProjectsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedProjectsInput = {
@@ -963,6 +1023,8 @@ export type UserUncheckedCreateWithoutAssignedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedProjectsInput = {
@@ -1001,6 +1063,8 @@ export type UserUpdateWithoutAssignedProjectsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedProjectsInput = {
@@ -1023,6 +1087,8 @@ export type UserUncheckedUpdateWithoutAssignedProjectsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedTasksInput = {
@@ -1045,6 +1111,8 @@ export type UserCreateWithoutAssignedTasksInput = {
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedTasksInput = {
@@ -1067,6 +1135,8 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedTasksInput = {
@@ -1105,6 +1175,8 @@ export type UserUpdateWithoutAssignedTasksInput = {
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedTasksInput = {
@@ -1127,6 +1199,8 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssignedTicketsInput = {
@@ -1149,6 +1223,8 @@ export type UserCreateWithoutAssignedTicketsInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAssignedTicketsInput = {
@@ -1171,6 +1247,8 @@ export type UserUncheckedCreateWithoutAssignedTicketsInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssignedTicketsInput = {
@@ -1209,6 +1287,8 @@ export type UserUpdateWithoutAssignedTicketsInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedTicketsInput = {
@@ -1231,6 +1311,8 @@ export type UserUncheckedUpdateWithoutAssignedTicketsInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivitiesInput = {
@@ -1253,6 +1335,8 @@ export type UserCreateWithoutActivitiesInput = {
   assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
   assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivitiesInput = {
@@ -1275,6 +1359,8 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
   assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
   assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivitiesInput = {
@@ -1313,6 +1399,8 @@ export type UserUpdateWithoutActivitiesInput = {
   assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
   assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivitiesInput = {
@@ -1335,6 +1423,232 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
   assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutProjectMembersInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: string
+  isTwoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  resetTokenHash?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedDeals?: Prisma.DealCreateNestedManyWithoutOwnerInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
+  assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutProjectMembersInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: string
+  isTwoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  resetTokenHash?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutOwnerInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
+  assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutProjectMembersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+}
+
+export type UserUpsertWithoutProjectMembersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProjectMembersInput, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProjectMembersInput, Prisma.UserUncheckedCreateWithoutProjectMembersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProjectMembersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProjectMembersInput, Prisma.UserUncheckedUpdateWithoutProjectMembersInput>
+}
+
+export type UserUpdateWithoutProjectMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedDeals?: Prisma.DealUpdateManyWithoutOwnerNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
+  assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProjectMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedDeals?: Prisma.DealUncheckedUpdateManyWithoutOwnerNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  pipelineMembers?: Prisma.PipelineMemberUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPipelineMembersInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: string
+  isTwoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  resetTokenHash?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ownedDeals?: Prisma.DealCreateNestedManyWithoutOwnerInput
+  assignedTasks?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  assignedTickets?: Prisma.TicketCreateNestedManyWithoutAssigneeInput
+  assignedProjects?: Prisma.ProjectCreateNestedManyWithoutAssigneeInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPipelineMembersInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: string
+  isTwoFactorEnabled?: boolean
+  twoFactorSecret?: string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  resetTokenHash?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ownedDeals?: Prisma.DealUncheckedCreateNestedManyWithoutOwnerInput
+  assignedTasks?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  assignedTickets?: Prisma.TicketUncheckedCreateNestedManyWithoutAssigneeInput
+  assignedProjects?: Prisma.ProjectUncheckedCreateNestedManyWithoutAssigneeInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutUserInput
+  projectMembers?: Prisma.ProjectMemberUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPipelineMembersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPipelineMembersInput, Prisma.UserUncheckedCreateWithoutPipelineMembersInput>
+}
+
+export type UserUpsertWithoutPipelineMembersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPipelineMembersInput, Prisma.UserUncheckedUpdateWithoutPipelineMembersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPipelineMembersInput, Prisma.UserUncheckedCreateWithoutPipelineMembersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPipelineMembersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPipelineMembersInput, Prisma.UserUncheckedUpdateWithoutPipelineMembersInput>
+}
+
+export type UserUpdateWithoutPipelineMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ownedDeals?: Prisma.DealUpdateManyWithoutOwnerNestedInput
+  assignedTasks?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  assignedTickets?: Prisma.TicketUpdateManyWithoutAssigneeNestedInput
+  assignedProjects?: Prisma.ProjectUpdateManyWithoutAssigneeNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPipelineMembersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  resetTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ownedDeals?: Prisma.DealUncheckedUpdateManyWithoutOwnerNestedInput
+  assignedTasks?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  assignedTickets?: Prisma.TicketUncheckedUpdateManyWithoutAssigneeNestedInput
+  assignedProjects?: Prisma.ProjectUncheckedUpdateManyWithoutAssigneeNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutUserNestedInput
+  projectMembers?: Prisma.ProjectMemberUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1349,6 +1663,8 @@ export type UserCountOutputType = {
   assignedTickets: number
   assignedProjects: number
   activities: number
+  projectMembers: number
+  pipelineMembers: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1358,6 +1674,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   assignedTickets?: boolean | UserCountOutputTypeCountAssignedTicketsArgs
   assignedProjects?: boolean | UserCountOutputTypeCountAssignedProjectsArgs
   activities?: boolean | UserCountOutputTypeCountActivitiesArgs
+  projectMembers?: boolean | UserCountOutputTypeCountProjectMembersArgs
+  pipelineMembers?: boolean | UserCountOutputTypeCountPipelineMembersArgs
 }
 
 /**
@@ -1412,6 +1730,20 @@ export type UserCountOutputTypeCountActivitiesArgs<ExtArgs extends runtime.Types
   where?: Prisma.ActivityWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProjectMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProjectMemberWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPipelineMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PipelineMemberWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1434,6 +1766,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   assignedTickets?: boolean | Prisma.User$assignedTicketsArgs<ExtArgs>
   assignedProjects?: boolean | Prisma.User$assignedProjectsArgs<ExtArgs>
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
+  projectMembers?: boolean | Prisma.User$projectMembersArgs<ExtArgs>
+  pipelineMembers?: boolean | Prisma.User$pipelineMembersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1496,6 +1830,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   assignedTickets?: boolean | Prisma.User$assignedTicketsArgs<ExtArgs>
   assignedProjects?: boolean | Prisma.User$assignedProjectsArgs<ExtArgs>
   activities?: boolean | Prisma.User$activitiesArgs<ExtArgs>
+  projectMembers?: boolean | Prisma.User$projectMembersArgs<ExtArgs>
+  pipelineMembers?: boolean | Prisma.User$pipelineMembersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1510,6 +1846,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     assignedTickets: Prisma.$TicketPayload<ExtArgs>[]
     assignedProjects: Prisma.$ProjectPayload<ExtArgs>[]
     activities: Prisma.$ActivityPayload<ExtArgs>[]
+    projectMembers: Prisma.$ProjectMemberPayload<ExtArgs>[]
+    pipelineMembers: Prisma.$PipelineMemberPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1926,6 +2264,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   assignedTickets<T extends Prisma.User$assignedTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedProjects<T extends Prisma.User$assignedProjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.User$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  projectMembers<T extends Prisma.User$projectMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$projectMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pipelineMembers<T extends Prisma.User$pipelineMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pipelineMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PipelineMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2498,6 +2838,54 @@ export type User$activitiesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ActivityScalarFieldEnum | Prisma.ActivityScalarFieldEnum[]
+}
+
+/**
+ * User.projectMembers
+ */
+export type User$projectMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProjectMember
+   */
+  select?: Prisma.ProjectMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProjectMember
+   */
+  omit?: Prisma.ProjectMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectMemberInclude<ExtArgs> | null
+  where?: Prisma.ProjectMemberWhereInput
+  orderBy?: Prisma.ProjectMemberOrderByWithRelationInput | Prisma.ProjectMemberOrderByWithRelationInput[]
+  cursor?: Prisma.ProjectMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProjectMemberScalarFieldEnum | Prisma.ProjectMemberScalarFieldEnum[]
+}
+
+/**
+ * User.pipelineMembers
+ */
+export type User$pipelineMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PipelineMember
+   */
+  select?: Prisma.PipelineMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PipelineMember
+   */
+  omit?: Prisma.PipelineMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PipelineMemberInclude<ExtArgs> | null
+  where?: Prisma.PipelineMemberWhereInput
+  orderBy?: Prisma.PipelineMemberOrderByWithRelationInput | Prisma.PipelineMemberOrderByWithRelationInput[]
+  cursor?: Prisma.PipelineMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PipelineMemberScalarFieldEnum | Prisma.PipelineMemberScalarFieldEnum[]
 }
 
 /**

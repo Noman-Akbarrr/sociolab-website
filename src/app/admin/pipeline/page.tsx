@@ -23,7 +23,7 @@ export default async function PipelinesPage() {
 
   return (
     <div className="px-8 py-10">
-      <PipelineGrid pipelines={pipelines} />
+      <PipelineGrid pipelines={pipelines} userRole={user.role} userId={user.id} />
     </div>
   );
 }
