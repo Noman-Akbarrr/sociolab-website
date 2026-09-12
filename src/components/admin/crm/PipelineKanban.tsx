@@ -49,6 +49,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
   const canAddDeals = userRole !== "freelancer";
   const canDeleteDeals = userRole === "super_admin" || userRole === "admin";
   const canReassignDeals = userRole === "super_admin" || userRole === "admin";
+  const seesAllDeals = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
 
   // Stage drag
   const [stageDragging, setStageDragging] = useState<string | null>(null);
@@ -86,8 +87,11 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     return sum + group.deals.reduce((s2: number, d: any) => s2 + (d.value || 0), 0);
   }, 0);
 
-  const getStageDeals = (stageId: string) =>
-    dealsByStage.find((g) => g.stage.id === stageId)?.deals || [];
+  const getStageDeals = (stageId: string) => {
+    const allDeals = dealsByStage.find((g) => g.stage.id === stageId)?.deals || [];
+    if (seesAllDeals) return allDeals;
+    return allDeals.filter((d: any) => d.ownerId === userId);
+  };
 
   function isCloseDateSoon(dateStr: string) {
     if (!dateStr) return false;
@@ -131,7 +135,9 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const allDeals = dealsByStage.flatMap((g) => g.deals);
+  const allDeals = seesAllDeals
+    ? dealsByStage.flatMap((g) => g.deals)
+    : dealsByStage.flatMap((g) => g.deals.filter((d: any) => d.ownerId === userId));
   const openDeals = allDeals.filter((d: any) => stages.find((st) => st.id === d.stageId) && !stages.find((st) => st.id === d.stageId)?.isClosed);
   const urgentCount = openDeals.filter((d: any) => d.expectedClose && isCloseDateSoon(d.expectedClose)).length;
   const wonCount = allDeals.filter((d: any) => stages.find((st) => st.id === d.stageId)?.isWon).length;
@@ -522,8 +528,8 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-sm font-semibold text-white">{formatCurrency(deal.value)}</span>
                         <div className="flex items-center gap-1.5">
-                          {deal.priority && deal.priority !== "medium" && (
-                            <span className={`inline-flex rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${priorityConfig[deal.priority]?.color || ""}`}>
+                          {deal.priority && (
+                            <span className={`inline-flex rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${priorityConfig[deal.priority]?.color || priorityConfig.medium.color}`}>
                               {priorityConfig[deal.priority]?.label || deal.priority}
                             </span>
                           )}
@@ -534,6 +540,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
                           )}
                         </div>
                       </div>
+                      {deal.owner && (
+                        <div className="mt-2 flex items-center gap-1.5">
+                          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-white/10 text-[8px] font-bold text-white/60">
+                            {deal.owner.name?.charAt(0)?.toUpperCase()}
+                          </div>
+                          <span className="text-[11px] text-white/40">{deal.owner.name}</span>
+                        </div>
+                      )}
                     </div>
                   ))
                 )}

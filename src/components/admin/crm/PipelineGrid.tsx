@@ -21,7 +21,13 @@ export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: 
 
   const canCreatePipeline = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
   const canDeletePipeline = userRole === "super_admin" || userRole === "admin";
+  const canEditPipeline = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
   const canManageMembers = userRole === "super_admin" || userRole === "admin" || userRole === "sales_executive";
+
+  // Edit state
+  const [editTarget, setEditTarget] = useState<any>(null);
+  const [editForm, setEditForm] = useState({ name: "", description: "", color: "#3b82f6" });
+  const [saving, setSaving] = useState(false);
 
   // Members modal state
   const [membersTarget, setMembersTarget] = useState<any>(null);
@@ -68,6 +74,30 @@ export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: 
       }
     } finally {
       setDeleting(false);
+    }
+  }
+
+  function openEditModal(pipeline: any) {
+    setEditTarget(pipeline);
+    setEditForm({ name: pipeline.name, description: pipeline.description || "", color: pipeline.color || "#3b82f6" });
+  }
+
+  async function handleEditSave() {
+    if (!editTarget) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/admin/api/crm/pipelines/${editTarget.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editForm),
+      });
+      if (res.ok) {
+        setPipelines((prev) => prev.map((p) => p.id === editTarget.id ? { ...p, ...editForm } : p));
+        setEditTarget(null);
+        router.refresh();
+      }
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -234,6 +264,38 @@ export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: 
         </div>
       )}
 
+      {/* Edit Pipeline Modal */}
+      {editTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+            <h2 className="font-display text-xl font-semibold text-white">Edit Pipeline</h2>
+            <div className="mt-4 flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-white/60 mb-1">Name</label>
+                <input type="text" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-white/60 mb-1">Description</label>
+                <textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} rows={3} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-white/60 mb-1">Color</label>
+                <div className="flex items-center gap-3">
+                  <input type="color" value={editForm.color} onChange={(e) => setEditForm({ ...editForm, color: e.target.value })} className="h-10 w-10 cursor-pointer rounded border border-[#1E293B] bg-transparent" />
+                  <span className="text-sm text-white/60">{editForm.color}</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end gap-3">
+              <button onClick={() => setEditTarget(null)} className="rounded-[3px] border border-[#1E293B] px-4 py-2 text-sm font-bold text-white hover:border-brand">Cancel</button>
+              <button onClick={handleEditSave} disabled={saving || !editForm.name.trim()} className="rounded-[3px] bg-brand px-4 py-2 text-sm font-bold text-white hover:bg-brand-dark disabled:opacity-50">
+                {saving ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Members Modal */}
       {membersTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -330,7 +392,7 @@ export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: 
                 <span className="font-semibold text-white">{formatCurrency(pipeline.totalValue)}</span>
               </div>
             </button>
-            {(canDeletePipeline || canManageMembers) && (
+            {(canDeletePipeline || canManageMembers || canEditPipeline) && (
               <div className="flex items-center justify-end gap-1 border-t border-[#1E293B] px-5 py-2">
                 {canManageMembers && (
                   <button
@@ -340,6 +402,17 @@ export function PipelineGrid({ pipelines: initialPipelines, userRole, userId }: 
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                    </svg>
+                  </button>
+                )}
+                {canEditPipeline && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); openEditModal(pipeline); }}
+                    className="rounded p-1.5 text-white/30 transition-colors hover:bg-brand/10 hover:text-brand"
+                    title="Edit pipeline"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                     </svg>
                   </button>
                 )}

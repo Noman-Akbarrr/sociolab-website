@@ -24,9 +24,11 @@ const priorityColors: Record<number, string> = {
   3: "bg-red-500/20 text-red-400",
 };
 
-export function ProjectProfile({ project, userRole }: { project: any; userRole: string }) {
+export function ProjectProfile({ project, userRole, userId }: { project: any; userRole: string; userId?: string }) {
   const company = project.company;
-  const tasks = project.tasks || [];
+  const allTasks = project.tasks || [];
+  const isFreelancer = userRole === "freelancer";
+  const tasks = isFreelancer ? allTasks.filter((t: any) => t.assigneeId === userId) : allTasks;
   const invoices = project.invoices || [];
   const showFinancials = userRole === "super_admin" || userRole === "admin";
   const activities = project.activities || [];

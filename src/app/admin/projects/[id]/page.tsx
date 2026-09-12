@@ -75,7 +75,7 @@ export default async function ProjectDetailPage({
     <div className="min-h-screen bg-[#090D16]">
       <ProjectHeader project={project} userRole={user.role} activeTab={activeTab} />
       <div className="px-8 py-6">
-        {activeTab === "profile" && <ProjectProfile project={project} userRole={user.role} />}
+        {activeTab === "profile" && <ProjectProfile project={project} userRole={user.role} userId={user.id} />}
         {activeTab === "work" && <ProjectWork project={project} projectMembers={projectMembers.map((m) => m.user)} userRole={user.role} userId={user.id} />}
         {activeTab === "submissions" && <ProjectSubmissions project={project} userRole={user.role} userId={user.id} />}
         {activeTab === "reports" && <ProjectReports project={project} />}

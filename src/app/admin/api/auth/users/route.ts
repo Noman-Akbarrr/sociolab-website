@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
 import { listUsers, createUser } from "@/lib/auth/users";
 import { hashPassword } from "@/lib/auth/password";
-import { canManageUsers } from "@/lib/auth/roles";
+import { canManageUsers, isSalesExecutive } from "@/lib/auth/roles";
 
 export async function GET(request: NextRequest) {
   const user = await getCurrentUser(request);
-  if (!user || !canManageUsers(user)) {
+  if (!user || (!canManageUsers(user) && !isSalesExecutive(user))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
