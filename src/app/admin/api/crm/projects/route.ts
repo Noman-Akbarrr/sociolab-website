@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     currency?: string;
     billingType?: string;
     description?: string;
+    memberIds?: string[];
   };
   try {
     body = await request.json();
@@ -71,6 +72,18 @@ export async function POST(request: NextRequest) {
     billingType: body.billingType || "fixed",
     description: body.description,
   });
+
+  // Add project members
+  if (body.memberIds && body.memberIds.length > 0) {
+    const { prisma } = await import("@/lib/prisma");
+    for (const memberId of body.memberIds) {
+      await prisma.projectMember.upsert({
+        where: { projectId_userId: { projectId: project.id, userId: memberId } },
+        update: {},
+        create: { projectId: project.id, userId: memberId, role: "member" },
+      });
+    }
+  }
 
   await store.createActivity({
     type: "project-created",

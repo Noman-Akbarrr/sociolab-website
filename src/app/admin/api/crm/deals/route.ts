@@ -81,6 +81,7 @@ export async function POST(request: NextRequest) {
     dealType: body.dealType || null,
     priority: body.priority || "medium",
     notes: body.notes || null,
+    ownerId: body.ownerId || user.id,
   }, user.id);
 
   await store.createActivity({

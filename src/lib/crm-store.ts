@@ -216,7 +216,7 @@ export async function createDeal(data: any, userId?: string) {
       stageId: data.stageId,
       probability: data.probability || 10,
       expectedClose: data.expectedClose || null,
-      ownerId: userId || "admin",
+      ownerId: data.ownerId || userId || "admin",
       contactName: data.contactName || null,
       contactEmail: data.contactEmail || null,
       contactPhone: data.contactPhone || null,
@@ -357,11 +357,13 @@ export async function createSubmission(data: any) {
   return prisma.submission.create({
     data: {
       projectId: data.projectId,
+      taskId: data.taskId || null,
       title: data.title,
       description: data.description || null,
       status: data.status || "pending",
       files: data.files || [],
       feedback: data.feedback || null,
+      submitterId: data.submitterId || null,
     },
   });
 }

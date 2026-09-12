@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/current";
+import { isFreelancer } from "@/lib/auth/roles";
 import * as store from "@/lib/crm-store";
 
 export const runtime = "nodejs";
@@ -15,6 +16,16 @@ export async function GET(request: NextRequest) {
   const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
 
   const result = await store.getSubmissions({ projectId, status, page, limit });
+
+  // Freelancers can only see their own submissions
+  if (isFreelancer(user)) {
+    const filtered = {
+      ...result,
+      submissions: result.submissions.filter((s: any) => s.submitterId === user.id),
+    };
+    return NextResponse.json(filtered);
+  }
+
   return NextResponse.json(result);
 }
 
@@ -24,11 +35,13 @@ export async function POST(request: NextRequest) {
 
   let body: {
     projectId: string;
+    taskId?: string;
     title: string;
     description?: string;
     status?: string;
     files?: string[];
     feedback?: string;
+    submitterId?: string;
   };
   try {
     body = await request.json();
@@ -42,11 +55,13 @@ export async function POST(request: NextRequest) {
 
   const submission = await store.createSubmission({
     projectId: body.projectId,
+    taskId: body.taskId,
     title: body.title,
     description: body.description,
     status: body.status || "pending",
     files: body.files || [],
     feedback: body.feedback,
+    submitterId: body.submitterId || user.id,
   });
 
   await store.createActivity({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DealPanel from "./DealPanel";
@@ -61,10 +61,20 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
 
   // New deal form
   const [newDeal, setNewDeal] = useState({
-    title: "", companyName: "", contactName: "", contactEmail: "", contactPhone: "",
+    title: "", companyName: "", companyId: "", contactName: "", contactEmail: "", contactPhone: "",
     value: 0, currency: "PKR", stageId: "", expectedClose: "", address: "", city: "",
-    country: "", source: "", dealType: "", priority: "medium", notes: "",
+    country: "", source: "", dealType: "", priority: "medium", notes: "", ownerId: "",
   });
+
+  // Company search
+  const [companySearch, setCompanySearch] = useState("");
+  const [companyResults, setCompanyResults] = useState<any[]>([]);
+  const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
+  const [companySearchLoading, setCompanySearchLoading] = useState(false);
+  const companyDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Users for owner assignment
+  const [users, setUsers] = useState<any[]>([]);
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-PK", { style: "currency", currency: "PKR", maximumFractionDigits: 0 }).format(cents / 100);
@@ -83,6 +93,47 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
     const diff = new Date(dateStr).getTime() - Date.now();
     return diff > 0 && diff <= 7 * 24 * 60 * 60 * 1000;
   }
+
+  const priorityConfig: Record<string, { label: string; color: string }> = {
+    low: { label: "Low", color: "bg-white/10 text-white/50" },
+    medium: { label: "Med", color: "bg-blue-500/20 text-blue-400" },
+    high: { label: "High", color: "bg-yellow-500/20 text-yellow-400" },
+    urgent: { label: "Urgent", color: "bg-red-500/20 text-red-400" },
+  };
+
+  // Fetch users for owner assignment
+  useEffect(() => {
+    fetch("/admin/api/auth/users").then(r => r.ok ? r.json() : []).then(data => setUsers(data)).catch(() => {});
+  }, []);
+
+  // Company search with debounce
+  const searchCompanies = useCallback(async (query: string) => {
+    if (!query.trim()) { setCompanyResults([]); return; }
+    setCompanySearchLoading(true);
+    try {
+      const res = await fetch(`/admin/api/crm/companies?search=${encodeURIComponent(query)}&limit=8`);
+      if (res.ok) {
+        const data = await res.json();
+        setCompanyResults(data.companies || []);
+      }
+    } finally { setCompanySearchLoading(false); }
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => searchCompanies(companySearch), 300);
+    return () => clearTimeout(timer);
+  }, [companySearch, searchCompanies]);
+
+  // Close company dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (companyDropdownRef.current && !companyDropdownRef.current.contains(e.target as HTMLElement)) {
+        setShowCompanyDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const allDeals = dealsByStage.flatMap((g) => g.deals);
   const openDeals = allDeals.filter((d: any) => stages.find((st) => st.id === d.stageId) && !stages.find((st) => st.id === d.stageId)?.isClosed);
@@ -283,10 +334,13 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
   // ── Create Deal ──
   function openNewDealModal(stageId?: string) {
     setNewDeal({
-      title: "", companyName: "", contactName: "", contactEmail: "", contactPhone: "",
+      title: "", companyName: "", companyId: "", contactName: "", contactEmail: "", contactPhone: "",
       value: 0, currency: "PKR", stageId: stageId || stages[0]?.id || "",
-      expectedClose: "", address: "", city: "", country: "", source: "", dealType: "", priority: "medium", notes: "",
+      expectedClose: "", address: "", city: "", country: "", source: "", dealType: "", priority: "medium", notes: "", ownerId: "",
     });
+    setCompanySearch("");
+    setCompanyResults([]);
+    setShowCompanyDropdown(true);
     setShowNewDeal(true);
   }
 
@@ -471,11 +525,18 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
                       <p className="mt-1 text-xs text-white/50">{deal.company?.name || "Unknown"}</p>
                       <div className="mt-2 flex items-center justify-between">
                         <span className="text-sm font-semibold text-white">{formatCurrency(deal.value)}</span>
-                        {deal.expectedClose && (
-                          <span className={`text-xs ${isCloseDateSoon(deal.expectedClose) ? "text-orange-400 font-semibold" : "text-white/40"}`}>
-                            {new Date(deal.expectedClose).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          {deal.priority && deal.priority !== "medium" && (
+                            <span className={`inline-flex rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase ${priorityConfig[deal.priority]?.color || ""}`}>
+                              {priorityConfig[deal.priority]?.label || deal.priority}
+                            </span>
+                          )}
+                          {deal.expectedClose && (
+                            <span className={`text-xs ${isCloseDateSoon(deal.expectedClose) ? "text-orange-400 font-semibold" : "text-white/40"}`}>
+                              {new Date(deal.expectedClose).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))
@@ -568,11 +629,62 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, u
                   </select>
                 </div>
               </div>
-              <div>
+              <div className="relative" ref={companyDropdownRef}>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Company Name</label>
-                <input type="text" value={newDeal.companyName} onChange={(e) => setNewDeal({ ...newDeal, companyName: e.target.value })}
-                  placeholder="e.g. Acme Corp"
-                  className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand" />
+                <input
+                  type="text"
+                  value={newDeal.companyId ? newDeal.companyName : companySearch}
+                  onChange={(e) => {
+                    setCompanySearch(e.target.value);
+                    setNewDeal({ ...newDeal, companyName: e.target.value, companyId: "" });
+                    setShowCompanyDropdown(true);
+                  }}
+                  onFocus={() => setShowCompanyDropdown(true)}
+                  placeholder="Search or type company name..."
+                  className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand"
+                />
+                {showCompanyDropdown && (
+                  <div className="absolute z-20 mt-1 w-full rounded-[3px] border border-[#1E293B] bg-[#111827] shadow-xl max-h-48 overflow-y-auto">
+                    {companySearchLoading && <div className="px-3 py-2 text-xs text-white/40">Searching...</div>}
+                    {!companySearchLoading && companyResults.length > 0 && companyResults.map((c: any) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => {
+                          setNewDeal({ ...newDeal, companyName: c.name, companyId: c.id });
+                          setCompanySearch("");
+                          setShowCompanyDropdown(false);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-white hover:bg-white/5"
+                      >
+                        <span className="font-medium">{c.name}</span>
+                        {c.industry && <span className="text-xs text-white/40">({c.industry})</span>}
+                      </button>
+                    ))}
+                    {!companySearchLoading && companyResults.length === 0 && companySearch.trim() && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setNewDeal({ ...newDeal, companyName: companySearch, companyId: "" });
+                          setShowCompanyDropdown(false);
+                        }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-brand hover:bg-white/5"
+                      >
+                        + Create &quot;{companySearch}&quot;
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-white/60 mb-1">Assign To</label>
+                <select value={newDeal.ownerId} onChange={(e) => setNewDeal({ ...newDeal, ownerId: e.target.value })}
+                  className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
+                  <option value="">Me (current user)</option>
+                  {users.filter((u: any) => u.id !== userId).map((u: any) => (
+                    <option key={u.id} value={u.id}>{u.name}</option>
+                  ))}
+                </select>
               </div>
               <div className="border-t border-[#1E293B] pt-4">
                 <p className="text-xs font-semibold text-white/40 uppercase tracking-wider mb-3">Contact Person</p>
