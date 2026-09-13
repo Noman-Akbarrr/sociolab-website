@@ -1,5 +1,6 @@
 import type { Config } from "@puckeditor/core";
 import type React from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
@@ -161,26 +162,10 @@ const config: Config<BlockProps> = {
           { value: "100%", label: "in-house team" },
         ],
       },
-      render: ({
-        variant,
-        backgroundImage,
-        badge,
-        eyebrow,
-        title,
-        accentTitle,
-        sub,
-        align,
-        ctaLabel,
-        whatsappMessage,
-        ctaStyle,
-        ctaColor,
-        ctaSize,
-        buttonRadius,
-        secondaryLabel,
-        secondaryHref,
-        stats = [],
-      }) => {
-        if (variant === "reveal") {
+      render: (props) => {
+        const { variant, backgroundImage, badge, eyebrow, title, accentTitle, sub, align, ctaLabel, whatsappMessage, ctaStyle, ctaColor, ctaSize, buttonRadius, secondaryLabel, secondaryHref, stats = [] } = props;
+        const pathname = usePathname();
+        if (variant === "reveal" || pathname === "/") {
           return <HeroReveal />;
         }
         const imageMode = variant === "image" && backgroundImage;
