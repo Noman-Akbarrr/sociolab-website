@@ -35,18 +35,20 @@ export function HeroReveal() {
 
   const p = easeOutCubic(progress);
 
-  // Panel translate: 0 → 52%
-  const panelTranslate = p * 52;
-  // Image scale: 1.35 → 1.0
-  const imageScale = 1.35 - p * 0.35;
-  // Duotone opacity: 0 → 0.55
-  const duotoneOpacity = p * 0.55;
-  // Dots: hidden when wordmark is centered, appear as it splits
-  const dotsOpacity = Math.min(1, Math.max(0, (p - 0.2) / 0.3));
-  // Wordmark gap: 0 → 8vw as it splits
-  const wordmarkGap = p * 8;
-  // Metadata fade
-  const metaOpacity = Math.min(1, Math.max(0, (p - 0.3) / 0.4));
+  // Panel translate: 0 → 105% (fully off screen)
+  const panelTranslate = p * 105;
+  // Image scale: 1.2 → 1.0
+  const imageScale = 1.2 - p * 0.2;
+  // Duotone opacity: 0 → 0.5
+  const duotoneOpacity = p * 0.5;
+  // Wordmark: visible at start, fades out as panels move
+  const wordmarkOpacity = Math.max(0, 1 - p * 3);
+  // Wordmark gap: 0 → 6vw as it splits
+  const wordmarkGap = p * 6;
+  // Dots: fade out with wordmark
+  const dotsOpacity = Math.max(0, 1 - p * 3);
+  // Metadata fade out with panels
+  const metaOpacity = Math.max(0, 1 - p * 2.5);
 
   return (
     <section
@@ -151,7 +153,7 @@ export function HeroReveal() {
         {/* ── Layer 5: Accent dots at center seam ──────── */}
         <div
           className="absolute top-1/2 left-1/2 z-[5] flex -translate-x-1/2 -translate-y-1/2 items-center gap-3"
-          style={{ opacity: dotsOpacity }}
+          style={{ opacity: dotsOpacity, pointerEvents: "none" }}
         >
           <span
             className="block h-2 w-2 rounded-full"
@@ -174,7 +176,9 @@ export function HeroReveal() {
           className="absolute top-1/2 left-1/2 z-[6] flex -translate-x-1/2 -translate-y-1/2 items-center"
           style={{
             gap: `${wordmarkGap}vw`,
-            willChange: "gap",
+            opacity: wordmarkOpacity,
+            pointerEvents: "none",
+            willChange: "gap, opacity",
           }}
         >
           <span
@@ -200,7 +204,7 @@ export function HeroReveal() {
         {/* ── Scroll indicator ─────────────────────────── */}
         <div
           className="absolute bottom-8 left-1/2 z-[7] -translate-x-1/2"
-          style={{ opacity: 1 - p * 2 }}
+          style={{ opacity: Math.max(0, 1 - p * 3), pointerEvents: "none" }}
         >
           <div className="flex flex-col items-center gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-white/40">
