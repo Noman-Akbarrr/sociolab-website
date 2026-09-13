@@ -35,16 +35,16 @@ export function HeroReveal() {
 
   const p = easeOutCubic(progress);
 
-  // Panel translate: 0 → 52% (just past half to fully clear)
+  // Panel translate: 0 → 52%
   const panelTranslate = p * 52;
   // Image scale: 1.35 → 1.0
   const imageScale = 1.35 - p * 0.35;
   // Duotone opacity: 0 → 0.55
   const duotoneOpacity = p * 0.55;
-  // Dots glow: always visible, intensify on scroll
-  const dotsOpacity = 0.6 + p * 0.4;
-  // Wordmark opacity: fades in after panels separate
-  const wordmarkOpacity = Math.min(1, Math.max(0, (p - 0.15) / 0.5));
+  // Dots: hidden when wordmark is centered, appear as it splits
+  const dotsOpacity = Math.min(1, Math.max(0, (p - 0.2) / 0.3));
+  // Wordmark gap: 0 → 8vw as it splits
+  const wordmarkGap = p * 8;
   // Metadata fade
   const metaOpacity = Math.min(1, Math.max(0, (p - 0.3) / 0.4));
 
@@ -102,7 +102,6 @@ export function HeroReveal() {
             willChange: "transform",
           }}
         >
-          {/* Corner metadata — top-left */}
           <div
             className="absolute top-6 left-6 sm:top-8 sm:left-8"
             style={{ opacity: metaOpacity }}
@@ -111,7 +110,6 @@ export function HeroReveal() {
               Est. 2024
             </span>
           </div>
-          {/* Corner metadata — bottom-left */}
           <div
             className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8"
             style={{ opacity: metaOpacity }}
@@ -132,7 +130,6 @@ export function HeroReveal() {
             willChange: "transform",
           }}
         >
-          {/* Corner metadata — top-right */}
           <div
             className="absolute top-6 right-6 sm:top-8 sm:right-8"
             style={{ opacity: metaOpacity }}
@@ -141,7 +138,6 @@ export function HeroReveal() {
               Growth Studio
             </span>
           </div>
-          {/* Corner metadata — bottom-right */}
           <div
             className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8"
             style={{ opacity: metaOpacity }}
@@ -173,32 +169,31 @@ export function HeroReveal() {
           />
         </div>
 
-        {/* ── Layer 6: Wordmark split across center ────── */}
+        {/* ── Layer 6: Wordmark — SOCIOLAB splits on scroll ── */}
         <div
           className="absolute top-1/2 left-1/2 z-[6] flex -translate-x-1/2 -translate-y-1/2 items-center"
-          style={{ opacity: wordmarkOpacity }}
+          style={{
+            gap: `${wordmarkGap}vw`,
+            willChange: "gap",
+          }}
         >
           <span
             className="font-display text-[clamp(3rem,10vw,8rem)] font-extrabold tracking-[-0.04em] leading-none"
             style={{
               color: "#FF5500",
               textShadow: "0 0 40px rgba(255,85,0,0.4), 0 0 80px rgba(255,85,0,0.2)",
-              transform: `translateX(${-panelTranslate * 0.4}vw)`,
-              opacity: wordmarkOpacity,
             }}
           >
-            SO
+            SOCI
           </span>
           <span
             className="font-display text-[clamp(3rem,10vw,8rem)] font-extrabold tracking-[-0.04em] leading-none"
             style={{
               color: "#FFFFFF",
               textShadow: "0 0 40px rgba(255,255,255,0.15)",
-              transform: `translateX(${panelTranslate * 0.4}vw)`,
-              opacity: wordmarkOpacity,
             }}
           >
-            CIOLAB
+            OLAB
           </span>
         </div>
 
