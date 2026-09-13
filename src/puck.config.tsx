@@ -8,6 +8,7 @@ import { Marquee } from "@/components/marquee";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { ArrowUpRightIcon, CheckIcon, WhatsAppIcon } from "@/components/icons";
 import { ContactForm } from "@/components/editor/contact-form";
+import { HeroReveal } from "@/components/home/hero-reveal";
 import { CRMCaseGrid } from "@/components/editor/crm-case-grid";
 import { CRMTeamBlock } from "@/components/editor/crm-team-block";
 import { CRMServiceGrid } from "@/components/editor/crm-service-grid";
@@ -95,6 +96,7 @@ const config: Config<BlockProps> = {
         variant: { type: "radio", options: [
           { value: "solid", label: "Solid background" },
           { value: "image", label: "Image background" },
+          { value: "reveal", label: "Scroll reveal (panels)" },
         ] },
         backgroundImage: { type: "image" } as any,
         badge: { type: "text" },
@@ -137,7 +139,7 @@ const config: Config<BlockProps> = {
         },
       },
       defaultProps: {
-        variant: "solid",
+        variant: "reveal",
         backgroundImage: "",
         badge: "",
         eyebrow: "Sociolab — trend-native GTM team",
@@ -178,6 +180,9 @@ const config: Config<BlockProps> = {
         secondaryHref,
         stats = [],
       }) => {
+        if (variant === "reveal") {
+          return <HeroReveal />;
+        }
         const imageMode = variant === "image" && backgroundImage;
         const color = ctaColor || "#ff4d00";
         const lightColor = /^#(f[0-9a-f]{5}|f{6}|e[0-9a-f]{5})$/i.test(color);
