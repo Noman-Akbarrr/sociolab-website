@@ -1,3 +1,5 @@
+"use client";
+
 export function LogoStrip() {
   const logos = [
     "CloudScale Data",
@@ -9,16 +11,19 @@ export function LogoStrip() {
   ];
 
   return (
-    <section className="border-y border-white/5 py-10">
+    <section className="py-10" style={{ borderTop: "1px solid #E7E5E4", borderBottom: "1px solid #E7E5E4" }}>
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <p className="text-center text-xs font-mono uppercase tracking-widest text-slate-400 mb-8">
-          Trusted by revenue & marketing leaders across enterprise &amp; scale-up B2B
+        <p className="text-center text-xs font-mono uppercase tracking-widest mb-8" style={{ color: "#A8A29E" }}>
+          Trusted by revenue &amp; marketing leaders across enterprise &amp; scale-up B2B
         </p>
         <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6">
           {logos.map((name) => (
             <span
               key={name}
-              className="text-lg font-semibold text-white/40 hover:text-white/80 transition-all cursor-default grayscale hover:grayscale-0"
+              className="text-lg font-semibold transition-all cursor-default"
+              style={{ color: "#D6D3D1" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1917")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#D6D3D1")}
             >
               {name}
             </span>

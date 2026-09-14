@@ -19,7 +19,7 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <>
+    <div className="light-page">
       <B2BHero />
       <LogoStrip />
       <StrategicThesis />
@@ -29,6 +29,6 @@ export default function HomePage() {
       <Onboarding />
       <DiagnosticForm />
       <B2BFooter />
-    </>
+    </div>
   );
 }
