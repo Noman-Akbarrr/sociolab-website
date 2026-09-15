@@ -72,11 +72,12 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
     >
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
         {/* ── Wordmark ─────────────────────────────── */}
-        <Link href="/" className="flex items-center gap-2" aria-label={`${site.name} — home`}>
-          <span className="font-display text-lg font-bold tracking-tight text-white">
-            {site.name}
-            <span className="text-[#FF5500]">.</span>
-          </span>
+        <Link href="/" className="flex items-center" aria-label={`${site.name} — home`}>
+          <img
+            src="/sociolab-logo.jpg"
+            alt="Sociolab"
+            className="h-8 w-auto rounded"
+          />
         </Link>
 
         {/* ── Desktop nav ──────────────────────────── */}
