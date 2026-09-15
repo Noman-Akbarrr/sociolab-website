@@ -133,3 +133,19 @@ h3 {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Light page theme (homepage only) ─────────────────────── */
+
+.light-page {
+  background: #FAFAF9;
+  color: #1C1917;
+}
+
+.light-page h1,
+.light-page h2,
+.light-page h3,
+.light-page h4,
+.light-page h5,
+.light-page h6 {
+  color: #1C1917;
+}

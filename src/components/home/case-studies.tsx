@@ -5,9 +5,9 @@ const caseStudies = [
     paragraph:
       "Client had strong technical adoption among developers but failed to close multi-year enterprise contracts. We restructured their narrative around corporate risk reduction and launched a targeted Tier-1 ABM engine.",
     metrics: [
-      { value: "+$8.4M", color: "text-white", label: "Net-New Pipeline" },
-      { value: "+41%", color: "text-emerald-400", label: "Average Deal Size" },
-      { value: "-38 Days", color: "text-blue-400", label: "Sales Cycle Drag" },
+      { value: "+$8.4M", color: "#1C1917", label: "Net-New Pipeline" },
+      { value: "+41%", color: "#059669", label: "Average Deal Size" },
+      { value: "-38 Days", color: "#FF5500", label: "Sales Cycle Drag" },
     ],
     quote:
       "\"Socio Lab gave our sales leadership the exact narrative weapon needed to close $100k+ enterprise contracts.\"",
@@ -19,9 +19,9 @@ const caseStudies = [
     paragraph:
       "Client struggled with long sales cycles and inconsistent pipeline generation. We deployed a full-funnel ABM system targeting CFOs and VPs of Finance at mid-market enterprises.",
     metrics: [
-      { value: "+$5.2M", color: "text-white", label: "Net-New Pipeline" },
-      { value: "+67%", color: "text-emerald-400", label: "SQL Conversion Rate" },
-      { value: "-21 Days", color: "text-blue-400", label: "Sales Cycle Drag" },
+      { value: "+$5.2M", color: "#1C1917", label: "Net-New Pipeline" },
+      { value: "+67%", color: "#059669", label: "SQL Conversion Rate" },
+      { value: "-21 Days", color: "#FF5500", label: "Sales Cycle Drag" },
     ],
     quote:
       "\"The pipeline consistency we now have is something we've never achieved before. Every board meeting, we can predict revenue.\"",
@@ -33,10 +33,10 @@ export function CaseStudies() {
   return (
     <section id="case-studies" className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <p className="text-xs font-mono uppercase tracking-widest text-blue-400 mb-3">
+        <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
           [ Proven Telemetry ]
         </p>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold mb-12" style={{ color: "#1C1917" }}>
           Board-Level Commercial Outcomes
         </h2>
 
@@ -44,18 +44,18 @@ export function CaseStudies() {
           {caseStudies.map((cs) => (
             <div
               key={cs.title}
-              className="bg-[#12151C] border border-white/10 rounded-2xl p-8 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+              className="bg-white border border-stone-200 rounded-2xl p-8 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
             >
               {/* Left: Visual placeholder */}
               <div className="lg:col-span-6">
-                <div className="aspect-[16/10] bg-[#181C26] border border-white/10 rounded-xl overflow-hidden shadow-2xl flex items-center justify-center">
+                <div className="aspect-[16/10] bg-stone-50 border border-stone-200 rounded-xl overflow-hidden shadow-sm flex items-center justify-center">
                   <div className="text-center px-8">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center">
-                      <svg className="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#FFF7ED", border: "1px solid #FDBA74" }}>
+                      <svg className="w-8 h-8" style={{ color: "#FF5500" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
                       </svg>
                     </div>
-                    <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">
+                    <p className="text-xs font-mono uppercase tracking-wider" style={{ color: "#A8A29E" }}>
                       Enterprise Deliverable
                     </p>
                   </div>
@@ -64,24 +64,24 @@ export function CaseStudies() {
 
               {/* Right: Content */}
               <div className="lg:col-span-6">
-                <p className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">
+                <p className="text-xs font-mono uppercase tracking-widest mb-2" style={{ color: "#78716C" }}>
                   {cs.meta}
                 </p>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-bold mb-4" style={{ color: "#1C1917" }}>
                   {cs.title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                <p className="text-sm leading-relaxed mb-6" style={{ color: "#57534E" }}>
                   {cs.paragraph}
                 </p>
 
                 {/* Metrics */}
-                <div className="grid grid-cols-3 gap-4 border-y border-white/10 py-4 mb-6">
+                <div className="grid grid-cols-3 gap-4 py-4 mb-6" style={{ borderTop: "1px solid #E7E5E4", borderBottom: "1px solid #E7E5E4" }}>
                   {cs.metrics.map((m) => (
                     <div key={m.label}>
-                      <span className={`text-2xl font-bold font-mono ${m.color}`}>
+                      <span className="text-2xl font-bold font-mono" style={{ color: m.color }}>
                         {m.value}
                       </span>
-                      <span className="block text-xs text-slate-400 mt-1">
+                      <span className="block text-xs mt-1" style={{ color: "#78716C" }}>
                         {m.label}
                       </span>
                     </div>
@@ -89,11 +89,11 @@ export function CaseStudies() {
                 </div>
 
                 {/* Testimonial */}
-                <div className="border-l-2 border-blue-500 pl-4">
-                  <p className="text-xs italic text-slate-300 mb-2">
+                <div className="pl-4" style={{ borderLeft: "2px solid #FF5500" }}>
+                  <p className="text-xs italic mb-2" style={{ color: "#44403C" }}>
                     {cs.quote}
                   </p>
-                  <p className="text-xs font-semibold text-white">
+                  <p className="text-xs font-semibold" style={{ color: "#1C1917" }}>
                     {cs.author}
                   </p>
                 </div>
