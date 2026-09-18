@@ -3,7 +3,9 @@ import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import { site } from "@/lib/site";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import { SiteChrome } from "@/components/site-chrome";
+import { LenisProvider } from "@/components/lenis-provider";
 import { listResourcePosts } from "@/lib/pages";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -237,15 +239,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body className="flex min-h-full flex-col bg-paper text-ink">
-        <AnalyticsProvider>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
-          >
-            Skip to content
-          </a>
-          <SiteChrome navPosts={navPosts}>{children}</SiteChrome>
-        </AnalyticsProvider>
+        <LenisProvider>
+          <AnalyticsProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-[3px] focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+            >
+              Skip to content
+            </a>
+            <SiteChrome navPosts={navPosts}>{children}</SiteChrome>
+          </AnalyticsProvider>
+        </LenisProvider>
       </body>
     </html>
   );
