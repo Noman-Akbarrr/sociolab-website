@@ -62,7 +62,7 @@ export function ServicesSection() {
 
         <div className="flex flex-col gap-0">
           {pillars.map((pillar, i) => (
-            <Reveal key={pillar.index} delay={i * 0.06}>
+            <Reveal key={i} delay={i * 0.06}>
               <div
                 className={`grid gap-8 py-12 border-[#1E293B] md:grid-cols-[1fr_1.2fr] ${
                   i !== pillars.length - 1 ? "border-b" : ""
