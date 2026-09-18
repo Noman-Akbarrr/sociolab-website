@@ -70,9 +70,6 @@ export function Capabilities() {
     <section className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
-          <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-            [ Scope &amp; Capabilities ]
-          </p>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
             Four Disciplines. One Cohesive Revenue Engine.
           </h2>

@@ -4,7 +4,6 @@ import { Reveal } from "@/components/ui/reveal";
 
 const pillars = [
   {
-    index: "01",
     eyebrow: "Paid Acquisition",
     title: "Algorithmic Meta & Google Ad Management",
     bullets: [
@@ -14,7 +13,6 @@ const pillars = [
     ],
   },
   {
-    index: "02",
     eyebrow: "Creative Studio",
     title: "Short-Form Video & Visual Assets Engineered to Convert",
     bullets: [
@@ -24,7 +22,6 @@ const pillars = [
     ],
   },
   {
-    index: "03",
     eyebrow: "Creator Marketing",
     title: "Systematized Influencer Partnerships & PR Seeding",
     bullets: [
@@ -34,7 +31,6 @@ const pillars = [
     ],
   },
   {
-    index: "04",
     eyebrow: "Revenue Operations",
     title: "Post-Click Conversion & Lead Triage Optimization",
     bullets: [
@@ -75,10 +71,7 @@ export function ServicesSection() {
               >
                 {/* Left / alternating right */}
                 <div style={i % 2 !== 0 ? { direction: "ltr" } : undefined}>
-                  <div className="flex items-baseline gap-3 mb-4">
-                    <span className="font-mono text-sm font-bold text-[#FF5500]">
-                      {pillar.index}
-                    </span>
+                  <div className="mb-4">
                     <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-[#94A3B8]">
                       {pillar.eyebrow}
                     </span>

@@ -47,8 +47,6 @@ export function HeroReveal() {
   const wordmarkGap = p * 6;
   // Dots: fade out with wordmark
   const dotsOpacity = Math.max(0, 1 - p * 3);
-  // Metadata fade out with panels
-  const metaOpacity = Math.max(0, 1 - p * 2.5);
 
   return (
     <section
@@ -95,60 +93,26 @@ export function HeroReveal() {
         />
 
         {/* ── Layer 4: Left panel ──────────────────────── */}
-        <div
-          className="absolute top-0 left-0 z-[3] flex h-full items-stretch"
-          style={{
-            width: "50.5%",
-            backgroundColor: "#090D16",
-            transform: `translateX(-${panelTranslate}%)`,
-            willChange: "transform",
-          }}
-        >
           <div
-            className="absolute top-6 left-6 sm:top-8 sm:left-8"
-            style={{ opacity: metaOpacity }}
-          >
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30">
-              Est. 2024
-            </span>
-          </div>
-          <div
-            className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8"
-            style={{ opacity: metaOpacity }}
-          >
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30">
-              Pakistan
-            </span>
-          </div>
-        </div>
+            className="absolute top-0 left-0 z-[3] flex h-full items-stretch"
+            style={{
+              width: "50.5%",
+              backgroundColor: "#090D16",
+              transform: `translateX(-${panelTranslate}%)`,
+              willChange: "transform",
+            }}
+          />
 
         {/* ── Layer 4: Right panel ─────────────────────── */}
-        <div
-          className="absolute top-0 right-0 z-[3] flex h-full items-stretch"
-          style={{
-            width: "50.5%",
-            backgroundColor: "#090D16",
-            transform: `translateX(${panelTranslate}%)`,
-            willChange: "transform",
-          }}
-        >
           <div
-            className="absolute top-6 right-6 sm:top-8 sm:right-8"
-            style={{ opacity: metaOpacity }}
-          >
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30">
-              Growth Studio
-            </span>
-          </div>
-          <div
-            className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8"
-            style={{ opacity: metaOpacity }}
-          >
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.3em] text-white/30">
-              30°N 71°E
-            </span>
-          </div>
-        </div>
+            className="absolute top-0 right-0 z-[3] flex h-full items-stretch"
+            style={{
+              width: "50.5%",
+              backgroundColor: "#090D16",
+              transform: `translateX(${panelTranslate}%)`,
+              willChange: "transform",
+            }}
+          />
 
         {/* ── Layer 5: Accent dots at center seam ──────── */}
         <div

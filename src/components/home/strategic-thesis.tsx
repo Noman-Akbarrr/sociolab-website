@@ -5,9 +5,6 @@ export function StrategicThesis() {
 
         {/* Left Column — Sticky */}
         <div className="lg:col-span-5 lg:sticky lg:top-32">
-          <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-            [ The Structural Flaw ]
-          </p>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-6" style={{ color: "#1C1917" }}>
             Most B2B enterprises don&apos;t have a lead problem. They have a positioning and velocity problem.
           </h2>

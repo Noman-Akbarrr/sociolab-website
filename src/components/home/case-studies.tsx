@@ -1,6 +1,5 @@
 const caseStudies = [
   {
-    meta: "Series B Enterprise SaaS // $28M ARR",
     title: "Repositioning Complex Security Infrastructure for Enterprise CISOs.",
     paragraph:
       "Client had strong technical adoption among developers but failed to close multi-year enterprise contracts. We restructured their narrative around corporate risk reduction and launched a targeted Tier-1 ABM engine.",
@@ -14,7 +13,6 @@ const caseStudies = [
     author: "David Sterling, Chief Commercial Officer",
   },
   {
-    meta: "Scale-Up Fintech // $12M ARR",
     title: "Scaling Pipeline Velocity for a Complex B2B Payments Platform.",
     paragraph:
       "Client struggled with long sales cycles and inconsistent pipeline generation. We deployed a full-funnel ABM system targeting CFOs and VPs of Finance at mid-market enterprises.",
@@ -33,9 +31,6 @@ export function CaseStudies() {
   return (
     <section id="case-studies" className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-          [ Proven Telemetry ]
-        </p>
         <h2 className="text-3xl md:text-4xl font-bold mb-12" style={{ color: "#1C1917" }}>
           Board-Level Commercial Outcomes
         </h2>
@@ -64,9 +59,6 @@ export function CaseStudies() {
 
               {/* Right: Content */}
               <div className="lg:col-span-6">
-                <p className="text-xs font-mono uppercase tracking-widest mb-2" style={{ color: "#78716C" }}>
-                  {cs.meta}
-                </p>
                 <h3 className="text-2xl font-bold mb-4" style={{ color: "#1C1917" }}>
                   {cs.title}
                 </h3>

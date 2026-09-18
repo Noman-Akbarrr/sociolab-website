@@ -9,9 +9,6 @@ export function DiagnosticForm() {
     <section id="diagnostic-form" className="py-16 md:py-24">
       <div className="max-w-2xl mx-auto px-6 md:px-12">
         <div className="bg-white border border-stone-200 p-8 md:p-12 rounded-2xl shadow-sm relative overflow-hidden">
-          <p className="text-center text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-            [ Direct Executive Access ]
-          </p>
           <h2 className="text-3xl font-bold text-center mb-3" style={{ color: "#1C1917" }}>
             Request a Strategic GTM Diagnostic
           </h2>

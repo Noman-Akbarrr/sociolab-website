@@ -35,9 +35,6 @@ export function Onboarding() {
   return (
     <section className="py-24 md:py-32" style={{ backgroundColor: "#1C1917" }}>
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-          [ Seamless Integration ]
-        </p>
         <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: "#FFFFFF" }}>
           How We Integrate: Zero Operational Drag
         </h2>
@@ -73,7 +70,7 @@ export function Onboarding() {
         {/* SLA Trust Banner */}
         <div className="mt-8 p-4 rounded-xl flex flex-col md:flex-row justify-between items-center text-xs gap-4" style={{ backgroundColor: "rgba(255,85,0,0.08)", border: "1px solid rgba(255,85,0,0.2)", color: "#D6D3D1" }}>
           <span>
-            Dedicated Enterprise Slack Channel // Async Weekly Video Briefings // Bi-Weekly Executive Sprints
+            Dedicated Enterprise Slack Channel, Async Weekly Video Briefings, Bi-Weekly Executive Sprints
           </span>
           <span className="font-semibold whitespace-nowrap" style={{ color: "#FF5500" }}>
             Guaranteed 4-Hour Response SLA

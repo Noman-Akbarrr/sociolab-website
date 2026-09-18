@@ -1,6 +1,5 @@
 const stages = [
   {
-    number: "01",
     title: "Strategic Diagnostic & ICP Calibration",
     summary:
       "Rigorous forensic audit of existing customer data, win/loss interviews, and pipeline leakage.",
@@ -11,7 +10,6 @@ const stages = [
     ],
   },
   {
-    number: "02",
     title: "Category Framing & Narrative Architecture",
     summary:
       "Translating complex technical capabilities into an undeniable commercial executive narrative.",
@@ -22,7 +20,6 @@ const stages = [
     ],
   },
   {
-    number: "03",
     title: "Demand Generation & ABM Infrastructure",
     summary:
       "Building the programmatic outbound and inbound acquisition engine targeting Tier-1 accounts.",
@@ -33,7 +30,6 @@ const stages = [
     ],
   },
   {
-    number: "04",
     title: "Revenue Operations & Attribution Telemetry",
     summary:
       "Integrating marketing signals directly with CRM stages to monitor pipeline velocity and ARR.",
@@ -50,9 +46,6 @@ export function Framework() {
     <section className="py-24 md:py-32" style={{ backgroundColor: "#1C1917" }}>
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
-          <p className="text-xs font-mono uppercase tracking-widest mb-3" style={{ color: "#FF5500" }}>
-            [ Repeatable Methodology ]
-          </p>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#FFFFFF" }}>
             The 4-Stage GTM Architecture Engine
           </h2>
@@ -63,15 +56,12 @@ export function Framework() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stages.map((stage) => (
-            <div
-              key={stage.number}
+              <div
+              key={stages.indexOf(stage)}
               className="p-6 rounded-xl flex flex-col justify-between transition-all"
               style={{ backgroundColor: "#292524", border: "1px solid #44403C" }}
             >
               <div>
-                <span className="text-xs font-mono tracking-wider mb-4 block" style={{ color: "#FF5500" }}>
-                  Stage // {stage.number}
-                </span>
                 <h3 className="text-xl font-bold mb-3" style={{ color: "#FFFFFF" }}>
                   {stage.title}
                 </h3>

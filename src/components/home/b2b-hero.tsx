@@ -32,7 +32,7 @@ export function B2BHero() {
           </span>
         </div>
 
-        {/* Headline — Scale Faster with [MEGAPHONE] Digital Marketing */}
+        {/* Headline */}
         <h1 className="font-display font-extrabold leading-[1.05] mb-8" style={{ fontSize: "clamp(3rem, 7vw, 6.5rem)", letterSpacing: "-0.03em", color: "#1C1917" }}>
           Scale Faster
           <br />
