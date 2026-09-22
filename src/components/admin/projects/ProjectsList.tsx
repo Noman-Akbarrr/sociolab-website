@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CompanyAutocomplete } from "@/components/admin/crm/CompanyAutocomplete";
 
 interface ProjectsListProps {
   initialProjects: any[];
@@ -26,6 +27,7 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   const [loading, setLoading] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
+  const [createError, setCreateError] = useState("");
   const companies = initialCompanies;
   const deals = initialDeals;
 
@@ -65,15 +67,19 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
   async function handleNewProject(e: React.FormEvent) {
     e.preventDefault();
+    setCreateError("");
     const res = await fetch("/admin/api/crm/projects", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newProject),
     });
+    const data = await res.json();
     if (res.ok) {
       setShowNew(false);
       setNewProject({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
       fetchProjects();
+    } else {
+      setCreateError(data.error || "Failed to create project.");
     }
   }
 
@@ -197,21 +203,24 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
       </div>
 
       {showNew && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
             <h2 className="font-display text-xl font-semibold text-white">New Project</h2>
+            {createError && (
+              <div className="mt-3 rounded-[3px] border border-red-500/30 bg-red-500/10 px-3 py-2">
+                <p className="text-xs text-red-400">{createError}</p>
+              </div>
+            )}
             <form onSubmit={handleNewProject} className="mt-4 flex flex-col gap-4">
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Name *</label>
                 <input type="text" required value={newProject.name} onChange={(e) => setNewProject({ ...newProject, name: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand" />
               </div>
-              <div>
-                <label className="block text-xs font-semibold text-white/60 mb-1">Company *</label>
-                <select required value={newProject.companyId} onChange={(e) => setNewProject({ ...newProject, companyId: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
-                  <option value="">Select company</option>
-                  {companies.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
+              <CompanyAutocomplete
+                value={newProject.companyId}
+                companyName={companies.find((c: any) => c.id === newProject.companyId)?.name || ""}
+                onChange={(id, name) => setNewProject({ ...newProject, companyId: id })}
+              />
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Origin Deal (optional)</label>
                 <select value={newProject.dealId} onChange={(e) => setNewProject({ ...newProject, dealId: e.target.value })} className="w-full rounded-[3px] border border-[#1E293B] bg-[#111827] px-3 py-2 text-sm text-white focus:outline-none focus:border-brand">
@@ -256,8 +265,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Edit Modal */}
       {editTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
             <h2 className="font-display text-xl font-semibold text-white">Edit Project</h2>
             <div className="mt-4 flex flex-col gap-4">
               <div>
@@ -301,8 +310,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
             <h2 className="font-display text-lg font-semibold text-white">Delete Project</h2>
             <p className="mt-2 text-sm text-white/60">
               Are you sure you want to delete <span className="font-semibold text-white">{deleteTarget.name}</span>?
@@ -326,8 +335,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Members Modal */}
       {membersTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
+          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
             <h2 className="font-display text-lg font-semibold text-white">Manage Members — {membersTarget.name}</h2>
             <p className="text-sm text-white/50 mt-1">Only assigned members can see this project and be assigned tasks within it.</p>
             {loadingMembers ? (

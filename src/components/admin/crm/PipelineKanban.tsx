@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DealPanel from "./DealPanel";
+import { CompanyAutocomplete } from "./CompanyAutocomplete";
 
 interface PipelineKanbanProps {
   pipeline: any;
@@ -26,6 +27,7 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
   const [dealsByStage, setDealsByStage] = useState(initialDealsByStage);
   const [showNewDeal, setShowNewDeal] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState("");
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
 
   // Add stage
@@ -68,13 +70,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     country: "", source: "", dealType: "", priority: "medium", notes: "", ownerId: "",
   });
 
-  // Company search
-  const [companySearch, setCompanySearch] = useState("");
-  const [companyResults, setCompanyResults] = useState<any[]>([]);
-  const [showCompanyDropdown, setShowCompanyDropdown] = useState(false);
-  const [companySearchLoading, setCompanySearchLoading] = useState(false);
-  const companyDropdownRef = useRef<HTMLDivElement>(null);
-
   // Pipeline members for owner assignment (passed from server)
   const [users] = useState(pipelineMembers || []);
 
@@ -105,35 +100,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     high: { label: "High", color: "bg-yellow-500/20 text-yellow-400" },
     urgent: { label: "Urgent", color: "bg-red-500/20 text-red-400" },
   };
-
-  // Company search with debounce
-  const searchCompanies = useCallback(async (query: string) => {
-    if (!query.trim()) { setCompanyResults([]); return; }
-    setCompanySearchLoading(true);
-    try {
-      const res = await fetch(`/admin/api/crm/companies?search=${encodeURIComponent(query)}&limit=8`);
-      if (res.ok) {
-        const data = await res.json();
-        setCompanyResults(data.companies || []);
-      }
-    } finally { setCompanySearchLoading(false); }
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => searchCompanies(companySearch), 300);
-    return () => clearTimeout(timer);
-  }, [companySearch, searchCompanies]);
-
-  // Close company dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (companyDropdownRef.current && !companyDropdownRef.current.contains(e.target as HTMLElement)) {
-        setShowCompanyDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const allDeals = seesAllDeals
     ? dealsByStage.flatMap((g) => g.deals)
@@ -340,9 +306,6 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
       value: 0, currency: "PKR", stageId: stageId || stages[0]?.id || "",
       expectedClose: "", address: "", city: "", country: "", source: "", dealType: "", priority: "medium", notes: "", ownerId: "",
     });
-    setCompanySearch("");
-    setCompanyResults([]);
-    setShowCompanyDropdown(true);
     setShowNewDeal(true);
   }
 
@@ -350,26 +313,31 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     e.preventDefault();
     if (!newDeal.title.trim() || !newDeal.stageId) return;
     setCreating(true);
+    setCreateError("");
     try {
       const res = await fetch("/admin/api/crm/deals", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...newDeal, pipelineId: pipeline.id }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        const stage = stages.find((s) => s.id === newDeal.stageId);
-        if (stage) {
-          setDealsByStage((prev) =>
-            prev.map((g) => g.stage.id === newDeal.stageId
-              ? { ...g, deals: [...g.deals, { ...data.deal, company: { name: newDeal.companyName || "Unknown" }, stage }] }
-              : g
-            )
-          );
-        }
-        setShowNewDeal(false);
-        router.refresh();
+      const data = await res.json();
+      if (!res.ok) {
+        setCreateError(data.error || "Failed to create deal.");
+        return;
       }
+      const stage = stages.find((s) => s.id === newDeal.stageId);
+      if (stage) {
+        setDealsByStage((prev) =>
+          prev.map((g) => g.stage.id === newDeal.stageId
+            ? { ...g, deals: [...g.deals, { ...data.deal, company: { name: newDeal.companyName || "Unknown" }, stage }] }
+            : g
+          )
+        );
+      }
+      setShowNewDeal(false);
+      router.refresh();
+    } catch {
+      setCreateError("Network error. Please try again.");
     } finally { setCreating(false); }
   }
 
@@ -611,10 +579,15 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
 
       {/* New Deal Modal */}
       {showNewDeal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 p-4 pt-[5vh]">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 px-4 py-6 sm:py-10">
           <div className="w-full max-w-lg rounded-[3px] bg-[#111827] p-6 shadow-2xl mb-8">
             <h2 className="font-display text-lg font-semibold text-white">New Deal</h2>
             <p className="text-xs text-white/40 mt-0.5">Fill in what you know. Everything is optional except title and stage.</p>
+            {createError && (
+              <div className="mt-3 rounded-[3px] border border-red-500/30 bg-red-500/10 px-3 py-2">
+                <p className="text-xs text-red-400">{createError}</p>
+              </div>
+            )}
             <form onSubmit={handleCreateDeal} className="mt-5 flex flex-col gap-4">
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Deal Title *</label>
@@ -639,53 +612,11 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
                   </select>
                 </div>
               </div>
-              <div className="relative" ref={companyDropdownRef}>
-                <label className="block text-xs font-semibold text-white/60 mb-1">Company Name</label>
-                <input
-                  type="text"
-                  value={newDeal.companyId ? newDeal.companyName : companySearch}
-                  onChange={(e) => {
-                    setCompanySearch(e.target.value);
-                    setNewDeal({ ...newDeal, companyName: e.target.value, companyId: "" });
-                    setShowCompanyDropdown(true);
-                  }}
-                  onFocus={() => setShowCompanyDropdown(true)}
-                  placeholder="Search or type company name..."
-                  className="w-full rounded-[3px] border border-[#1E293B] bg-[#090D16] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand"
-                />
-                {showCompanyDropdown && (
-                  <div className="absolute z-20 mt-1 w-full rounded-[3px] border border-[#1E293B] bg-[#111827] shadow-xl max-h-48 overflow-y-auto">
-                    {companySearchLoading && <div className="px-3 py-2 text-xs text-white/40">Searching...</div>}
-                    {!companySearchLoading && companyResults.length > 0 && companyResults.map((c: any) => (
-                      <button
-                        key={c.id}
-                        type="button"
-                        onClick={() => {
-                          setNewDeal({ ...newDeal, companyName: c.name, companyId: c.id });
-                          setCompanySearch("");
-                          setShowCompanyDropdown(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-white hover:bg-white/5"
-                      >
-                        <span className="font-medium">{c.name}</span>
-                        {c.industry && <span className="text-xs text-white/40">({c.industry})</span>}
-                      </button>
-                    ))}
-                    {!companySearchLoading && companyResults.length === 0 && companySearch.trim() && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setNewDeal({ ...newDeal, companyName: companySearch, companyId: "" });
-                          setShowCompanyDropdown(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-brand hover:bg-white/5"
-                      >
-                        + Create &quot;{companySearch}&quot;
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
+              <CompanyAutocomplete
+                value={newDeal.companyId}
+                companyName={newDeal.companyName}
+                onChange={(id, name) => setNewDeal({ ...newDeal, companyId: id, companyName: name })}
+              />
               <div>
                 <label className="block text-xs font-semibold text-white/60 mb-1">Assign To</label>
                 <select value={newDeal.ownerId} onChange={(e) => setNewDeal({ ...newDeal, ownerId: e.target.value })}
