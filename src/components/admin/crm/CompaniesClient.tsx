@@ -37,8 +37,24 @@ export function CompaniesClient({ initialCompanies, initialTotal, initialPage, i
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => fetchCompanies(), 300);
-    return () => clearTimeout(timer);
+    const controller = new AbortController();
+    async function load() {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (search) params.set("search", search);
+      params.set("page", String(page));
+      params.set("limit", "20");
+      try {
+        const res = await fetch(`/admin/api/crm/companies?${params}`, { signal: controller.signal });
+        const data = await res.json();
+        setCompanies(data.companies);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
+      } catch {}
+      setLoading(false);
+    }
+    const timer = setTimeout(load, 300);
+    return () => { clearTimeout(timer); controller.abort(); };
   }, [search, page]);
 
   async function handleNewCompany(e: React.FormEvent) {

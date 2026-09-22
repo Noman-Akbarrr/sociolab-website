@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
   const project = await store.createProject({
     name: body.name,
     companyId: body.companyId,
-    dealId: body.dealId,
+    dealId: body.dealId || null,
     status: body.status || "kickoff",
     startDate: body.startDate || null,
     endDate: body.endDate || null,

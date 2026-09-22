@@ -77,18 +77,22 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   async function handleNewProject(e: React.FormEvent) {
     e.preventDefault();
     setCreateError("");
-    const res = await fetch("/admin/api/crm/projects", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newProject),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      setShowNew(false);
-      setNewProject({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
-      fetchProjects();
-    } else {
-      setCreateError(data.error || "Failed to create project.");
+    try {
+      const res = await fetch("/admin/api/crm/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProject),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setShowNew(false);
+        setNewProject({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
+        fetchProjects();
+      } else {
+        setCreateError(data.error || "Failed to create project.");
+      }
+    } catch {
+      setCreateError("Network error. Please try again.");
     }
   }
 
