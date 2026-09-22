@@ -28,6 +28,15 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   const [showNew, setShowNew] = useState(false);
   const [newProject, setNewProject] = useState({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
   const [createError, setCreateError] = useState("");
+
+  // Lock body scroll when any modal is open
+  useEffect(() => {
+    if (showNew || editTarget || deleteTarget || membersTarget) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [showNew, editTarget, deleteTarget, membersTarget]);
+
   const companies = initialCompanies;
   const deals = initialDeals;
 
@@ -203,8 +212,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
       </div>
 
       {showNew && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overscroll-contain" style={{ overflowY: "auto" }} onWheel={(e) => e.stopPropagation()} onClick={(e) => { if (e.target === e.currentTarget) setShowNew(false); }}>
+          <div className="w-full max-w-md mx-4 my-6 sm:my-10 rounded-[3px] bg-[#111827] p-5 sm:p-6 shadow-xl">
             <h2 className="font-display text-xl font-semibold text-white">New Project</h2>
             {createError && (
               <div className="mt-3 rounded-[3px] border border-red-500/30 bg-red-500/10 px-3 py-2">
@@ -265,8 +274,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Edit Modal */}
       {editTarget && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overscroll-contain" style={{ overflowY: "auto" }} onWheel={(e) => e.stopPropagation()} onClick={(e) => { if (e.target === e.currentTarget) setEditTarget(null); }}>
+          <div className="w-full max-w-md mx-4 my-6 sm:my-10 rounded-[3px] bg-[#111827] p-5 sm:p-6 shadow-xl">
             <h2 className="font-display text-xl font-semibold text-white">Edit Project</h2>
             <div className="mt-4 flex flex-col gap-4">
               <div>
@@ -310,8 +319,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overscroll-contain" style={{ overflowY: "auto" }} onWheel={(e) => e.stopPropagation()} onClick={(e) => { if (e.target === e.currentTarget) { setDeleteTarget(null); setDeleteConfirmText(""); } }}>
+          <div className="w-full max-w-md mx-4 my-6 sm:my-10 rounded-[3px] bg-[#111827] p-5 sm:p-6 shadow-xl">
             <h2 className="font-display text-lg font-semibold text-white">Delete Project</h2>
             <p className="mt-2 text-sm text-white/60">
               Are you sure you want to delete <span className="font-semibold text-white">{deleteTarget.name}</span>?
@@ -335,8 +344,8 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
 
       {/* Members Modal */}
       {membersTarget && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-6 sm:py-10">
-          <div className="w-full max-w-md rounded-[3px] bg-[#111827] p-6 shadow-xl mb-8">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overscroll-contain" style={{ overflowY: "auto" }} onWheel={(e) => e.stopPropagation()} onClick={(e) => { if (e.target === e.currentTarget) { setMembersTarget(null); setMembers([]); } }}>
+          <div className="w-full max-w-md mx-4 my-6 sm:my-10 rounded-[3px] bg-[#111827] p-5 sm:p-6 shadow-xl">
             <h2 className="font-display text-lg font-semibold text-white">Manage Members — {membersTarget.name}</h2>
             <p className="text-sm text-white/50 mt-1">Only assigned members can see this project and be assigned tasks within it.</p>
             {loadingMembers ? (

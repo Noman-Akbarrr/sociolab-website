@@ -101,6 +101,14 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
     urgent: { label: "Urgent", color: "bg-red-500/20 text-red-400" },
   };
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showNewDeal) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [showNewDeal]);
+
   const allDeals = seesAllDeals
     ? dealsByStage.flatMap((g) => g.deals)
     : dealsByStage.flatMap((g) => g.deals.filter((d: any) => d.ownerId === userId));
@@ -579,8 +587,13 @@ export function PipelineKanban({ pipeline, initialStages, initialDealsByStage, p
 
       {/* New Deal Modal */}
       {showNewDeal && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/60 px-4 py-6 sm:py-10">
-          <div className="w-full max-w-lg rounded-[3px] bg-[#111827] p-6 shadow-2xl mb-8">
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 overscroll-contain"
+          style={{ overflowY: "auto" }}
+          onWheel={(e) => e.stopPropagation()}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowNewDeal(false); }}
+        >
+          <div className="w-full max-w-lg mx-4 my-6 sm:my-10 rounded-[3px] bg-[#111827] p-5 sm:p-6 shadow-2xl">
             <h2 className="font-display text-lg font-semibold text-white">New Deal</h2>
             <p className="text-xs text-white/40 mt-0.5">Fill in what you know. Everything is optional except title and stage.</p>
             {createError && (
