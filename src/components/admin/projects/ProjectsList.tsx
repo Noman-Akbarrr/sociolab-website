@@ -29,14 +29,6 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   const [newProject, setNewProject] = useState({ name: "", companyId: "", dealId: "", status: "kickoff", budget: 0, billingType: "fixed", description: "" });
   const [createError, setCreateError] = useState("");
 
-  // Lock body scroll when any modal is open
-  useEffect(() => {
-    if (showNew || editTarget || deleteTarget || membersTarget) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
-  }, [showNew, editTarget, deleteTarget, membersTarget]);
-
   const companies = initialCompanies;
   const deals = initialDeals;
 
@@ -59,6 +51,14 @@ export function ProjectsList({ initialProjects, initialTotal, initialPage, initi
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [loadingMembers, setLoadingMembers] = useState(false);
+
+  // Lock body scroll when any modal is open
+  useEffect(() => {
+    if (showNew || editTarget || deleteTarget || membersTarget) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [showNew, editTarget, deleteTarget, membersTarget]);
 
   async function fetchProjects() {
     setLoading(true);
