@@ -24,46 +24,45 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
-    template: "%s | Sociolab — Performance Media & Creative Growth Agency",
+    default: "Sociolab | Digital Marketing Agency Pakistan",
+    template: "%s | Sociolab — Digital Marketing Agency",
   },
   description:
-    "Sociolab scales direct-to-consumer and B2B brands through performance Meta & Google ads, in-house direct-response video production, and automated creator seeding.",
+    "Full-service digital marketing agency helping brands grow through performance marketing, social media management, and high-converting websites.",
   keywords: [
-    "performance marketing agency Pakistan",
-    "paid media agency",
-    "direct-response creative studio",
-    "Meta ads agency",
-    "Google ads agency",
-    "DTC brand growth",
-    "B2B lead generation",
-    "video production for ads",
-    "creator marketing agency",
-    "social media marketing agency Pakistan",
+    "digital marketing agency Pakistan",
+    "performance marketing agency",
+    "social media management Pakistan",
+    "web development Pakistan",
+    "Meta ads agency Pakistan",
+    "Google ads agency Pakistan",
+    "digital marketing services",
+    "social media marketing",
+    "website development Pakistan",
   ],
   openGraph: {
     type: "website",
     locale: "en_PK",
     url: site.url,
     siteName: site.name,
-    title: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
+    title: "Sociolab | Digital Marketing Agency Pakistan",
     description:
-      "Eliminate wasted ad spend. We engineer predictable acquisition funnels using data-driven paid advertising, high-converting short-form video, and creator partnerships.",
+      "Full-service digital marketing agency helping brands grow through performance marketing, social media management, and high-converting websites.",
     images: [
       {
         url: `${site.url}/opengraph-image`,
         width: 1200,
         height: 630,
-        alt: "Sociolab — Performance Media & Creative Growth Agency",
+        alt: "Sociolab — Digital Marketing Agency",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
+    title: "Sociolab | Digital Marketing Agency Pakistan",
     description:
-      "Eliminate wasted ad spend. We engineer predictable acquisition funnels using data-driven paid advertising, high-converting short-form video, and creator partnerships.",
+      "Full-service digital marketing agency helping brands grow through performance marketing, social media management, and high-converting websites.",
     images: [`${site.url}/opengraph-image`],
   },
   robots: {
@@ -92,6 +91,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="theme-color" content="#0F172A" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
@@ -112,7 +112,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   "url": "https://sociolab.com.pk",
                   "logo": "https://sociolab.com.pk/opengraph-image",
                   "image": "https://sociolab.com.pk/opengraph-image",
-                  "description": "Sociolab scales direct-to-consumer and B2B brands through performance Meta & Google ads, in-house direct-response video production, and automated creator seeding.",
+                  "description": "Full-service digital marketing agency helping brands grow through performance marketing, social media management, and high-converting websites.",
                   "sameAs": [
                     "https://www.instagram.com/sociolab.official/",
                     "https://www.linkedin.com/company/sociolab-pk",
@@ -150,13 +150,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                     "Performance Marketing",
                     "Meta Ads Management",
                     "Google Ads Management",
-                    "Direct-Response Creative Strategy",
-                    "Short-Form Video Production",
-                    "Influencer Marketing Automation",
-                    "Conversion Rate Optimization",
-                    "DTC Brand Growth",
-                    "B2B Lead Generation",
-                    "Creator Marketing"
+                    "Social Media Management",
+                    "Content Creation",
+                    "Web Development",
+                    "Landing Page Design",
+                    "E-Commerce Development",
+                    "Digital Marketing Strategy"
                   ],
                   "hasOfferCatalog": {
                     "@type": "OfferCatalog",
@@ -166,24 +165,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         "@type": "Offer",
                         "itemOffered": {
                           "@type": "Service",
-                          "name": "Paid Acquisition",
-                          "description": "Performance Meta & Google ads management for DTC and B2B brands"
+                          "name": "Performance Marketing",
+                          "description": "Data-driven Meta and Google ad campaigns engineered to acquire customers at a profitable cost"
                         }
                       },
                       {
                         "@type": "Offer",
                         "itemOffered": {
                           "@type": "Service",
-                          "name": "Creative Production",
-                          "description": "In-house direct-response video production and ad creative"
+                          "name": "Social Media Management",
+                          "description": "Strategic content creation, community management, and growth across Instagram, Facebook, and TikTok"
                         }
                       },
                       {
                         "@type": "Offer",
                         "itemOffered": {
                           "@type": "Service",
-                          "name": "Creator Marketing",
-                          "description": "Automated creator seeding and influencer partnership programs"
+                          "name": "Web Development",
+                          "description": "High-converting websites, landing pages, and e-commerce stores built to turn traffic into customers"
                         }
                       }
                     ]
@@ -194,7 +193,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   "@id": "https://sociolab.com.pk/#website",
                   "url": "https://sociolab.com.pk",
                   "name": "Sociolab",
-                  "description": "Performance Media & Creative Growth Agency",
+                  "description": "Digital Marketing Agency Pakistan",
                   "publisher": {
                     "@id": "https://sociolab.com.pk/#organization"
                   },
@@ -204,14 +203,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   "@type": "WebPage",
                   "@id": "https://sociolab.com.pk/#webpage",
                   "url": "https://sociolab.com.pk",
-                  "name": "Sociolab | Full-Funnel Paid Media & Direct-Response Creative Studio",
+                  "name": "Sociolab | Digital Marketing Agency Pakistan",
                   "isPartOf": {
                     "@id": "https://sociolab.com.pk/#website"
                   },
                   "about": {
                     "@id": "https://sociolab.com.pk/#organization"
                   },
-                  "description": "Sociolab scales direct-to-consumer and B2B brands through performance Meta & Google ads, in-house direct-response video production, and automated creator seeding.",
+                  "description": "Full-service digital marketing agency helping brands grow through performance marketing, social media management, and high-converting websites.",
                   "breadcrumb": {
                     "@id": "https://sociolab.com.pk/#breadcrumb"
                   },

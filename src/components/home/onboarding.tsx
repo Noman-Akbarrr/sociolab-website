@@ -1,33 +1,47 @@
 const phases = [
   {
-    period: "Days 1–30",
-    title: "Diagnose & Architect",
-    summary: "Comprehensive technical, positioning, and data audit.",
+    period: "Week 1",
+    title: "Discovery & Setup",
+    summary: "Audit your current presence and set up everything needed to grow.",
     bullets: [
-      "Stakeholder interviews",
-      "CRM tracking check",
-      "Initial quick-win deployment",
+      "Competitor & audience research",
+      "Ad account setup & tracking",
+      "Content strategy creation",
     ],
+    icon: "bx bx-search-alt",
   },
   {
-    period: "Days 31–60",
-    title: "Build & Calibrate",
-    summary: "Asset production and infrastructure deployment.",
+    period: "Week 2",
+    title: "Create & Build",
+    summary: "Design and build all assets — from ad creatives to your website.",
     bullets: [
-      "Core narrative sign-off",
-      "ABM campaign staging",
-      "Digital conversion asset rollout",
+      "Ad creatives & copywriting",
+      "Content calendar finalization",
+      "Website or landing page build",
     ],
+    icon: "bx bx-pencil",
   },
   {
-    period: "Days 61–90",
-    title: "Activate & Accelerate",
-    summary: "Live market activation and bi-weekly revenue sprints.",
+    period: "Week 3",
+    title: "Launch & Go Live",
+    summary: "Everything goes live — campaigns, content, and your website.",
     bullets: [
-      "Pipeline ramp-up",
-      "Bi-weekly CRO reporting",
-      "Active sales enablement feedback loops",
+      "Campaign launch & monitoring",
+      "First content published",
+      "Website goes live",
     ],
+    icon: "bx bx-rocket",
+  },
+  {
+    period: "Week 4",
+    title: "Report & Optimize",
+    summary: "First performance report and optimization round based on real data.",
+    bullets: [
+      "Performance report delivery",
+      "A/B test analysis",
+      "Scaling strategy for next month",
+    ],
+    icon: "bx bx-bar-chart-alt-2",
   },
 ];
 
@@ -36,45 +50,41 @@ export function Onboarding() {
     <section className="py-24 md:py-32" style={{ backgroundColor: "#1C1917" }}>
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
         <h2 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: "#FFFFFF" }}>
-          How We Integrate: Zero Operational Drag
+          Your First 30 Days
         </h2>
         <p className="max-w-xl text-base mb-12" style={{ color: "#A8A29E" }}>
-          Enterprise teams cannot afford months of hand-holding. Here is our exact, sprint-based onboarding framework:
+          From kickoff to results in 4 weeks. Here&apos;s exactly what happens:
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {phases.map((phase) => (
             <div
               key={phase.period}
               className="p-6 rounded-xl"
               style={{ backgroundColor: "#292524", border: "1px solid #44403C" }}
             >
-              <span className="text-xs font-mono tracking-wider" style={{ color: "#FF5500" }}>
-                {phase.period}
-              </span>
-              <h3 className="text-sm font-semibold mt-2 mb-3" style={{ color: "#FFFFFF" }}>
-                {phase.title}: {phase.summary}
+              <div className="flex items-center gap-3 mb-3">
+                <i className={`${phase.icon} text-xl`} style={{ color: "#FF5500" }} />
+                <span className="text-xs font-mono tracking-wider font-semibold" style={{ color: "#FF5500" }}>
+                  {phase.period}
+                </span>
+              </div>
+              <h3 className="text-sm font-semibold mb-2" style={{ color: "#FFFFFF" }}>
+                {phase.title}
               </h3>
+              <p className="text-xs mb-4" style={{ color: "#A8A29E" }}>
+                {phase.summary}
+              </p>
               <ul className="space-y-2">
                 {phase.bullets.map((b) => (
                   <li key={b} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
+                    <i className="bx bx-check text-xs mt-0.5 flex-shrink-0" style={{ color: "#FF5500" }} />
                     <span className="text-xs" style={{ color: "#D6D3D1" }}>{b}</span>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* SLA Trust Banner */}
-        <div className="mt-8 p-4 rounded-xl flex flex-col md:flex-row justify-between items-center text-xs gap-4" style={{ backgroundColor: "rgba(255,85,0,0.08)", border: "1px solid rgba(255,85,0,0.2)", color: "#D6D3D1" }}>
-          <span>
-            Dedicated Enterprise Slack Channel, Async Weekly Video Briefings, Bi-Weekly Executive Sprints
-          </span>
-          <span className="font-semibold whitespace-nowrap" style={{ color: "#FF5500" }}>
-            Guaranteed 4-Hour Response SLA
-          </span>
         </div>
       </div>
     </section>

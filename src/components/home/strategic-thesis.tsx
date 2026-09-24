@@ -6,10 +6,10 @@ export function StrategicThesis() {
         {/* Left Column — Sticky */}
         <div className="lg:col-span-5 lg:sticky lg:top-32">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-6" style={{ color: "#1C1917" }}>
-            Most B2B enterprises don&apos;t have a lead problem. They have a positioning and velocity problem.
+            Most businesses don&apos;t have a product problem. They have a visibility and conversion problem.
           </h2>
           <p className="text-base leading-relaxed" style={{ color: "#57534E" }}>
-            Traditional marketing agencies flood your CRM with low-intent MQLs that your sales team immediately discards. Meanwhile, pure brand consultancies deliver high-level slides that fail to generate pipeline. Socio Lab closes the chasm between brand narrative and closed-won ARR.
+            You&apos;re great at what you do — but your competitors are showing up everywhere your customers look. Without the right strategy, you&apos;re invisible online while others capture your audience.
           </p>
         </div>
 
@@ -18,39 +18,39 @@ export function StrategicThesis() {
           {/* Card 1 */}
           <div className="bg-white border border-stone-200 p-6 rounded-xl">
             <span className="font-mono text-xs uppercase tracking-wider" style={{ color: "#DC2626" }}>
-              Conventional Agency Approach
+              Posting Without Strategy
             </span>
             <h3 className="text-lg font-semibold mt-2 mb-2" style={{ color: "#1C1917" }}>
-              Creative vanity metrics without sales alignment.
+              Random content with no clear plan.
             </h3>
             <p className="text-sm leading-relaxed" style={{ color: "#78716C" }}>
-              Pretty designs and awareness campaigns that win aesthetic awards, but leave enterprise SDRs and AEs without high-intent buyer conversations.
+              Posting when you feel like it, no content calendar, no audience targeting. You get a few likes but zero leads or sales.
             </p>
           </div>
 
           {/* Card 2 */}
           <div className="bg-white border border-stone-200 p-6 rounded-xl">
             <span className="font-mono text-xs uppercase tracking-wider" style={{ color: "#DC2626" }}>
-              Performance Agency Approach
+              Hiring Expensive Agencies
             </span>
             <h3 className="text-lg font-semibold mt-2 mb-2" style={{ color: "#1C1917" }}>
-              Spamming inboxes and bidding on generic keywords.
+              Big retainers with no accountability.
             </h3>
             <p className="text-sm leading-relaxed" style={{ color: "#78716C" }}>
-              Burning brand reputation with automated cold sequences and high-CAC paid campaigns that produce inflated lead counts with near-zero conversion to Stage 3 pipeline.
+              You pay PKR 100K+ per month and get vague reports about &quot;impressions&quot; and &quot;reach&quot; — but no actual customers or revenue growth.
             </p>
           </div>
 
-          {/* Card 3 — The Socio Lab Standard */}
+          {/* Card 3 — The Sociolab Standard */}
           <div className="p-6 rounded-xl relative" style={{ background: "linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%)", border: "1px solid #FDBA74" }}>
             <span className="font-mono text-xs uppercase tracking-wider font-semibold" style={{ color: "#FF5500" }}>
-              The Socio Lab Architecture
+              The Sociolab Approach
             </span>
             <h3 className="text-lg font-semibold mt-2 mb-2" style={{ color: "#1C1917" }}>
-              Integrated GTM: Narrative, Demand, and Pipeline Telemetry.
+              Data-driven growth across ads, social, and web.
             </h3>
             <p className="text-sm leading-relaxed" style={{ color: "#44403C" }}>
-              We build full-funnel systems where enterprise positioning informs targeted ABM acquisition, directly measured by sales acceptance rates and deal acceleration.
+              We combine performance marketing, strategic social media, and high-converting websites — all measured by real business results, not vanity metrics.
             </p>
           </div>
         </div>

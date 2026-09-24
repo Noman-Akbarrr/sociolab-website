@@ -2,7 +2,7 @@ export const site = {
   name: "Sociolab",
   domain: "sociolab.com.pk",
   url: "https://sociolab.com.pk",
-  tagline: "Trend-native GTM team",
+  tagline: "Digital Marketing Agency",
   // TODO: replace with the real WhatsApp business number (country code, no + or spaces)
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "+923001234567",
   whatsappDefaultMessage:

@@ -9,9 +9,9 @@ import { caseStudies, type CaseStudy } from "@/lib/case-studies";
 
 const categories = [
   { key: "all", label: "All" },
-  { key: "ecommerce", label: "E-Commerce & Fashion" },
-  { key: "automotive", label: "Automotive & Retail" },
-  { key: "b2b", label: "B2B & Lead Gen" },
+  { key: "ecommerce", label: "E-Commerce" },
+  { key: "automotive", label: "Automotive" },
+  { key: "b2b", label: "Digital Marketing" },
 ];
 
 export default function CaseStudiesPage() {
@@ -27,17 +27,17 @@ export default function CaseStudiesPage() {
       {/* ── Hero ────────────────────────────────────── */}
       <Container className="pt-20 pb-12 sm:pt-28 sm:pb-16">
         <Reveal>
-          <div className="max-w-4xl">
+          <div className="max-w-4xl text-center">
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
-              Case Studies
+              Our Work
             </p>
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl">
-              Client Case Studies &{" "}
-              <span className="text-[#FF5500]">Growth Teardowns</span>
+              Results That{" "}
+              <span className="text-[#FF5500]">Speak</span>
             </h1>
-            <p className="mt-7 max-w-[720px] text-lg leading-relaxed text-[#CBD5E1] sm:text-xl">
-              Real numbers, real baselines, and transparent operational insights. Every
-              case study includes verified metrics and honest lessons learned.
+            <p className="mt-7 max-w-[720px] mx-auto text-lg leading-relaxed text-[#CBD5E1] sm:text-xl">
+              Real businesses, real results. See how we&apos;ve helped brands grow
+              through performance marketing, social media, and web development.
             </p>
           </div>
         </Reveal>
@@ -109,21 +109,8 @@ function CaseStudyCard({ cs }: { cs: CaseStudy }) {
       </p>
 
       <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#FF5500] mt-auto">
-        Read Detailed Teardown
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          className="size-4 transition-transform group-hover:translate-x-1"
-          aria-hidden="true"
-        >
-          <path
-            d="M5 12h14m-6-6l6 6-6 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        Read Case Study
+        <i className="bx bx-right-arrow-alt text-lg transition-transform group-hover:translate-x-1" />
       </span>
     </Link>
   );

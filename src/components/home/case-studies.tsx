@@ -1,29 +1,29 @@
 const caseStudies = [
   {
-    title: "Repositioning Complex Security Infrastructure for Enterprise CISOs.",
+    title: "Growing an E-Commerce Brand from Zero to Consistent Sales",
     paragraph:
-      "Client had strong technical adoption among developers but failed to close multi-year enterprise contracts. We restructured their narrative around corporate risk reduction and launched a targeted Tier-1 ABM engine.",
+      "A local fashion brand was struggling to get online orders. We built their social media presence, launched Meta ad campaigns, and redesigned their website — resulting in consistent daily orders within 60 days.",
     metrics: [
-      { value: "+$8.4M", color: "#1C1917", label: "Net-New Pipeline" },
-      { value: "+41%", color: "#059669", label: "Average Deal Size" },
-      { value: "-38 Days", color: "#FF5500", label: "Sales Cycle Drag" },
+      { value: "300%", color: "#059669", label: "ROAS on Ads" },
+      { value: "PKR 2.5M", color: "#1C1917", label: "Monthly Revenue" },
+      { value: "15K+", color: "#FF5500", label: "New Followers" },
     ],
     quote:
-      "\"Socio Lab gave our sales leadership the exact narrative weapon needed to close $100k+ enterprise contracts.\"",
-    author: "David Sterling, Chief Commercial Officer",
+      "\"Sociolab transformed our online presence. We went from zero orders to consistent daily sales within 2 months.\"",
+    author: "Ahmed R., Founder — Exact Fashion Store",
   },
   {
-    title: "Scaling Pipeline Velocity for a Complex B2B Payments Platform.",
+    title: "Scaling a Local Automotive Business with Performance Ads",
     paragraph:
-      "Client struggled with long sales cycles and inconsistent pipeline generation. We deployed a full-funnel ABM system targeting CFOs and VPs of Finance at mid-market enterprises.",
+      "Sehgal Motors was relying on word-of-mouth. We set up Google Ads, Meta campaigns, and a lead capture system — generating qualified leads at a fraction of their previous cost.",
     metrics: [
-      { value: "+$5.2M", color: "#1C1917", label: "Net-New Pipeline" },
-      { value: "+67%", color: "#059669", label: "SQL Conversion Rate" },
-      { value: "-21 Days", color: "#FF5500", label: "Sales Cycle Drag" },
+      { value: "450%", color: "#059669", label: "Return on Ad Spend" },
+      { value: "200+", color: "#1C1917", label: "Monthly Leads" },
+      { value: "-60%", color: "#FF5500", label: "Cost Per Lead" },
     ],
     quote:
-      "\"The pipeline consistency we now have is something we've never achieved before. Every board meeting, we can predict revenue.\"",
-    author: "Sarah Chen, Chief Revenue Officer",
+      "\"We were spending PKR 50K on newspaper ads with no results. Now we get 200+ leads a month from Sociolab's campaigns.\"",
+    author: "Bilal S., Marketing Manager — Sehgal Motors",
   },
 ];
 
@@ -31,9 +31,12 @@ export function CaseStudies() {
   return (
     <section id="case-studies" className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12" style={{ color: "#1C1917" }}>
-          Board-Level Commercial Outcomes
+        <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#1C1917" }}>
+          Results That Speak
         </h2>
+        <p className="text-base mb-12" style={{ color: "#57534E" }}>
+          Real businesses, real results. Here&apos;s what we&apos;ve done for our clients.
+        </p>
 
         <div className="space-y-12">
           {caseStudies.map((cs) => (
@@ -46,12 +49,10 @@ export function CaseStudies() {
                 <div className="aspect-[16/10] bg-stone-50 border border-stone-200 rounded-xl overflow-hidden shadow-sm flex items-center justify-center">
                   <div className="text-center px-8">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#FFF7ED", border: "1px solid #FDBA74" }}>
-                      <svg className="w-8 h-8" style={{ color: "#FF5500" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
-                      </svg>
+                      <i className="bx bx-bar-chart-alt-2 text-3xl" style={{ color: "#FF5500" }} />
                     </div>
                     <p className="text-xs font-mono uppercase tracking-wider" style={{ color: "#A8A29E" }}>
-                      Enterprise Deliverable
+                      Case Study
                     </p>
                   </div>
                 </div>
