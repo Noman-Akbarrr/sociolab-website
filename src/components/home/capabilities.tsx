@@ -1,3 +1,13 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 const pillars = [
   {
     icon: (
@@ -8,12 +18,7 @@ const pillars = [
     headline: "Performance Marketing",
     paragraph:
       "Data-driven Meta and Google ad campaigns engineered to acquire customers at a profitable cost. We handle everything from strategy to creative to optimization.",
-    bullets: [
-      "Meta & Instagram Ads",
-      "Google Search & Shopping",
-      "Retargeting Campaigns",
-      "Conversion Tracking (CAPI)",
-    ],
+    bullets: ["Meta & Instagram Ads", "Google Search & Shopping", "Retargeting Campaigns", "Conversion Tracking (CAPI)"],
   },
   {
     icon: (
@@ -24,12 +29,7 @@ const pillars = [
     headline: "Social Media Management",
     paragraph:
       "Strategic content creation, community management, and growth across Instagram, Facebook, and TikTok — turning followers into customers.",
-    bullets: [
-      "Content Strategy & Calendar",
-      "Reels & Short-Form Video",
-      "Community Management",
-      "Analytics & Reporting",
-    ],
+    bullets: ["Content Strategy & Calendar", "Reels & Short-Form Video", "Community Management", "Analytics & Reporting"],
   },
   {
     icon: (
@@ -40,12 +40,7 @@ const pillars = [
     headline: "Web Development",
     paragraph:
       "High-converting websites, landing pages, and e-commerce stores built to turn your traffic into paying customers.",
-    bullets: [
-      "Landing Pages & Funnels",
-      "E-Commerce Websites",
-      "Speed & SEO Optimization",
-      "Conversion-Focused Design",
-    ],
+    bullets: ["Landing Pages & Funnels", "E-Commerce Websites", "Speed & SEO Optimization", "Conversion-Focused Design"],
   },
   {
     icon: (
@@ -56,21 +51,47 @@ const pillars = [
     headline: "Analytics & Tracking",
     paragraph:
       "Crystal-clear attribution so you know exactly which campaigns drive revenue — no more guessing or wasting budget.",
-    bullets: [
-      "GA4 Event Setup",
-      "Server-Side Tracking",
-      "UTM Taxonomy & Reporting",
-      "Weekly Performance Dashboards",
-    ],
+    bullets: ["GA4 Event Setup", "Server-Side Tracking", "UTM Taxonomy & Reporting", "Weekly Performance Dashboards"],
   },
 ];
 
 export function Capabilities() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".cap-title",
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 75%" }
+        }
+      );
+
+      // Cards come from different directions
+      const cards = gsap.utils.toArray<HTMLElement>(".cap-card");
+      cards.forEach((card, i) => {
+        const fromX = i % 2 === 0 ? -50 : 50;
+        const fromRotY = i % 2 === 0 ? -5 : 5;
+        gsap.fromTo(card,
+          { opacity: 0, x: fromX, y: 30, rotateY: fromRotY },
+          {
+            opacity: 1, x: 0, y: 0, rotateY: 0,
+            duration: 0.8, delay: i * 0.12, ease: "power3.out",
+            scrollTrigger: { trigger: sectionRef.current, start: "top 60%" }
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-24 md:py-32">
+    <section ref={sectionRef} className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
+          <h2 className="cap-title text-3xl md:text-4xl font-bold text-center mb-4 opacity-0" style={{ color: "#1C1917" }}>
             Four Services. One Growth Engine.
           </h2>
         </div>
@@ -79,17 +100,14 @@ export function Capabilities() {
           {pillars.map((pillar) => (
             <div
               key={pillar.headline}
-              className="bg-white border border-stone-200 p-6 rounded-xl transition-all hover:shadow-md"
+              className="cap-card opacity-0 bg-white border border-stone-200 p-6 rounded-xl transition-all hover:shadow-md"
+              style={{ transformStyle: "preserve-3d" }}
             >
               <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: "#FFF7ED", border: "1px solid #FDBA74", color: "#FF5500" }}>
                 {pillar.icon}
               </div>
-              <h3 className="text-lg font-bold mb-2" style={{ color: "#1C1917" }}>
-                {pillar.headline}
-              </h3>
-              <p className="text-sm leading-relaxed mb-4" style={{ color: "#57534E" }}>
-                {pillar.paragraph}
-              </p>
+              <h3 className="text-lg font-bold mb-2" style={{ color: "#1C1917" }}>{pillar.headline}</h3>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: "#57534E" }}>{pillar.paragraph}</p>
               <ul className="grid grid-cols-2 gap-2">
                 {pillar.bullets.map((b) => (
                   <li key={b} className="flex items-start gap-2">

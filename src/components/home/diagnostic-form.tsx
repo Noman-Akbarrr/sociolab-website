@@ -1,14 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export function DiagnosticForm() {
   const [submitted, setSubmitted] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(".form-card",
+        { opacity: 0, y: 50, scale: 0.96 },
+        {
+          opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 70%" }
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="diagnostic-form" className="py-16 md:py-24">
+    <section ref={sectionRef} id="diagnostic-form" className="py-16 md:py-24">
       <div className="max-w-2xl mx-auto px-6 md:px-12">
-        <div className="bg-white border border-stone-200 p-8 md:p-12 rounded-2xl shadow-sm relative overflow-hidden">
+        <div className="form-card opacity-0 bg-white border border-stone-200 p-8 md:p-12 rounded-2xl shadow-sm relative overflow-hidden">
           <h2 className="text-3xl font-bold text-center mb-3" style={{ color: "#1C1917" }}>
             Get Your Free Growth Audit
           </h2>
@@ -29,30 +50,11 @@ export function DiagnosticForm() {
           ) : (
             <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="email"
-                  placeholder="name@company.com"
-                  required
-                  className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors"
-                  style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#FF5500")}
-                  onBlur={(e) => (e.target.style.borderColor = "#E7E5E4")}
-                />
-                <input
-                  type="text"
-                  placeholder="company.com"
-                  className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors"
-                  style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
-                  onFocus={(e) => (e.target.style.borderColor = "#FF5500")}
-                  onBlur={(e) => (e.target.style.borderColor = "#E7E5E4")}
-                />
+                <input type="email" placeholder="name@company.com" required className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors" style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }} onFocus={(e) => (e.target.style.borderColor = "#FF5500")} onBlur={(e) => (e.target.style.borderColor = "#E7E5E4")} />
+                <input type="text" placeholder="company.com" className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors" style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }} onFocus={(e) => (e.target.style.borderColor = "#FF5500")} onBlur={(e) => (e.target.style.borderColor = "#E7E5E4")} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <select
-                  className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none"
-                  style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
-                  defaultValue=""
-                >
+                <select className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none" style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }} defaultValue="">
                   <option value="" disabled>Business Type</option>
                   <option value="ecommerce">E-Commerce</option>
                   <option value="local">Local Business</option>
@@ -60,11 +62,7 @@ export function DiagnosticForm() {
                   <option value="saas">SaaS</option>
                   <option value="other">Other</option>
                 </select>
-                <select
-                  className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none"
-                  style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
-                  defaultValue=""
-                >
+                <select className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none" style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }} defaultValue="">
                   <option value="" disabled>What do you need?</option>
                   <option value="performance">Performance Marketing</option>
                   <option value="social">Social Media Management</option>
@@ -72,10 +70,7 @@ export function DiagnosticForm() {
                   <option value="all">All of the Above</option>
                 </select>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-[#FF5500] hover:bg-[#E04B00] text-white font-semibold py-4 rounded-lg text-base transition-all shadow-lg mt-4"
-              >
+              <button type="submit" className="w-full bg-[#FF5500] hover:bg-[#E04B00] text-white font-semibold py-4 rounded-lg text-base transition-all shadow-lg mt-4">
                 Get My Free Audit
               </button>
               <p className="text-center text-xs mt-4" style={{ color: "#A8A29E" }}>
