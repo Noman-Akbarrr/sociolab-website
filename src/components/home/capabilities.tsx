@@ -31,20 +31,12 @@ const pillars = [
   },
 ];
 
-// Scattered positions: top-left, mid-right, bottom-left, mid-right-lower
-const positions = [
-  { top: "8%", left: "5%" },
-  { top: "28%", right: "5%" },
-  { top: "52%", left: "8%" },
-  { top: "72%", right: "8%" },
-];
-
 export function Capabilities() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Section title
+      // Title
       gsap.fromTo(".cap-title",
         { opacity: 0, y: 40 },
         {
@@ -53,32 +45,39 @@ export function Capabilities() {
         }
       );
 
-      // Each card pins and reveals as you scroll to it
-      const cards = gsap.utils.toArray<HTMLElement>(".service-card");
-      cards.forEach((card, i) => {
-        // Entry animation
-        gsap.fromTo(card,
-          { opacity: 0, y: 80, scale: 0.85, rotateZ: i % 2 === 0 ? -3 : 3 },
-          {
-            opacity: 1, y: 0, scale: 1, rotateZ: 0,
-            duration: 0.8, ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              end: "top 40%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-
-        // Pin each card in place while its content is visible
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top center",
-          end: "bottom center",
-          pin: false,
+      // Desktop: staggered reveal of scattered cards
+      if (window.innerWidth >= 768) {
+        const cards = gsap.utils.toArray<HTMLElement>(".service-card-desktop");
+        cards.forEach((card, i) => {
+          gsap.fromTo(card,
+            { opacity: 0, y: 60, scale: 0.9 },
+            {
+              opacity: 1, y: 0, scale: 1,
+              duration: 0.7, delay: i * 0.15, ease: "power3.out",
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 50%",
+              },
+            }
+          );
         });
-      });
+      } else {
+        // Mobile: simple cards from bottom
+        const cards = gsap.utils.toArray<HTMLElement>(".service-card-mobile");
+        cards.forEach((card, i) => {
+          gsap.fromTo(card,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1, y: 0,
+              duration: 0.6, delay: i * 0.1, ease: "power2.out",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+              },
+            }
+          );
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -86,17 +85,12 @@ export function Capabilities() {
 
   return (
     <section ref={sectionRef} className="relative">
-      {/* Background differentiation — subtle texture */}
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#F5F5F4" }}>
-        {/* Scattered decorative dots */}
         <div className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-[#FF5500] opacity-10" />
         <div className="absolute top-[35%] right-[15%] w-3 h-3 rounded-full bg-[#FF5500] opacity-[0.07]" />
         <div className="absolute top-[60%] left-[20%] w-1.5 h-1.5 rounded-full bg-[#FF5500] opacity-15" />
         <div className="absolute top-[80%] right-[25%] w-2.5 h-2.5 rounded-full bg-[#FF5500] opacity-[0.05]" />
-        <div className="absolute top-[45%] left-[60%] w-1 h-1 rounded-full bg-[#1C1917] opacity-[0.06]" />
-        <div className="absolute top-[20%] right-[40%] w-2 h-2 rounded-full bg-[#1C1917] opacity-[0.04]" />
-
-        {/* Subtle diagonal lines */}
         <svg className="absolute inset-0 w-full h-full opacity-[0.02]" preserveAspectRatio="none">
           <line x1="0" y1="0" x2="100%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
           <line x1="20%" y1="0" x2="100%" y2="80%" stroke="#1C1917" strokeWidth="0.5" />
@@ -114,68 +108,123 @@ export function Capabilities() {
           </p>
         </div>
 
-        {/* Scattered card layout — tall section for scroll space */}
-        <div className="relative" style={{ minHeight: "160vh" }}>
-          {pillars.map((pillar, i) => {
-            const pos = positions[i];
+        {/* ── Desktop: scattered sticky cards ── */}
+        <div className="hidden md:block relative" style={{ minHeight: "180vh" }}>
+          {/* Card 1: Performance Marketing — left, shifted right */}
+          <div
+            className="service-card-desktop absolute"
+            style={{ top: "5%", left: "12%", width: "min(360px, 40vw)", zIndex: 1 }}
+          >
+            <HoverCard pillar={pillars[0]} index={0} />
+          </div>
 
-          return (
-              <div
-                key={pillar.title}
-                className="service-card"
-                style={{
-                  position: "sticky",
-                  top: `${12 + i * 18}%`,
-                  zIndex: i + 1,
-                  left: "left" in pos ? pos.left : undefined,
-                  right: "right" in pos ? pos.right : undefined,
-                  width: "min(380px, 85vw)",
-                }}
-              >
-                <div
-                  className="group p-6 rounded-2xl transition-all duration-500 hover:scale-[1.03] cursor-pointer"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.95)",
-                    border: "1px solid #E7E5E4",
-                    backdropFilter: "blur(12px)",
-                    boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
-                  }}
-                >
-                  {/* Number */}
-                  <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
-                    0{i + 1}
-                  </span>
+          {/* Card 2: Social Media — right, shifted toward center */}
+          <div
+            className="service-card-desktop absolute"
+            style={{ top: "28%", right: "8%", width: "min(360px, 40vw)", zIndex: 2 }}
+          >
+            <HoverCard pillar={pillars[1]} index={1} />
+          </div>
 
-                  {/* Title — always visible */}
-                  <h3 className="text-xl font-bold mt-2 mb-0 group-hover:mb-3 transition-all duration-300" style={{ color: "#1C1917" }}>
-                    {pillar.title}
-                  </h3>
+          {/* Card 3: Web Development — left, lower, different offset */}
+          <div
+            className="service-card-desktop absolute"
+            style={{ top: "52%", left: "22%", width: "min(360px, 40vw)", zIndex: 3 }}
+          >
+            <HoverCard pillar={pillars[2]} index={2} />
+          </div>
 
-                  {/* Content — reveals on hover */}
-                  <div className="max-h-0 overflow-hidden opacity-0 group-hover:max-h-60 group-hover:opacity-100 transition-all duration-500 ease-out">
-                    <p className="text-sm leading-relaxed mt-3 mb-4" style={{ color: "#57534E" }}>
-                      {pillar.description}
-                    </p>
-                    <ul className="grid grid-cols-2 gap-2">
-                      {pillar.bullets.map((b) => (
-                        <li key={b} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
-                          <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+          {/* Card 4: Analytics — right, lower */}
+          <div
+            className="service-card-desktop absolute"
+            style={{ top: "75%", right: "15%", width: "min(360px, 40vw)", zIndex: 4 }}
+          >
+            <HoverCard pillar={pillars[3]} index={3} />
+          </div>
+        </div>
 
-                  {/* Hover hint */}
-                  <div className="mt-2 group-hover:opacity-0 transition-opacity duration-300">
-                    <span className="text-[10px] font-mono" style={{ color: "#A8A29E" }}>hover to explore →</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        {/* ── Mobile: simple stacked cards ── */}
+        <div className="md:hidden flex flex-col gap-4">
+          {pillars.map((pillar, i) => (
+            <div key={pillar.title} className="service-card-mobile">
+              <MobileCard pillar={pillar} index={i} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
+  return (
+    <div
+      className="group p-6 rounded-2xl transition-all duration-500 hover:scale-[1.03] cursor-pointer"
+      style={{
+        backgroundColor: "rgba(255,255,255,0.95)",
+        border: "1px solid #E7E5E4",
+        backdropFilter: "blur(12px)",
+        boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
+      }}
+    >
+      <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
+        0{index + 1}
+      </span>
+
+      <h3 className="text-xl font-bold mt-2 mb-0 group-hover:mb-3 transition-all duration-300" style={{ color: "#1C1917" }}>
+        {pillar.title}
+      </h3>
+
+      <div className="max-h-0 overflow-hidden opacity-0 group-hover:max-h-60 group-hover:opacity-100 transition-all duration-500 ease-out">
+        <p className="text-sm leading-relaxed mt-3 mb-4" style={{ color: "#57534E" }}>
+          {pillar.description}
+        </p>
+        <ul className="grid grid-cols-2 gap-2">
+          {pillar.bullets.map((b) => (
+            <li key={b} className="flex items-start gap-2">
+              <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
+              <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-2 group-hover:opacity-0 transition-opacity duration-300">
+        <span className="text-[10px] font-mono" style={{ color: "#A8A29E" }}>hover to explore →</span>
+      </div>
+    </div>
+  );
+}
+
+function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
+  return (
+    <div
+      className="p-5 rounded-xl"
+      style={{
+        backgroundColor: "white",
+        border: "1px solid #E7E5E4",
+      }}
+    >
+      <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
+        0{index + 1}
+      </span>
+
+      <h3 className="text-lg font-bold mt-2 mb-2" style={{ color: "#1C1917" }}>
+        {pillar.title}
+      </h3>
+
+      <p className="text-sm leading-relaxed mb-4" style={{ color: "#57534E" }}>
+        {pillar.description}
+      </p>
+
+      <ul className="grid grid-cols-2 gap-2">
+        {pillar.bullets.map((b) => (
+          <li key={b} className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
+            <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
