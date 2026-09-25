@@ -8,7 +8,6 @@ const phases = [
       "Ad account setup & tracking",
       "Content strategy creation",
     ],
-    icon: "bx bx-search-alt",
   },
   {
     period: "Week 2",
@@ -19,29 +18,16 @@ const phases = [
       "Content calendar finalization",
       "Website or landing page build",
     ],
-    icon: "bx bx-pencil",
   },
   {
-    period: "Week 3",
-    title: "Launch & Go Live",
-    summary: "Everything goes live — campaigns, content, and your website.",
+    period: "Week 3-4",
+    title: "Launch & Optimize",
+    summary: "Everything goes live and we start optimizing based on real data.",
     bullets: [
       "Campaign launch & monitoring",
       "First content published",
-      "Website goes live",
+      "Performance report & optimization",
     ],
-    icon: "bx bx-rocket",
-  },
-  {
-    period: "Week 4",
-    title: "Report & Optimize",
-    summary: "First performance report and optimization round based on real data.",
-    bullets: [
-      "Performance report delivery",
-      "A/B test analysis",
-      "Scaling strategy for next month",
-    ],
-    icon: "bx bx-bar-chart-alt-2",
   },
 ];
 
@@ -56,35 +42,39 @@ export function Onboarding() {
           From kickoff to results in 4 weeks. Here&apos;s exactly what happens:
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {phases.map((phase) => (
             <div
               key={phase.period}
               className="p-6 rounded-xl"
               style={{ backgroundColor: "#292524", border: "1px solid #44403C" }}
             >
-              <div className="flex items-center gap-3 mb-3">
-                <i className={`${phase.icon} text-xl`} style={{ color: "#FF5500" }} />
-                <span className="text-xs font-mono tracking-wider font-semibold" style={{ color: "#FF5500" }}>
-                  {phase.period}
-                </span>
-              </div>
-              <h3 className="text-sm font-semibold mb-2" style={{ color: "#FFFFFF" }}>
-                {phase.title}
+              <span className="text-xs font-mono tracking-wider" style={{ color: "#FF5500" }}>
+                {phase.period}
+              </span>
+              <h3 className="text-sm font-semibold mt-2 mb-3" style={{ color: "#FFFFFF" }}>
+                {phase.title}: {phase.summary}
               </h3>
-              <p className="text-xs mb-4" style={{ color: "#A8A29E" }}>
-                {phase.summary}
-              </p>
               <ul className="space-y-2">
                 {phase.bullets.map((b) => (
                   <li key={b} className="flex items-start gap-2">
-                    <i className="bx bx-check text-xs mt-0.5 flex-shrink-0" style={{ color: "#FF5500" }} />
+                    <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
                     <span className="text-xs" style={{ color: "#D6D3D1" }}>{b}</span>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* Trust Banner */}
+        <div className="mt-8 p-4 rounded-xl flex flex-col md:flex-row justify-between items-center text-xs gap-4" style={{ backgroundColor: "rgba(255,85,0,0.08)", border: "1px solid rgba(255,85,0,0.2)", color: "#D6D3D1" }}>
+          <span>
+            Dedicated account manager, weekly check-ins, and transparent reporting — every step of the way.
+          </span>
+          <span className="font-semibold whitespace-nowrap" style={{ color: "#FF5500" }}>
+            Guaranteed Response Within 24 Hours
+          </span>
         </div>
       </div>
     </section>

@@ -32,11 +32,8 @@ export function B2BHero() {
           </span>
         </div>
 
-        {/* Headline — centered */}
-        <h1
-          className="font-display font-extrabold leading-[1.05] mb-8"
-          style={{ fontSize: "clamp(3rem, 7vw, 6.5rem)", letterSpacing: "-0.03em", color: "#1C1917" }}
-        >
+        {/* Headline */}
+        <h1 className="font-display font-extrabold leading-[1.05] mb-8" style={{ fontSize: "clamp(3rem, 7vw, 6.5rem)", letterSpacing: "-0.03em", color: "#1C1917" }}>
           Scale Faster
           <br />
           <span className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
@@ -63,7 +60,9 @@ export function B2BHero() {
             className="inline-flex items-center gap-2 bg-[#FF5500] hover:bg-[#E04B00] text-white font-semibold px-7 py-4 rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-orange-500/20"
           >
             Get Free Audit
-            <i className="bx bx-right-arrow-alt text-xl" />
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
           </a>
           <a
             href="#case-studies"
@@ -77,15 +76,21 @@ export function B2BHero() {
         {/* Trust strip */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-xs" style={{ color: "#A8A29E" }}>
           <div className="flex items-center gap-2">
-            <i className="bx bx-check-circle text-sm" style={{ color: "#059669" }} />
+            <svg className="w-4 h-4" style={{ color: "#059669" }} fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
             <span>No lock-in contracts</span>
           </div>
           <div className="flex items-center gap-2">
-            <i className="bx bx-check-circle text-sm" style={{ color: "#059669" }} />
+            <svg className="w-4 h-4" style={{ color: "#059669" }} fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
             <span>Results in 30 days</span>
           </div>
           <div className="flex items-center gap-2">
-            <i className="bx bx-check-circle text-sm" style={{ color: "#059669" }} />
+            <svg className="w-4 h-4" style={{ color: "#059669" }} fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
             <span>50+ brands served</span>
           </div>
         </div>

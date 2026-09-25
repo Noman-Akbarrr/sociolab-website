@@ -31,12 +31,9 @@ export function CaseStudies() {
   return (
     <section id="case-studies" className="py-24 md:py-32">
       <div className="max-w-[1240px] mx-auto px-6 md:px-12">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "#1C1917" }}>
+        <h2 className="text-3xl md:text-4xl font-bold mb-12" style={{ color: "#1C1917" }}>
           Results That Speak
         </h2>
-        <p className="text-base mb-12" style={{ color: "#57534E" }}>
-          Real businesses, real results. Here&apos;s what we&apos;ve done for our clients.
-        </p>
 
         <div className="space-y-12">
           {caseStudies.map((cs) => (
@@ -49,7 +46,9 @@ export function CaseStudies() {
                 <div className="aspect-[16/10] bg-stone-50 border border-stone-200 rounded-xl overflow-hidden shadow-sm flex items-center justify-center">
                   <div className="text-center px-8">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-xl flex items-center justify-center" style={{ backgroundColor: "#FFF7ED", border: "1px solid #FDBA74" }}>
-                      <i className="bx bx-bar-chart-alt-2 text-3xl" style={{ color: "#FF5500" }} />
+                      <svg className="w-8 h-8" style={{ color: "#FF5500" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
+                      </svg>
                     </div>
                     <p className="text-xs font-mono uppercase tracking-wider" style={{ color: "#A8A29E" }}>
                       Case Study
