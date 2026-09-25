@@ -34,13 +34,12 @@ export function B2BHero() {
 
         {/* Headline */}
         <h1 className="font-display font-extrabold leading-[1.05] mb-8" style={{ fontSize: "clamp(3rem, 7vw, 6.5rem)", letterSpacing: "-0.03em", color: "#1C1917" }}>
-          Scale Faster
+          Scale faster with
           <br />
           <span className="flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
-            <span>with</span>
-            <span>Digital</span>
+            <span>digital</span>
             <MegaphoneIcon className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" />
-            <span>Marketing</span>
+            <span>marketing</span>
           </span>
         </h1>
 

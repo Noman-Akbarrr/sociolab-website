@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "motion/react";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
@@ -23,7 +24,7 @@ export default function CaseStudiesPage() {
       : caseStudies.filter((cs) => cs.category === active);
 
   return (
-    <main className="bg-[#090D16] min-h-screen">
+    <main style={{ backgroundColor: "#FAFAF9" }} className="min-h-screen">
       {/* ── Hero ────────────────────────────────────── */}
       <Container className="pt-20 pb-12 sm:pt-28 sm:pb-16">
         <Reveal>
@@ -31,11 +32,11 @@ export default function CaseStudiesPage() {
             <p className="font-mono text-xs font-semibold uppercase tracking-[0.22em] text-[#FF5500] mb-4">
               Our Work
             </p>
-            <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl md:text-6xl">
+            <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl" style={{ color: "#1C1917" }}>
               Results That{" "}
               <span className="text-[#FF5500]">Speak</span>
             </h1>
-            <p className="mt-7 max-w-[720px] mx-auto text-lg leading-relaxed text-[#CBD5E1] sm:text-xl">
+            <p className="mt-7 max-w-[720px] mx-auto text-lg leading-relaxed sm:text-xl" style={{ color: "#57534E" }}>
               Real businesses, real results. See how we&apos;ve helped brands grow
               through performance marketing, social media, and web development.
             </p>
@@ -44,7 +45,7 @@ export default function CaseStudiesPage() {
       </Container>
 
       {/* ── Filter Tabs ─────────────────────────────── */}
-      <div className="border-b border-[#1E293B]">
+      <div style={{ borderTop: "1px solid #E7E5E4", borderBottom: "1px solid #E7E5E4" }}>
         <Container>
           <Reveal>
             <div className="flex gap-1 overflow-x-auto py-1 -mb-px">
@@ -55,8 +56,9 @@ export default function CaseStudiesPage() {
                   className={`whitespace-nowrap px-5 py-3 text-sm font-semibold transition-colors border-b-2 -mb-px ${
                     active === cat.key
                       ? "border-[#FF5500] text-[#FF5500]"
-                      : "border-transparent text-[#94A3B8] hover:text-white"
+                      : "border-transparent hover:text-[#1C1917]"
                   }`}
+                  style={{ color: active === cat.key ? "#FF5500" : "#78716C" }}
                 >
                   {cat.label}
                 </button>
@@ -77,7 +79,7 @@ export default function CaseStudiesPage() {
         </div>
 
         {filtered.length === 0 && (
-          <p className="text-center text-[#94A3B8] py-12">
+          <p className="text-center py-12" style={{ color: "#78716C" }}>
             No case studies in this category yet.
           </p>
         )}
@@ -88,30 +90,34 @@ export default function CaseStudiesPage() {
 
 function CaseStudyCard({ cs }: { cs: CaseStudy }) {
   return (
-    <Link
-      href={`/case-studies/${cs.slug}`}
-      className="group flex flex-col gap-5 rounded-lg border border-[#1E293B] bg-[#111827] p-7 transition-all duration-200 hover:border-[#FF5500]/40"
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-bold text-white group-hover:text-[#FF5500] transition-colors">
-            {cs.client}
-          </h2>
-          <p className="text-sm text-[#94A3B8] mt-0.5">{cs.industry}</p>
+    <Link href={`/case-studies/${cs.slug}`}>
+      <motion.div
+        whileHover={{ y: -4, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}
+        className="flex flex-col gap-5 rounded-xl border border-stone-200 bg-white p-7 transition-colors"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-bold group-hover:text-[#FF5500] transition-colors" style={{ color: "#1C1917" }}>
+              {cs.client}
+            </h2>
+            <p className="text-sm mt-0.5" style={{ color: "#78716C" }}>{cs.industry}</p>
+          </div>
+          <span className="text-xs shrink-0 font-mono font-semibold text-[#FF5500]">
+            {cs.metric} {cs.metricLabel}
+          </span>
         </div>
-        <span className="accent-tint text-xs shrink-0">
-          {cs.metric} {cs.metricLabel}
+
+        <p className="text-[15px] leading-relaxed" style={{ color: "#57534E" }}>
+          {cs.summary}
+        </p>
+
+        <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#FF5500] mt-auto">
+          Read Case Study
+          <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
         </span>
-      </div>
-
-      <p className="text-[15px] leading-relaxed text-[#CBD5E1]">
-        {cs.summary}
-      </p>
-
-      <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#FF5500] mt-auto">
-        Read Case Study
-        <i className="bx bx-right-arrow-alt text-lg transition-transform group-hover:translate-x-1" />
-      </span>
+      </motion.div>
     </Link>
   );
 }
