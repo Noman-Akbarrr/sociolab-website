@@ -2,8 +2,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerUser } from "@/lib/auth/current";
 import * as store from "@/lib/crm-store";
-import { listPages } from "@/lib/pages";
-import { groupPages } from "@/lib/admin-groups";
 import { isAdmin, isFreelancer } from "@/lib/auth/roles";
 
 export const metadata = {
@@ -16,8 +14,6 @@ export default async function Dashboard() {
   if (!user) redirect("/admin/login");
 
   const stats = await store.getDashboardStats(user.id, user.role);
-  const pages = await listPages();
-  const groups = groupPages(pages);
 
   const formatCurrency = (cents: number) =>
     new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(cents / 100);
@@ -70,14 +66,6 @@ export default async function Dashboard() {
 
       {!userIsFreelancer && (
         <div className="mt-8 flex flex-wrap gap-3">
-          {userIsAdmin && (
-            <Link
-              href="/admin/pages/new"
-              className="inline-flex items-center gap-2 rounded-[3px] bg-brand px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark"
-            >
-              + New Page
-            </Link>
-          )}
           <Link
             href="/admin/pipeline"
             className="inline-flex items-center gap-2 rounded-[3px] border border-[#1E293B] bg-[#111827] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:border-brand"
@@ -186,43 +174,6 @@ export default async function Dashboard() {
         </section>
       </div>
 
-      {userIsAdmin && (
-        <div className="mt-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-lg font-semibold text-white">Pages</h2>
-            <Link href="/admin/pages" className="text-xs font-semibold text-brand hover:underline">
-              Manage all
-            </Link>
-          </div>
-          <div className="rounded-[3px] border border-[#1E293B] bg-[#111827] overflow-hidden">
-            {groups.slice(0, 2).map((group) => (
-              <div key={group.key}>
-                <div className="border-b border-[#1E293B] bg-white/5 px-4 py-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-white/50">{group.label}</span>
-                </div>
-                <ul className="divide-y divide-line">
-                  {group.pages.slice(0, 4).map((page) => (
-                      <li key={page.path}>
-                      <Link
-                        href={`/admin/edit${page.path === "/" ? "" : page.path}`}
-                        className="flex items-center justify-between p-4 hover:bg-white/5"
-                      >
-                        <div>
-                          <span className="font-display text-sm font-semibold text-white">{page.title || "Untitled"}</span>
-                          <span className="ml-2 font-mono text-xs text-white/40">{page.path}</span>
-                        </div>
-                        <span className="text-xs text-white/40">
-                          {page.updatedAt ? new Date(page.updatedAt).toLocaleDateString() : "Not edited"}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

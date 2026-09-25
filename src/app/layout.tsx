@@ -4,7 +4,6 @@ import { site } from "@/lib/site";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import { SiteChrome } from "@/components/site-chrome";
 import { LenisProvider } from "@/components/lenis-provider";
-import { listResourcePosts } from "@/lib/pages";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 
@@ -82,8 +81,6 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const navPosts = await listResourcePosts(4);
-
   return (
     <html lang="en" className={`${plusJakarta.variable} ${spaceGrotesk.variable}`}>
       <head>
@@ -246,7 +243,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             >
               Skip to content
             </a>
-            <SiteChrome navPosts={navPosts}>{children}</SiteChrome>
+            <SiteChrome>{children}</SiteChrome>
           </AnalyticsProvider>
         </LenisProvider>
       </body>

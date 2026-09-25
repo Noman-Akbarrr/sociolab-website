@@ -30,13 +30,7 @@ const nav = [
   { label: "About", href: "/about" },
 ];
 
-export type NavPost = {
-  path: string;
-  title: string;
-  updatedAt: string;
-};
-
-export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
+export function Navbar() {
   const [open, setOpen] = useState(false);
   const [capabilitiesOpen, setCapabilitiesOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
