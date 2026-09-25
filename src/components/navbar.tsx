@@ -12,19 +12,16 @@ const capabilities = [
     title: "Performance Marketing",
     href: "/services/performance-marketing",
     blurb: "Meta & Google ads that drive real results.",
-    icon: "bx bx-target-lock",
   },
   {
     title: "Social Media Management",
     href: "/services/social-media",
     blurb: "Content, community, and growth across platforms.",
-    icon: "bx bx-social-network",
   },
   {
     title: "Web Development",
     href: "/services/web-development",
     blurb: "Websites and landing pages that convert.",
-    icon: "bx bx-code-alt",
   },
 ];
 
@@ -79,7 +76,7 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
 
         {/* ── Desktop nav ──────────────────────────── */}
         <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
-          {/* Services dropdown */}
+          {/* Capabilities dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setCapabilitiesOpen(true)}
@@ -95,7 +92,7 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
                   : "text-[#CBD5E1] hover:text-white"
               }`}
             >
-              Services
+              Capabilities
               <svg
                 viewBox="0 0 24 24"
                 className={`size-3 transition-transform ${capabilitiesOpen ? "rotate-180" : ""}`}
@@ -114,25 +111,18 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
                     <Link
                       key={c.href}
                       href={c.href}
-                      className="group flex items-center gap-3 rounded-lg px-4 py-3 transition-colors hover:bg-[#1E293B]/50"
+                      className="group flex flex-col gap-1 rounded-lg px-4 py-3 transition-colors hover:bg-[#1E293B]/50"
                     >
-                      <i
-                        className={`${c.icon} text-lg ${
-                          isActive(c.href) ? "text-[#FF5500]" : "text-[#94A3B8] group-hover:text-[#FF5500]"
+                      <span
+                        className={`text-sm font-semibold ${
+                          isActive(c.href)
+                            ? "text-[#FF5500]"
+                            : "text-white group-hover:text-[#FF5500]"
                         }`}
-                      />
-                      <div className="flex flex-col gap-0.5">
-                        <span
-                          className={`text-sm font-semibold ${
-                            isActive(c.href)
-                              ? "text-[#FF5500]"
-                              : "text-white group-hover:text-[#FF5500]"
-                          }`}
-                        >
-                          {c.title}
-                        </span>
-                        <span className="text-xs text-[#94A3B8]">{c.blurb}</span>
-                      </div>
+                      >
+                        {c.title}
+                      </span>
+                      <span className="text-xs text-[#94A3B8]">{c.blurb}</span>
                     </Link>
                   ))}
                 </div>
@@ -168,7 +158,7 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
             href="/contact"
             className="inline-flex items-center gap-2 rounded-lg bg-[#FF5500] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00] hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#FF5500]"
           >
-            Get Free Audit
+            Request Growth Audit
           </Link>
         </div>
 
@@ -188,21 +178,18 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
       {open && (
         <div className="fixed inset-0 top-16 z-50 flex flex-col bg-[#090D16] lg:hidden">
           <nav className="flex-1 overflow-y-auto px-5 py-6 sm:px-8" aria-label="Mobile">
-            {/* Services section */}
+            {/* Capabilities section */}
             <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
-              Services
+              Capabilities
             </p>
             {capabilities.map((c) => (
               <Link
                 key={c.href}
                 href={c.href}
-                className="flex items-center gap-3 border-b border-[#1E293B] py-3.5 text-base font-semibold text-white last:border-b-0"
+                className="flex flex-col gap-0.5 border-b border-[#1E293B] py-3.5 text-base font-semibold text-white last:border-b-0"
               >
-                <i className={`${c.icon} text-lg text-[#FF5500]`} />
-                <div className="flex flex-col gap-0.5">
-                  {c.title}
-                  <span className="text-xs font-normal text-[#94A3B8]">{c.blurb}</span>
-                </div>
+                {c.title}
+                <span className="text-xs font-normal text-[#94A3B8]">{c.blurb}</span>
               </Link>
             ))}
 
@@ -235,7 +222,7 @@ export function Navbar({ posts = [] }: { posts?: NavPost[] }) {
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF5500] px-5 py-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00]"
               >
-                Get Free Audit
+                Request Growth Audit
               </Link>
             </div>
           </div>

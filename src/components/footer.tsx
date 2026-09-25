@@ -5,9 +5,9 @@ import { WhatsAppIcon } from "@/components/icons";
 import { whatsappHref } from "@/lib/site";
 
 const capabilities = [
-  { label: "Performance Marketing", href: "/services/performance-marketing", icon: "bx bx-target-lock" },
-  { label: "Social Media Management", href: "/services/social-media", icon: "bx bx-social-network" },
-  { label: "Web Development", href: "/services/web-development", icon: "bx bx-code-alt" },
+  { label: "Performance Marketing", href: "/services/performance-marketing" },
+  { label: "Social Media Management", href: "/services/social-media" },
+  { label: "Web Development", href: "/services/web-development" },
 ];
 
 const company = [
@@ -35,7 +35,7 @@ export function Footer() {
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-[#94A3B8]">
               Full-service digital marketing agency helping brands grow through
-              performance ads, social media, and high-converting websites.
+              performance marketing, social media, and high-converting websites.
             </p>
             <p className="text-xs text-[#94A3B8]">
               Islamabad / Rawalpindi, Pakistan — Serving Regional &amp; Global Clients.
@@ -46,24 +46,23 @@ export function Footer() {
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
               <span className="text-xs font-medium text-emerald-400">
-                Accepting New Clients
+                Accepting Select Q3/Q4 Client Engagements
               </span>
             </div>
           </div>
 
-          {/* ── Column 2: Services ─────────────────── */}
+          {/* ── Column 2: Capabilities ─────────────── */}
           <div>
             <p className="pb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
-              Services
+              Capabilities
             </p>
             <ul className="flex flex-col gap-3">
               {capabilities.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="flex items-center gap-2 text-sm text-[#94A3B8] transition-colors hover:text-white"
+                    className="text-sm text-[#94A3B8] transition-colors hover:text-white"
                   >
-                    <i className={`${l.icon} text-sm text-[#FF5500]`} />
                     {l.label}
                   </Link>
                 </li>
@@ -71,7 +70,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Column 3: Company ──────────────────── */}
+          {/* ── Column 3: Company & Evidence ───────── */}
           <div>
             <p className="pb-4 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
               Company
@@ -90,10 +89,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* ── Column 4: Contact ──────────────────── */}
+          {/* ── Column 4: Contact & Legal ──────────── */}
           <div className="flex flex-col gap-5">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5500]">
-              Get in Touch
+              Direct Contact
             </p>
             <a
               href={whatsappHref()}
