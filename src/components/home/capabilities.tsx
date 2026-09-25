@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
 
 const pillars = [
   {
@@ -31,60 +26,153 @@ const pillars = [
   },
 ];
 
-export function Capabilities() {
-  const sectionRef = useRef<HTMLElement>(null);
+// Desktop scattered positions — tighter vertical spacing
+const desktopPositions = [
+  { top: "4%",  left: "12%" },
+  { top: "24%", right: "8%" },
+  { top: "46%", left: "22%" },
+  { top: "66%", right: "15%" },
+];
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Title
-      gsap.fromTo(".cap-title",
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: sectionRef.current, start: "top 75%" }
-        }
-      );
-
-      // Desktop: staggered reveal of scattered cards
-      if (window.innerWidth >= 768) {
-        const cards = gsap.utils.toArray<HTMLElement>(".service-card-desktop");
-        cards.forEach((card, i) => {
-          gsap.fromTo(card,
-            { opacity: 0, y: 60, scale: 0.9 },
-            {
-              opacity: 1, y: 0, scale: 1,
-              duration: 0.7, delay: i * 0.15, ease: "power3.out",
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top 50%",
-              },
-            }
-          );
-        });
-      } else {
-        // Mobile: simple cards from bottom
-        const cards = gsap.utils.toArray<HTMLElement>(".service-card-mobile");
-        cards.forEach((card, i) => {
-          gsap.fromTo(card,
-            { opacity: 0, y: 50 },
-            {
-              opacity: 1, y: 0,
-              duration: 0.6, delay: i * 0.1, ease: "power2.out",
-              scrollTrigger: {
-                trigger: card,
-                start: "top 85%",
-              },
-            }
-          );
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+function MouseGlow({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
+  const glowRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section ref={sectionRef} className="relative">
+    <div
+      ref={glowRef}
+      className="absolute pointer-events-none hidden md:block"
+      style={{
+        width: "300px",
+        height: "300px",
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(255,85,0,0.08) 0%, transparent 70%)",
+        transform: "translate(-50%, -50%)",
+        transition: "left 0.3s ease-out, top 0.3s ease-out",
+        zIndex: 0,
+      }}
+      onMouseMove={(e) => {
+        if (!containerRef.current || !glowRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        glowRef.current.style.left = `${e.clientX - rect.left}px`;
+        glowRef.current.style.top = `${e.clientY - rect.top}px`;
+      }}
+    />
+  );
+}
+
+function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    ref.current.style.setProperty("--mouse-x", `${x}px`);
+    ref.current.style.setProperty("--mouse-y", `${y}px`);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden"
+      style={{
+        backgroundColor: "rgba(255,255,255,0.95)",
+        border: "1px solid #E7E5E4",
+        backdropFilter: "blur(12px)",
+        boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
+        "--mouse-x": "50%",
+        "--mouse-y": "50%",
+      } as React.CSSProperties}
+      initial={{ opacity: 0, y: 50, scale: 0.92 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ scale: 1.03, boxShadow: "0 12px 40px rgba(255,85,0,0.08)" }}
+    >
+      {/* Mouse spotlight */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{
+          background: "radial-gradient(300px circle at var(--mouse-x) var(--mouse-y), rgba(255,85,0,0.06), transparent 60%)",
+        }}
+      />
+
+      <div className="relative z-10">
+        <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
+          0{index + 1}
+        </span>
+
+        <h3 className="text-xl font-bold mt-2 mb-0 group-hover:mb-3 transition-all duration-300" style={{ color: "#1C1917" }}>
+          {pillar.title}
+        </h3>
+
+        <div className="max-h-0 overflow-hidden opacity-0 group-hover:max-h-60 group-hover:opacity-100 transition-all duration-500 ease-out">
+          <p className="text-sm leading-relaxed mt-3 mb-4" style={{ color: "#57534E" }}>
+            {pillar.description}
+          </p>
+          <ul className="grid grid-cols-2 gap-2">
+            {pillar.bullets.map((b) => (
+              <li key={b} className="flex items-start gap-2">
+                <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
+                <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-2 group-hover:opacity-0 transition-opacity duration-300">
+          <span className="text-[10px] font-mono" style={{ color: "#A8A29E" }}>hover to explore →</span>
+        </div>
+      </div>
+
+      {/* Accent border on hover */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ border: "1px solid rgba(255,85,0,0.3)" }}
+      />
+    </motion.div>
+  );
+}
+
+function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
+  return (
+    <motion.div
+      className="p-5 rounded-xl"
+      style={{ backgroundColor: "white", border: "1px solid #E7E5E4" }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
+        0{index + 1}
+      </span>
+      <h3 className="text-lg font-bold mt-2 mb-2" style={{ color: "#1C1917" }}>
+        {pillar.title}
+      </h3>
+      <p className="text-sm leading-relaxed mb-4" style={{ color: "#57534E" }}>
+        {pillar.description}
+      </p>
+      <ul className="grid grid-cols-2 gap-2">
+        {pillar.bullets.map((b) => (
+          <li key={b} className="flex items-start gap-2">
+            <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
+            <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+export function Capabilities() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
+
+  return (
+    <section className="relative">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#F5F5F4" }}>
         <div className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-[#FF5500] opacity-10" />
@@ -99,132 +187,53 @@ export function Capabilities() {
       </div>
 
       <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
-        <div className="text-center mb-20">
-          <h2 className="cap-title text-3xl md:text-4xl font-bold text-center mb-4 opacity-0" style={{ color: "#1C1917" }}>
+        {/* Title */}
+        <motion.div
+          ref={titleRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={titleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
             Four Services. One Growth Engine.
           </h2>
-          <p className="cap-title text-center max-w-xl mx-auto text-sm opacity-0" style={{ color: "#78716C" }}>
+          <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
             Hover to explore each service
           </p>
+        </motion.div>
+
+        {/* ── Desktop: scattered cards with mouse glow ── */}
+        <div ref={containerRef} className="hidden md:block relative" style={{ minHeight: "140vh" }}>
+          <MouseGlow containerRef={containerRef} />
+
+          {pillars.map((pillar, i) => {
+            const pos = desktopPositions[i];
+            return (
+              <div
+                key={pillar.title}
+                className="absolute"
+                style={{
+                  top: pos.top,
+                  left: "left" in pos ? pos.left : undefined,
+                  right: "right" in pos ? pos.right : undefined,
+                  width: "min(360px, 40vw)",
+                  zIndex: i + 1,
+                }}
+              >
+                <HoverCard pillar={pillar} index={i} />
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── Desktop: scattered sticky cards ── */}
-        <div className="hidden md:block relative" style={{ minHeight: "180vh" }}>
-          {/* Card 1: Performance Marketing — left, shifted right */}
-          <div
-            className="service-card-desktop absolute"
-            style={{ top: "5%", left: "12%", width: "min(360px, 40vw)", zIndex: 1 }}
-          >
-            <HoverCard pillar={pillars[0]} index={0} />
-          </div>
-
-          {/* Card 2: Social Media — right, shifted toward center */}
-          <div
-            className="service-card-desktop absolute"
-            style={{ top: "28%", right: "8%", width: "min(360px, 40vw)", zIndex: 2 }}
-          >
-            <HoverCard pillar={pillars[1]} index={1} />
-          </div>
-
-          {/* Card 3: Web Development — left, lower, different offset */}
-          <div
-            className="service-card-desktop absolute"
-            style={{ top: "52%", left: "22%", width: "min(360px, 40vw)", zIndex: 3 }}
-          >
-            <HoverCard pillar={pillars[2]} index={2} />
-          </div>
-
-          {/* Card 4: Analytics — right, lower */}
-          <div
-            className="service-card-desktop absolute"
-            style={{ top: "75%", right: "15%", width: "min(360px, 40vw)", zIndex: 4 }}
-          >
-            <HoverCard pillar={pillars[3]} index={3} />
-          </div>
-        </div>
-
-        {/* ── Mobile: simple stacked cards ── */}
+        {/* ── Mobile: stacked cards ── */}
         <div className="md:hidden flex flex-col gap-4">
           {pillars.map((pillar, i) => (
-            <div key={pillar.title} className="service-card-mobile">
-              <MobileCard pillar={pillar} index={i} />
-            </div>
+            <MobileCard key={pillar.title} pillar={pillar} index={i} />
           ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
-  return (
-    <div
-      className="group p-6 rounded-2xl transition-all duration-500 hover:scale-[1.03] cursor-pointer"
-      style={{
-        backgroundColor: "rgba(255,255,255,0.95)",
-        border: "1px solid #E7E5E4",
-        backdropFilter: "blur(12px)",
-        boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
-      }}
-    >
-      <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
-        0{index + 1}
-      </span>
-
-      <h3 className="text-xl font-bold mt-2 mb-0 group-hover:mb-3 transition-all duration-300" style={{ color: "#1C1917" }}>
-        {pillar.title}
-      </h3>
-
-      <div className="max-h-0 overflow-hidden opacity-0 group-hover:max-h-60 group-hover:opacity-100 transition-all duration-500 ease-out">
-        <p className="text-sm leading-relaxed mt-3 mb-4" style={{ color: "#57534E" }}>
-          {pillar.description}
-        </p>
-        <ul className="grid grid-cols-2 gap-2">
-          {pillar.bullets.map((b) => (
-            <li key={b} className="flex items-start gap-2">
-              <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
-              <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-2 group-hover:opacity-0 transition-opacity duration-300">
-        <span className="text-[10px] font-mono" style={{ color: "#A8A29E" }}>hover to explore →</span>
-      </div>
-    </div>
-  );
-}
-
-function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
-  return (
-    <div
-      className="p-5 rounded-xl"
-      style={{
-        backgroundColor: "white",
-        border: "1px solid #E7E5E4",
-      }}
-    >
-      <span className="font-mono text-xs font-bold" style={{ color: "#FF5500" }}>
-        0{index + 1}
-      </span>
-
-      <h3 className="text-lg font-bold mt-2 mb-2" style={{ color: "#1C1917" }}>
-        {pillar.title}
-      </h3>
-
-      <p className="text-sm leading-relaxed mb-4" style={{ color: "#57534E" }}>
-        {pillar.description}
-      </p>
-
-      <ul className="grid grid-cols-2 gap-2">
-        {pillar.bullets.map((b) => (
-          <li key={b} className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 bg-[#FF5500] rounded-sm inline-block mt-1.5 flex-shrink-0" />
-            <span className="text-xs" style={{ color: "#44403C" }}>{b}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
