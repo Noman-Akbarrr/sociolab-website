@@ -138,63 +138,64 @@ export default function PipelineDetailPage() {
 
   function openDealModal() {
     loadCompanies();
-    if (pipeline?.stages.length) {
-      setDealForm({ title: "", companyId: "", value: "", priority: "medium", source: "", expectedClose: "" });
-    }
+    setDealForm({ title: "", companyId: "", value: "", priority: "medium", source: "", expectedClose: "" });
     setShowDealModal(true);
   }
 
-  // Stage reorder via DnD
+  // Deal DnD between stages only
   async function onDragEnd(result: DropResult) {
     if (!pipeline) return;
     const { source, destination, draggableId } = result;
     if (!destination) return;
 
-    // Stage reorder
-    if (draggableId.startsWith("stage-")) {
-      const stageId = draggableId.replace("stage-", "");
-      if (source.index === destination.index) return;
-      const newStageIds = pipeline.stages.map((s) => s.id);
-      newStageIds.splice(source.index, 1);
-      newStageIds.splice(destination.index, 0, stageId);
-      const reordered = newStageIds.map((id) => pipeline.stages.find((s) => s.id === id)!);
-      setPipeline({ ...pipeline, stages: reordered });
-      try {
-        await fetch(`/admin/api/crm/pipelines/${pipelineId}/stages/reorder`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ stageIds: newStageIds }),
-        });
-      } catch (e) {
-        console.error("Failed to reorder stages", e);
-        loadData();
-      }
-      return;
+    if (!draggableId.startsWith("deal-")) return;
+
+    const dealId = draggableId.replace("deal-", "");
+    const sourceStageId = source.droppableId;
+    const destStageId = destination.droppableId;
+    if (sourceStageId === destStageId && source.index === destination.index) return;
+
+    const newStageId = destStageId;
+    const updatedDeals = pipeline.deals.map((d) =>
+      d.id === dealId ? { ...d, stageId: newStageId } : d
+    );
+    setPipeline({ ...pipeline, deals: updatedDeals });
+
+    try {
+      await fetch(`/admin/api/crm/deals/${dealId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stageId: newStageId }),
+      });
+    } catch (e) {
+      console.error("Failed to move deal", e);
+      loadData();
     }
+  }
 
-    // Deal move
-    if (draggableId.startsWith("deal-")) {
-      const dealId = draggableId.replace("deal-", "");
-      const sourceStageId = source.droppableId;
-      const destStageId = destination.droppableId;
-      if (sourceStageId === destStageId && source.index === destination.index) return;
+  // Move stage via arrow buttons
+  async function moveStage(stageId: string, direction: "left" | "right") {
+    if (!pipeline) return;
+    const idx = pipeline.stages.findIndex((s) => s.id === stageId);
+    if (idx < 0) return;
+    const swapIdx = direction === "left" ? idx - 1 : idx + 1;
+    if (swapIdx < 0 || swapIdx >= pipeline.stages.length) return;
 
-      const newStageId = destStageId;
-      const updatedDeals = pipeline.deals.map((d) =>
-        d.id === dealId ? { ...d, stageId: newStageId } : d
-      );
-      setPipeline({ ...pipeline, deals: updatedDeals });
+    const newStages = [...pipeline.stages];
+    [newStages[idx], newStages[swapIdx]] = [newStages[swapIdx], newStages[idx]];
+    const newStageIds = newStages.map((s) => s.id);
 
-      try {
-        await fetch(`/admin/api/crm/deals/${dealId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ stageId: newStageId }),
-        });
-      } catch (e) {
-        console.error("Failed to move deal", e);
-        loadData();
-      }
+    setPipeline({ ...pipeline, stages: newStages });
+
+    try {
+      await fetch(`/admin/api/crm/pipelines/${pipelineId}/stages/reorder`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stageIds: newStageIds }),
+      });
+    } catch (e) {
+      console.error("Failed to reorder stages", e);
+      loadData();
     }
   }
 
@@ -268,28 +269,34 @@ export default function PipelineDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-6 h-6 border-2 border-gray-300 border-t-[#FF5500] rounded-full animate-spin" />
-      </div>
+      <DashShell>
+        <div className="flex items-center justify-center py-20">
+          <div className="w-6 h-6 border-2 border-gray-300 border-t-[#FF5500] rounded-full animate-spin" />
+        </div>
+      </DashShell>
     );
   }
 
   if (!pipeline) {
-    return <div className="text-center py-20 text-gray-400 text-sm">Pipeline not found</div>;
+    return (
+      <DashShell>
+        <div className="text-center py-20 text-gray-400 text-sm">Pipeline not found</div>
+      </DashShell>
+    );
   }
 
   const totalValue = pipeline.deals.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <DashShell>
-    <div>
       <div className="flex items-center justify-between mb-6">
-        <div />
         <div className="flex items-center gap-3">
           <div className="text-sm text-gray-500">
-            <span className="font-semibold text-gray-800">{pipeline.deals.length}</span> deals ·{" "}
+            <span className="font-semibold text-gray-800">{pipeline.deals.length}</span> deals &middot;{" "}
             <span className="font-semibold text-gray-800">Rs. {totalValue.toLocaleString()}</span> total
           </div>
+        </div>
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setShowStageModal(true)}
             className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
@@ -303,8 +310,6 @@ export default function PipelineDetailPage() {
             onClick={openDealModal}
             className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-md transition-colors"
             style={{ backgroundColor: "#FF5500" }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#E04B00")}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#FF5500")}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -316,65 +321,81 @@ export default function PipelineDetailPage() {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex gap-4 overflow-x-auto pb-4">
-          {pipeline.stages.map((stage) => {
+          {pipeline.stages.map((stage, stageIdx) => {
             const stageDeals = pipeline.deals.filter((d) => d.stageId === stage.id);
             const stageValue = stageDeals.reduce((sum, d) => sum + d.value, 0);
             return (
-              <Draggable key={stage.id} draggableId={`stage-${stage.id}`} index={stage.order}>
-                {(prov, snap) => (
-                  <div
-                    ref={prov.innerRef}
-                    {...prov.draggableProps}
-                    className={`min-w-[280px] w-[280px] shrink-0 rounded-lg ${snap.isDragging ? "shadow-xl opacity-95" : ""}`}
-                  >
-                    {/* Stage header */}
-                    <div
-                      className="rounded-t-lg px-3 py-2 flex items-center justify-between cursor-grab active:cursor-grabbing"
-                      style={{ backgroundColor: stage.color }}
-                      {...prov.dragHandleProps}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-white">{stage.name}</span>
-                        <span className="text-xs text-white/70 bg-white/20 px-1.5 py-0.5 rounded">
-                          {stageDeals.length}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-white/80 font-medium">
-                          Rs. {stageValue.toLocaleString()}
-                        </span>
-                        <button
-                          onClick={() => handleDeleteStage(stage.id)}
-                          className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
-                          title="Delete stage"
-                        >
-                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Droppable deal area */}
-                    <Droppable droppableId={stage.id}>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          className={`rounded-b-lg min-h-[200px] p-2 transition-colors ${
-                            snapshot.isDraggingOver ? "bg-orange-50" : "bg-gray-50"
-                          }`}
-                        >
-                          {stageDeals.map((deal, index) => (
-                            <DealCard key={deal.id} deal={deal} index={index} />
-                          ))}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
+              <div
+                key={stage.id}
+                className="min-w-[280px] w-[280px] shrink-0 rounded-lg"
+              >
+                {/* Stage header */}
+                <div
+                  className="rounded-t-lg px-3 py-2 flex items-center justify-between"
+                  style={{ backgroundColor: stage.color }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-white">{stage.name}</span>
+                    <span className="text-xs text-white/70 bg-white/20 px-1.5 py-0.5 rounded">
+                      {stageDeals.length}
+                    </span>
                   </div>
-                )}
-              </Draggable>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-white/80 font-medium mr-1">
+                      Rs. {stageValue.toLocaleString()}
+                    </span>
+                    {stageIdx > 0 && (
+                      <button
+                        onClick={() => moveStage(stage.id, "left")}
+                        className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                        title="Move left"
+                      >
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                        </svg>
+                      </button>
+                    )}
+                    {stageIdx < pipeline.stages.length - 1 && (
+                      <button
+                        onClick={() => moveStage(stage.id, "right")}
+                        className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                        title="Move right"
+                      >
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDeleteStage(stage.id)}
+                      className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                      title="Delete stage"
+                    >
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Droppable deal area */}
+                <Droppable droppableId={stage.id}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className={`rounded-b-lg min-h-[200px] p-2 transition-colors ${
+                        snapshot.isDraggingOver ? "bg-orange-50" : "bg-gray-50"
+                      }`}
+                    >
+                      {stageDeals.map((deal, index) => (
+                        <DealCard key={deal.id} deal={deal} index={index} />
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </div>
             );
           })}
         </div>
@@ -525,7 +546,6 @@ export default function PipelineDetailPage() {
           </div>
         </div>
       )}
-    </div>
     </DashShell>
   );
 }

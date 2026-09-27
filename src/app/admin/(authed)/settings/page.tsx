@@ -110,8 +110,6 @@ export default function SettingsPage() {
   return (
     <DashShell>
     <div>
-      <h2 className="text-lg font-semibold text-gray-800 mb-6">Settings</h2>
-
       <div className="flex gap-1 border-b border-gray-200 mb-6">
         {tabs.map((tab) => (
           <button

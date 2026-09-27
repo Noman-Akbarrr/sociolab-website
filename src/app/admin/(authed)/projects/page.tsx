@@ -119,8 +119,7 @@ export default function ProjectsPage() {
   return (
     <DashShell>
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800">Projects</h2>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3 mb-6">
         <button
           onClick={openModal}
           className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-md transition-colors"
