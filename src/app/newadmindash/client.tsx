@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
 interface DashboardStats {
@@ -78,6 +79,13 @@ const tabs = [
 
 export function NewDashClient({ stats, error }: { stats: DashboardStats | null; error: string | null }) {
   const [activeTab, setActiveTab] = useState<"dashboard" | "leads" | "opportunities">("dashboard");
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/newadmindash/api/logout", { method: "POST" });
+    router.push("/newadmindash/login");
+    router.refresh();
+  }
 
   if (error) {
     return (
@@ -154,14 +162,25 @@ export function NewDashClient({ stats, error }: { stats: DashboardStats | null; 
 
         {/* Footer */}
         <div className="p-4 border-t border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600">
-              NA
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600">
+                NA
+              </div>
+              <div className="text-xs">
+                <div className="font-medium text-gray-700">Admin</div>
+                <div className="text-gray-400">Sociolab</div>
+              </div>
             </div>
-            <div className="text-xs">
-              <div className="font-medium text-gray-700">Admin</div>
-              <div className="text-gray-400">Sociolab</div>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+              title="Sign out"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
+            </button>
           </div>
         </div>
       </aside>

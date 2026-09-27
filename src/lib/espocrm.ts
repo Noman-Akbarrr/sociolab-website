@@ -1,9 +1,18 @@
-const ESPO_URL = process.env.ESPOCRM_URL || "";
-const ESPO_API_KEY = process.env.ESPOCRM_API_KEY || "";
+import { cookies } from "next/headers";
 
-function headers() {
+const ESPO_URL = process.env.ESPOCRM_URL || "";
+
+async function getAuthHeader() {
+  const cookieStore = await cookies();
+  const auth = cookieStore.get("espo_auth")?.value;
+  if (!auth) return null;
+  return { "Authorization": `Basic ${auth}` };
+}
+
+async function headers() {
+  const auth = await getAuthHeader();
   return {
-    "X-Api-Key": ESPO_API_KEY,
+    ...auth,
     "Content-Type": "application/json",
   };
 }
@@ -12,8 +21,13 @@ export async function espoFetch<T = any>(
   endpoint: string,
   options?: { method?: string; body?: any; params?: Record<string, string> }
 ): Promise<T> {
-  if (!ESPO_URL || !ESPO_API_KEY) {
-    throw new Error("ESPOCRM_URL and ESPOCRM_API_KEY must be set in environment variables");
+  if (!ESPO_URL) {
+    throw new Error("ESPOCRM_URL must be set in environment variables");
+  }
+
+  const authHeaders = await getAuthHeader();
+  if (!authHeaders) {
+    throw new Error("Not authenticated");
   }
 
   const url = new URL(`${ESPO_URL}/api/v1/${endpoint}`);
@@ -23,7 +37,10 @@ export async function espoFetch<T = any>(
 
   const res = await fetch(url.toString(), {
     method: options?.method || "GET",
-    headers: headers(),
+    headers: {
+      ...authHeaders,
+      "Content-Type": "application/json",
+    },
     body: options?.body ? JSON.stringify(options.body) : undefined,
     cache: "no-store",
   });
@@ -75,9 +92,6 @@ export async function getRecord(
 }
 
 export async function getDashboardStats() {
-  const now = new Date();
-  const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-
   const [leads, contacts, accounts, opportunities, tasks] = await Promise.all([
     listRecords("Lead", { "orderBy": "createdAt", "order": "desc", "maxRows": "1" }).catch(() => ({ total: 0, list: [] })),
     listRecords("Contact", { "maxRows": "1" }).catch(() => ({ total: 0, list: [] })),
@@ -86,18 +100,16 @@ export async function getDashboardStats() {
     listRecords("Task", { "maxRows": "1" }).catch(() => ({ total: 0, list: [] })),
   ]);
 
-  // Recent leads
   const recentLeads = await listRecords("Lead", {
     "orderBy": "createdAt",
     "order": "desc",
-    "maxRows": "5",
+    "maxRows": "10",
   }).catch(() => ({ total: 0, list: [] }));
 
-  // Recent opportunities
   const recentOpps = await listRecords("Opportunity", {
     "orderBy": "createdAt",
     "order": "desc",
-    "maxRows": "5",
+    "maxRows": "10",
   }).catch(() => ({ total: 0, list: [] }));
 
   return {

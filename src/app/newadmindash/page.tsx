@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getDashboardStats } from "@/lib/espocrm";
 import { NewDashClient } from "./client";
 
@@ -7,6 +9,13 @@ export const metadata = {
 };
 
 export default async function NewAdminDash() {
+  const cookieStore = await cookies();
+  const auth = cookieStore.get("espo_auth");
+
+  if (!auth) {
+    redirect("/newadmindash/login");
+  }
+
   let stats = null;
   let error = null;
 
