@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const navGroups = [
   {
@@ -53,6 +54,21 @@ function NavIcon({ name }: { name: string }) {
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
+  const [userName, setUserName] = useState("Admin");
+  const [userInitials, setUserInitials] = useState("A");
+
+  useEffect(() => {
+    fetch("/admin/api/auth/status")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.user?.name) {
+          setUserName(d.user.name);
+          const parts = d.user.name.trim().split(" ");
+          setUserInitials(parts.map((p: string) => p[0]).join("").toUpperCase().slice(0, 2));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   function isActive(href: string) {
     if (href === "/admin") return pathname === "/admin";
@@ -119,10 +135,10 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-xs font-medium" style={{ color: "#FF5500" }}>
-                A
+                {userInitials}
               </div>
               <div className="text-xs">
-                <div className="font-medium text-gray-700">Admin</div>
+                <div className="font-medium text-gray-700">{userName}</div>
                 <div className="text-gray-400">Sociolab</div>
               </div>
             </div>
