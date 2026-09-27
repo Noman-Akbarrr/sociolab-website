@@ -1,0 +1,121 @@
+"use client";
+
+import { motion } from "motion/react";
+import { DEALS, CONTACTS } from "../static-data";
+
+function StatIcon({ name }: { name: string }) {
+  const cls = "w-5 h-5";
+  const icons: Record<string, React.ReactElement> = {
+    deals: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+    pipeline: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>,
+    won: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+    projects: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>,
+    tickets: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" /></svg>,
+  };
+  return icons[name] || null;
+}
+
+const statCards = [
+  { label: "Total Deals", value: 24, icon: "deals", color: "#FF5500", bg: "#FFF3E0" },
+  { label: "Pipeline Value", value: "$1.2M", icon: "pipeline", color: "#FF5500", bg: "#FFF3E0" },
+  { label: "Won This Month", value: "$180K", icon: "won", color: "#4CAF50", bg: "#E8F5E9" },
+  { label: "Active Projects", value: 8, icon: "projects", color: "#FF9800", bg: "#FFF3E0" },
+  { label: "Open Tickets", value: 12, icon: "tickets", color: "#F44336", bg: "#FFEBEE" },
+];
+
+const stageColors: Record<string, string> = {
+  Lead: "#9CA3AF",
+  Qualified: "#5B8DEF",
+  Proposal: "#FF9800",
+  Negotiation: "#9C27B0",
+  "Closed Won": "#4CAF50",
+};
+
+export function DashboardView() {
+  const recentDeals = DEALS.slice(0, 5);
+  const recentContacts = CONTACTS.slice(0, 5);
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+        {statCards.map((stat, i) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.04, duration: 0.3 }}
+            className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-pointer"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: stat.bg }}>
+                <div style={{ color: stat.color }}><StatIcon name={stat.icon} /></div>
+              </div>
+              <svg className="w-4 h-4 text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </div>
+            <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-700">Recent Deals</h3>
+            <a href="/newadmindash/deals" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+          </div>
+          <ul className="divide-y divide-gray-50">
+            {recentDeals.map((deal) => (
+              <li key={deal.id} className="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-medium text-gray-700 block">{deal.title}</span>
+                    <span className="text-xs text-gray-400">{deal.company}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-medium text-gray-700 block">${deal.value.toLocaleString()}</span>
+                    <span
+                      className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: stageColors[deal.stage] + "20", color: stageColors[deal.stage] }}
+                    >
+                      {deal.stage}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-700">Recent Contacts</h3>
+            <a href="/newadmindash/contacts" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+          </div>
+          <ul className="divide-y divide-gray-50">
+            {recentContacts.map((contact) => (
+              <li key={contact.id} className="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium text-white" style={{ backgroundColor: "#FF5500" }}>
+                      {contact.firstName[0]}{contact.lastName[0]}
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-gray-700 block">{contact.firstName} {contact.lastName}</span>
+                      <span className="text-xs text-gray-400">{contact.email}</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                    {contact.company}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
