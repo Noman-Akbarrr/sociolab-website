@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { DashShell } from "../client";
 
 interface Pipeline {
   id: string;
@@ -77,6 +78,7 @@ export default function PipelineListPage() {
   }
 
   return (
+    <DashShell>
     <div>
       <div className="flex items-center justify-between mb-6">
         <div />
@@ -213,5 +215,6 @@ export default function PipelineListPage() {
         </div>
       )}
     </div>
+    </DashShell>
   );
 }

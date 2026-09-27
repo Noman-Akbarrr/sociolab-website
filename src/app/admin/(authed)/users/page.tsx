@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { DashShell } from "../client";
 
 type User = {
   id: string;
@@ -145,6 +146,7 @@ export default function UsersPage() {
   };
 
   return (
+    <DashShell>
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h2 className="text-lg font-semibold text-gray-800">Users</h2>
@@ -385,5 +387,6 @@ export default function UsersPage() {
         )}
       </AnimatePresence>
     </div>
+    </DashShell>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { DashShell } from "../client";
 
 const tabs = ["Profile", "Password"] as const;
 
@@ -107,6 +108,7 @@ export default function SettingsPage() {
   };
 
   return (
+    <DashShell>
     <div>
       <h2 className="text-lg font-semibold text-gray-800 mb-6">Settings</h2>
 
@@ -241,5 +243,6 @@ export default function SettingsPage() {
         )}
       </AnimatePresence>
     </div>
+    </DashShell>
   );
 }

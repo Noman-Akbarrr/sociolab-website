@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
+import { DashShell } from "../client";
 
 interface Company {
   id: string;
@@ -79,6 +80,7 @@ export default function CompaniesPage() {
   });
 
   return (
+    <DashShell>
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
         <h2 className="text-lg font-semibold text-gray-800">Companies</h2>
@@ -216,5 +218,6 @@ export default function CompaniesPage() {
         </div>
       )}
     </div>
+    </DashShell>
   );
 }

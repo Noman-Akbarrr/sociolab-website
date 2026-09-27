@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
+import { DashShell } from "../../client";
 
 interface PipelineOwner {
   id: string;
@@ -280,6 +281,7 @@ export default function PipelineDetailPage() {
   const totalValue = pipeline.deals.reduce((sum, d) => sum + d.value, 0);
 
   return (
+    <DashShell>
     <div>
       <div className="flex items-center justify-between mb-6">
         <div />
@@ -524,5 +526,6 @@ export default function PipelineDetailPage() {
         </div>
       )}
     </div>
+    </DashShell>
   );
 }

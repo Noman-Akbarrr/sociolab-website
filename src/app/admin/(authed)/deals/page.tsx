@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
+import { DashShell } from "../client";
 
 interface Owner {
   id: string;
@@ -135,8 +136,9 @@ export default function DealsPage() {
   });
 
   return (
+    <DashShell>
     <div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-gray-800">Deals</h2>
         <button
           onClick={() => setShowModal(true)}
@@ -340,5 +342,6 @@ export default function DealsPage() {
         </div>
       )}
     </div>
+    </DashShell>
   );
 }
