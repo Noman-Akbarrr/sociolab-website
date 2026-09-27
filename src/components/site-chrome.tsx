@@ -7,7 +7,7 @@ import { WhatsAppFloat } from "@/components/whatsapp-float";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin") || pathname.startsWith("/newadmindash");
+  const isAdmin = pathname.startsWith("/newadmindash");
 
   if (isAdmin) {
     return <>{children}</>;
