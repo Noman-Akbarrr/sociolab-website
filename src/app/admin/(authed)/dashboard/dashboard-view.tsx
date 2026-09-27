@@ -1,7 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { DEALS, CONTACTS } from "../static-data";
+
+interface Stats {
+  totalDeals: number;
+  pipelineValue: number;
+  activeProjects: number;
+  openTickets: number;
+  totalContacts: number;
+  totalCompanies: number;
+}
+
+interface Deal {
+  id: string;
+  title: string;
+  value: number;
+  company: { name: string };
+  stage: { name: string; color: string };
+  owner: { name: string };
+  createdAt: string;
+}
+
+interface Contact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  company: { name: string } | null;
+}
 
 function StatIcon({ name }: { name: string }) {
   const cls = "w-5 h-5";
@@ -11,33 +38,65 @@ function StatIcon({ name }: { name: string }) {
     won: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
     projects: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" /></svg>,
     tickets: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" /></svg>,
+    contacts: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>,
+    companies: <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" /></svg>,
   };
   return icons[name] || null;
 }
 
-const statCards = [
-  { label: "Total Deals", value: 24, icon: "deals", color: "#FF5500", bg: "#FFF3E0" },
-  { label: "Pipeline Value", value: "$1.2M", icon: "pipeline", color: "#FF5500", bg: "#FFF3E0" },
-  { label: "Won This Month", value: "$180K", icon: "won", color: "#4CAF50", bg: "#E8F5E9" },
-  { label: "Active Projects", value: 8, icon: "projects", color: "#FF9800", bg: "#FFF3E0" },
-  { label: "Open Tickets", value: 12, icon: "tickets", color: "#F44336", bg: "#FFEBEE" },
-];
-
-const stageColors: Record<string, string> = {
-  Lead: "#9CA3AF",
-  Qualified: "#5B8DEF",
-  Proposal: "#FF9800",
-  Negotiation: "#9C27B0",
-  "Closed Won": "#4CAF50",
-};
+const stageColors: Record<string, string> = {};
 
 export function DashboardView() {
-  const recentDeals = DEALS.slice(0, 5);
-  const recentContacts = CONTACTS.slice(0, 5);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const [statsRes, dealsRes, contactsRes] = await Promise.all([
+          fetch("/admin/api/crm/stats"),
+          fetch("/admin/api/crm/deals"),
+          fetch("/admin/api/crm/contacts"),
+        ]);
+        if (statsRes.ok) setStats(await statsRes.json());
+        if (dealsRes.ok) setDeals(await dealsRes.json());
+        if (contactsRes.ok) setContacts(await contactsRes.json());
+      } catch (e) {
+        console.error("Failed to load dashboard data", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  const statCards = stats
+    ? [
+        { label: "Total Deals", value: stats.totalDeals, icon: "deals", color: "#FF5500", bg: "#FFF3E0" },
+        { label: "Pipeline Value", value: `Rs. ${(stats.pipelineValue / 1000).toFixed(0)}K`, icon: "pipeline", color: "#FF5500", bg: "#FFF3E0" },
+        { label: "Active Projects", value: stats.activeProjects, icon: "projects", color: "#FF9800", bg: "#FFF3E0" },
+        { label: "Open Tickets", value: stats.openTickets, icon: "tickets", color: "#F44336", bg: "#FFEBEE" },
+        { label: "Contacts", value: stats.totalContacts, icon: "contacts", color: "#4CAF50", bg: "#E8F5E9" },
+        { label: "Companies", value: stats.totalCompanies, icon: "companies", color: "#9C27B0", bg: "#F3E5F5" },
+      ]
+    : [];
+
+  const recentDeals = deals.slice(0, 5);
+  const recentContacts = contacts.slice(0, 5);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-6 h-6 border-2 border-gray-300 border-t-[#FF5500] rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
         {statCards.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -64,7 +123,7 @@ export function DashboardView() {
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-700">Recent Deals</h3>
-            <a href="/admin/deals" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+            <a href="/admin/pipeline" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
           </div>
           <ul className="divide-y divide-gray-50">
             {recentDeals.map((deal) => (
@@ -72,20 +131,23 @@ export function DashboardView() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-sm font-medium text-gray-700 block">{deal.title}</span>
-                    <span className="text-xs text-gray-400">{deal.company}</span>
+                    <span className="text-xs text-gray-400">{deal.company?.name ?? "—"}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm font-medium text-gray-700 block">${deal.value.toLocaleString()}</span>
+                    <span className="text-sm font-medium text-gray-700 block">Rs. {deal.value.toLocaleString()}</span>
                     <span
                       className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                      style={{ backgroundColor: stageColors[deal.stage] + "20", color: stageColors[deal.stage] }}
+                      style={{ backgroundColor: (deal.stage?.color ?? "#9CA3AF") + "20", color: deal.stage?.color ?? "#9CA3AF" }}
                     >
-                      {deal.stage}
+                      {deal.stage?.name ?? "—"}
                     </span>
                   </div>
                 </div>
               </li>
             ))}
+            {recentDeals.length === 0 && (
+              <li className="px-4 py-6 text-center text-sm text-gray-400">No deals yet</li>
+            )}
           </ul>
         </div>
 
@@ -108,11 +170,14 @@ export function DashboardView() {
                     </div>
                   </div>
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
-                    {contact.company}
+                    {contact.company?.name ?? "—"}
                   </span>
                 </div>
               </li>
             ))}
+            {recentContacts.length === 0 && (
+              <li className="px-4 py-6 text-center text-sm text-gray-400">No contacts yet</li>
+            )}
           </ul>
         </div>
       </div>
