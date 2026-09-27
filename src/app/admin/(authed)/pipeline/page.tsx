@@ -36,7 +36,7 @@ export default function PipelineListPage() {
               transition={{ delay: i * 0.05, duration: 0.3 }}
             >
               <Link
-                href={`/newadmindash/pipeline/${pipeline.id}`}
+                href={`/admin/pipeline/${pipeline.id}`}
                 className="block bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-all group"
               >
                 <div className="flex items-start justify-between mb-4">

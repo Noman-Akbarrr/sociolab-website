@@ -64,7 +64,7 @@ export function DashboardView() {
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-700">Recent Deals</h3>
-            <a href="/newadmindash/deals" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+            <a href="/admin/deals" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
           </div>
           <ul className="divide-y divide-gray-50">
             {recentDeals.map((deal) => (
@@ -92,7 +92,7 @@ export function DashboardView() {
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-700">Recent Contacts</h3>
-            <a href="/newadmindash/contacts" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+            <a href="/admin/contacts" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
           </div>
           <ul className="divide-y divide-gray-50">
             {recentContacts.map((contact) => (

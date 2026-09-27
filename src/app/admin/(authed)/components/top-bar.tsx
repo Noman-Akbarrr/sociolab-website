@@ -3,22 +3,22 @@
 import { usePathname } from "next/navigation";
 
 const sectionTitles: Record<string, string> = {
-  "/newadmindash": "Dashboard",
-  "/newadmindash/pipeline": "Pipelines",
-  "/newadmindash/deals": "Deals",
-  "/newadmindash/contacts": "Contacts",
-  "/newadmindash/companies": "Companies",
-  "/newadmindash/projects": "Projects",
-  "/newadmindash/tickets": "Tickets",
-  "/newadmindash/users": "Users",
-  "/newadmindash/settings": "Settings",
+  "/admin": "Dashboard",
+  "/admin/pipeline": "Pipelines",
+  "/admin/deals": "Deals",
+  "/admin/contacts": "Contacts",
+  "/admin/companies": "Companies",
+  "/admin/projects": "Projects",
+  "/admin/tickets": "Tickets",
+  "/admin/users": "Users",
+  "/admin/settings": "Settings",
 };
 
 export function TopBar({ onMenuToggle }: { onMenuToggle: () => void }) {
   const pathname = usePathname();
 
   const title = Object.entries(sectionTitles).find(([path]) =>
-    path === "/newadmindash" ? pathname === path : pathname.startsWith(path)
+    path === "/admin" ? pathname === path : pathname.startsWith(path)
   )?.[1] || "Dashboard";
 
   return (

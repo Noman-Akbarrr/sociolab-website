@@ -5,6 +5,6 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function NewDashLoginPage() {
+export default function AdminLoginPage() {
   return <LoginForm />;
 }

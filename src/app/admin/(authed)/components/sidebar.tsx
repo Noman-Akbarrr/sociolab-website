@@ -7,30 +7,30 @@ const navGroups = [
   {
     label: "MAIN",
     items: [
-      { key: "dashboard", label: "Dashboard", href: "/newadmindash", icon: "dashboard" },
-      { key: "pipeline", label: "Pipelines", href: "/newadmindash/pipeline", icon: "pipeline" },
-      { key: "deals", label: "Deals", href: "/newadmindash/deals", icon: "deals" },
+      { key: "dashboard", label: "Dashboard", href: "/admin", icon: "dashboard" },
+      { key: "pipeline", label: "Pipelines", href: "/admin/pipeline", icon: "pipeline" },
+      { key: "deals", label: "Deals", href: "/admin/deals", icon: "deals" },
     ],
   },
   {
     label: "CRM",
     items: [
-      { key: "contacts", label: "Contacts", href: "/newadmindash/contacts", icon: "contacts" },
-      { key: "companies", label: "Companies", href: "/newadmindash/companies", icon: "companies" },
+      { key: "contacts", label: "Contacts", href: "/admin/contacts", icon: "contacts" },
+      { key: "companies", label: "Companies", href: "/admin/companies", icon: "companies" },
     ],
   },
   {
     label: "PROJECT MANAGEMENT",
     items: [
-      { key: "projects", label: "Projects", href: "/newadmindash/projects", icon: "projects" },
-      { key: "tickets", label: "Tickets", href: "/newadmindash/tickets", icon: "tickets" },
+      { key: "projects", label: "Projects", href: "/admin/projects", icon: "projects" },
+      { key: "tickets", label: "Tickets", href: "/admin/tickets", icon: "tickets" },
     ],
   },
   {
     label: "ADMINISTRATION",
     items: [
-      { key: "users", label: "Users", href: "/newadmindash/users", icon: "users" },
-      { key: "settings", label: "Settings", href: "/newadmindash/settings", icon: "settings" },
+      { key: "users", label: "Users", href: "/admin/users", icon: "users" },
+      { key: "settings", label: "Settings", href: "/admin/settings", icon: "settings" },
     ],
   },
 ];
@@ -55,7 +55,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
   const pathname = usePathname();
 
   function isActive(href: string) {
-    if (href === "/newadmindash") return pathname === "/newadmindash";
+    if (href === "/admin") return pathname === "/admin";
     return pathname.startsWith(href);
   }
 
@@ -75,7 +75,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
       >
         {/* Logo */}
         <div className="h-14 flex items-center px-5 border-b border-gray-100 shrink-0">
-          <Link href="/newadmindash" className="flex items-center gap-2.5" onClick={onClose}>
+          <Link href="/admin" className="flex items-center gap-2.5" onClick={onClose}>
             <div className="w-8 h-8 rounded flex items-center justify-center" style={{ backgroundColor: "#FF5500" }}>
               <span className="text-white font-bold text-sm">S</span>
             </div>
@@ -127,9 +127,9 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
               </div>
             </div>
             <button
-              onClick={() => {
-                document.cookie = "newadmindash_session=; path=/; max-age=0";
-                window.location.href = "/newadmindash/login";
+              onClick={async () => {
+                await fetch("/admin/api/auth/logout", { method: "POST" });
+                window.location.href = "/admin/login";
               }}
               className="text-gray-400 hover:text-red-500 transition-colors"
               title="Sign out"
