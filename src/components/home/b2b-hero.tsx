@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MegaphoneIcon } from "./megaphone-icon";
+import { MegaphoneVideo } from "./megaphone-video";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -118,7 +118,7 @@ export function B2BHero() {
           <span className="hero-line block opacity-0">Scale faster with</span>
           <span className="hero-line flex items-center justify-center flex-wrap gap-x-4 gap-y-2 opacity-0">
             <span>digital</span>
-            <MegaphoneIcon className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" />
+            <MegaphoneVideo className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" />
             <span>marketing</span>
           </span>
         </h1>

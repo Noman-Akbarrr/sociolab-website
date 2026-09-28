@@ -62,9 +62,9 @@ export function Navbar() {
         {/* ── Wordmark ─────────────────────────────── */}
         <Link href="/" className="flex items-center" aria-label={`${site.name} — home`}>
           <img
-            src="/sociolab-logo.jpg"
+            src="/sociolab-header-logo.png"
             alt="Sociolab"
-            className="h-8 w-auto rounded"
+            className="h-8 w-auto"
           />
         </Link>
 

@@ -84,6 +84,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${plusJakarta.variable} ${spaceGrotesk.variable}`}>
       <head>
+        <link rel="icon" href="/favicon.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#0F172A" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
