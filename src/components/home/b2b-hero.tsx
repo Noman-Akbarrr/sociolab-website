@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MegaphoneVideo } from "./megaphone-video";
+import { LogoCycle } from "./logo-cycle";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -103,7 +103,6 @@ export function B2BHero() {
       <div className="relative max-w-[1240px] mx-auto px-6 md:px-12 pt-24 md:pt-32 pb-16 md:pb-24 text-center">
         {/* Eyebrow */}
         <div className="hero-eyebrow flex items-center justify-center gap-2 mb-6 opacity-0">
-          <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#FF5500" }} />
         </div>
 
         {/* Headline */}
@@ -115,7 +114,7 @@ export function B2BHero() {
           <span className="hero-line block opacity-0">Scale faster with</span>
           <span className="hero-line flex items-center justify-center flex-wrap gap-x-4 gap-y-2 opacity-0">
             <span>Digital</span>
-            <MegaphoneVideo className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" />
+            <LogoCycle className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" size="1.1em" />
             <span>Marketing</span>
           </span>
         </h1>
