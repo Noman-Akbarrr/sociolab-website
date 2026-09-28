@@ -70,7 +70,7 @@ function CaseStudyCard({ cs }: { cs: CaseStudy }) {
           <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500 ease-out">
             {/* Brand name - always visible at bottom, moves up on hover */}
             <motion.h3
-              className="text-base font-bold text-white drop-shadow-lg"
+              className="text-base font-bold text-[#FF5500] drop-shadow-xl"
               initial={false}
               animate={{
                 y: hovered ? -80 : 0,
@@ -91,7 +91,7 @@ function CaseStudyCard({ cs }: { cs: CaseStudy }) {
               transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="absolute bottom-0 left-0 right-0 px-5"
             >
-              <h3 className="text-base font-bold text-white mb-3 drop-shadow-lg">
+              <h3 className="text-base font-bold text-[#FF5500] mb-3 drop-shadow-xl">
                 {cs.client}
               </h3>
               <motion.p
