@@ -35,23 +35,34 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
         alt={card.title}
         className="object-cover absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      
+      {/* Brand name - always visible at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out">
+        <h3 className="text-base md:text-lg font-bold text-white drop-shadow-lg">
+          {card.title}
+        </h3>
+      </div>
+
+      {/* Hover content - description + metrics */}
       <div
         className={cn(
-          "absolute bottom-0 left-0 right-0 p-6 transition-all duration-300",
-          hovered === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          "absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out",
+          hovered === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
         )}
       >
-        <h3 className="text-lg md:text-xl font-bold text-white mb-2">{card.title}</h3>
+        <h3 className="text-base md:text-lg font-bold text-white mb-3 drop-shadow-lg">
+          {card.title}
+        </h3>
         {card.description && (
-          <p className="text-sm text-white/80 mb-3 line-clamp-2">{card.description}</p>
+          <p className="text-sm text-white/90 mb-4 line-clamp-3">{card.description}</p>
         )}
-        {card.metrics && (
-          <div className="flex flex-wrap gap-4 text-xs">
-            {card.metrics.map((m, i) => (
-              <span key={i} className="flex items-center gap-1 bg-white/10 backdrop-blur px-2 py-1 rounded">
+        {card.metrics && card.metrics.length > 0 && (
+          <div className="flex flex-wrap gap-3 text-xs">
+            {card.metrics.slice(0, 2).map((m, i) => (
+              <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
                 <span className="font-semibold text-white">{m.value}</span>
-                <span className="text-white/60">{m.label}</span>
+                <span className="text-white/70">{m.label}</span>
               </span>
             ))}
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Container } from "@/components/ui/container";
@@ -32,7 +33,7 @@ export default function CaseStudiesPage() {
 
       {/* ── Case Study List ─────────────────────────── */}
       <Section className="pb-20">
-        <div className="flex flex-col gap-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {caseStudies.map((cs, i) => (
             <Reveal key={cs.slug} delay={i * 0.06}>
               <CaseStudyCard cs={cs} />
@@ -45,48 +46,66 @@ export default function CaseStudiesPage() {
 }
 
 function CaseStudyCard({ cs }: { cs: CaseStudy }) {
+  const [hovered, setHovered] = React.useState(false);
+  const image = getCaseStudyImage(cs.slug);
+
   return (
     <FollowerPointerCard title={cs.client}>
       <Link href={`/case-studies/${cs.slug}`}>
         <motion.div
-          whileHover={{ y: -4, boxShadow: "0 8px 30px rgba(0,0,0,0.06)" }}
-          className="flex flex-col md:flex-row gap-6 rounded-xl border border-stone-200 bg-white p-7 transition-colors group"
-          style={{ cursor: "none" }}
+          whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(0,0,0,0.08)" }}
+          className="group relative rounded-2xl overflow-hidden bg-white transition-all duration-500"
+          style={{ cursor: "none", aspectRatio: "4/5" }}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4 mb-3">
-              <div>
-                <h2 className="text-lg font-bold group-hover:text-[#FF5500] transition-colors" style={{ color: "#1C1917" }}>
-                  {cs.client}
-                </h2>
-                <p className="text-sm mt-0.5" style={{ color: "#78716C" }}>{cs.industry}</p>
-              </div>
-              <span className="text-xs shrink-0 font-mono font-semibold text-[#FF5500]">
-                {cs.metric} {cs.metricLabel}
-              </span>
-            </div>
+          <img
+            src={image}
+            alt={cs.client}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          
+          {/* Brand name - always visible at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out">
+            <h3 className="text-base font-bold text-white drop-shadow-lg">
+              {cs.client}
+            </h3>
+          </div>
 
-            <p className="text-[15px] leading-relaxed mb-4" style={{ color: "#57534E" }}>
+          {/* Hover content - description + metrics */}
+          <div
+            className={`absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out ${
+              hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
+            }`}
+          >
+            <h3 className="text-base font-bold text-white mb-3 drop-shadow-lg">
+              {cs.client}
+            </h3>
+            <p className="text-sm text-white/90 mb-4 line-clamp-3">
               {cs.summary}
             </p>
-
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {cs.results.slice(0, 3).map((r, i) => (
-                <span key={i} className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "#F5F5F4", color: "#57534E" }}>
-                  {r.label}: {r.value}
+            <div className="flex flex-wrap gap-2 text-xs">
+              {cs.results.slice(0, 2).map((r, i) => (
+                <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
+                  <span className="font-semibold text-white">{r.value}</span>
+                  <span className="text-white/70">{r.label}</span>
                 </span>
               ))}
             </div>
-
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#FF5500] mt-auto">
-              Read Case Study
-              <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
-            </span>
           </div>
         </motion.div>
       </Link>
     </FollowerPointerCard>
   );
+}
+
+function getCaseStudyImage(slug: string): string {
+  const images: Record<string, string> = {
+    "exact-fashion-store": "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop",
+    "sehgal-motors": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1200&auto=format&fit=crop",
+    "gcc-startups": "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",
+    "tanzeem": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop",
+  };
+  return images[slug] || "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop";
 }
