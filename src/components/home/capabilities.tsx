@@ -27,6 +27,14 @@ const pillars = [
   },
 ];
 
+// Desktop scattered positions
+const desktopPositions = [
+  { top: "4%",  left: "12%" },
+  { top: "24%", right: "8%" },
+  { top: "46%", left: "22%" },
+  { top: "66%", right: "15%" },
+];
+
 function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,7 +51,7 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden h-full"
+      className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden"
       style={{
         backgroundColor: "rgba(255,255,255,0.95)",
         border: "1px solid #E7E5E4",
@@ -103,7 +111,7 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
 function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
   return (
     <motion.div
-      className="p-5 rounded-xl h-full"
+      className="p-5 rounded-xl"
       style={{ backgroundColor: "white", border: "1px solid #E7E5E4" }}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -137,13 +145,13 @@ export function Capabilities() {
 
   return (
     <section className="relative">
-      {/* Wispr Flow background text animation */}
+      {/* Wispr Flow background text animation - curved path */}
       <WisprFlow 
-        speed={40} 
+        speed={28} 
         fontSize={13} 
-        opacity={0.06} 
-        color="#1C1917"
-        rows={4}
+        textOpacity={0.05} 
+        textColor="#1C1917"
+        strokeColor="transparent"
       />
 
       {/* Subtle background decoration */}
@@ -176,21 +184,32 @@ export function Capabilities() {
           </p>
         </motion.div>
 
-        {/* Desktop: Grid of cards */}
-        <div className="hidden md:grid grid-cols-1 lg:grid-cols-4 gap-6" style={{ minHeight: "500px" }}>
-          {pillars.map((pillar, i) => (
-            <div key={pillar.title} className="relative" style={{ minHeight: "320px" }}>
-              <HoverCard pillar={pillar} index={i} />
-            </div>
-          ))}
+        {/* Desktop: scattered cards with absolute positioning */}
+        <div className="hidden md:block relative" style={{ minHeight: "140vh" }}>
+          {pillars.map((pillar, i) => {
+            const pos = desktopPositions[i];
+            return (
+              <div
+                key={pillar.title}
+                className="absolute"
+                style={{
+                  top: pos.top,
+                  left: "left" in pos ? pos.left : undefined,
+                  right: "right" in pos ? pos.right : undefined,
+                  width: "min(360px, 40vw)",
+                  zIndex: i + 1,
+                }}
+              >
+                <HoverCard pillar={pillar} index={i} />
+              </div>
+            );
+          })}
         </div>
 
         {/* Mobile: stacked cards */}
         <div className="md:hidden flex flex-col gap-4">
           {pillars.map((pillar, i) => (
-            <div key={pillar.title} style={{ minHeight: "280px" }}>
-              <MobileCard pillar={pillar} index={i} />
-            </div>
+            <MobileCard key={pillar.title} pillar={pillar} index={i} />
           ))}
         </div>
       </div>
