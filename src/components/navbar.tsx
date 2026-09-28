@@ -27,6 +27,7 @@ const capabilities = [
 const nav = [
   { label: "Work", href: "/case-studies" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Navbar() {
