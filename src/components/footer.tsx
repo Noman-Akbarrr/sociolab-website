@@ -29,7 +29,7 @@ export function Footer() {
               <img
                 src="/sociolab-header-logo.png"
                 alt="Sociolab"
-                className="h-10 w-auto"
+                className="h-28 w-auto"
               />
             </Link>
             <p className="max-w-xs text-sm leading-relaxed" style={{ color: "#94A3B8", fontFamily: "var(--font-sans)" }}>
@@ -88,12 +88,9 @@ export function Footer() {
             </p>
             <a
               href="tel:+923348366960"
-              className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#374151] bg-[#1F2937] px-4 py-2.5 text-sm font-semibold text-[#F9FAFB] transition-all hover:border-[#FF5500] hover:bg-[rgba(255,85,0,0.08)]"
-              style={{ fontFamily: "var(--font-sans)" }}
+              className="text-sm transition-colors hover:text-white"
+              style={{ color: "#94A3B8", fontFamily: "var(--font-sans)" }}
             >
-              <svg className="size-4 text-[#FF5500]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13 2.257a1 1 0 011.21.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-3.28a1 1 0 01-.948-.684l-1.498-4.493a1 1 0 01.502-1.21l2.257-1.13a11.042 11.042 0 00-5.516-5.516l-1.13-2.257a1 1 0 01-1.21-.502l-4.493-1.498a1 1 0 01-1.21-.502l-4.493-1.498A1 1 0 013 12V9a2 2 0 012-2h3.28z" />
-              </svg>
               +92 334 8366 960
             </a>
             <a

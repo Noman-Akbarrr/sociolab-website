@@ -73,7 +73,7 @@ export function MegaphoneVideo({ className = "" }: { className?: string }) {
   return (
     <video
       ref={videoRef}
-      src="/megaphone.mp4"
+      src="/megaphone-for-web.webm"
       className={className}
       muted
       playsInline

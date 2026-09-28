@@ -104,9 +104,6 @@ export function B2BHero() {
         {/* Eyebrow */}
         <div className="hero-eyebrow flex items-center justify-center gap-2 mb-6 opacity-0">
           <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: "#FF5500" }} />
-          <span className="text-xs font-mono uppercase tracking-widest" style={{ color: "#FF5500" }}>
-            Digital Marketing Agency
-          </span>
         </div>
 
         {/* Headline */}
@@ -117,9 +114,9 @@ export function B2BHero() {
         >
           <span className="hero-line block opacity-0">Scale faster with</span>
           <span className="hero-line flex items-center justify-center flex-wrap gap-x-4 gap-y-2 opacity-0">
-            <span>digital</span>
+            <span>Digital</span>
             <MegaphoneVideo className="inline-block w-[1.1em] h-[1.1em] flex-shrink-0 -mt-1" />
-            <span>marketing</span>
+            <span>Marketing</span>
           </span>
         </h1>
 
