@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
+import { ParallaxCards } from "./parallax-cards";
 
 const pillars = [
   {
@@ -26,7 +27,6 @@ const pillars = [
   },
 ];
 
-// Desktop scattered positions — tighter vertical spacing
 const desktopPositions = [
   { top: "4%",  left: "12%" },
   { top: "24%", right: "8%" },
@@ -34,33 +34,10 @@ const desktopPositions = [
   { top: "66%", right: "15%" },
 ];
 
-function MouseGlow({ containerRef }: { containerRef: React.RefObject<HTMLDivElement | null> }) {
-  const glowRef = useRef<HTMLDivElement>(null);
+const cardDepths = [0.15, 0.4, 0.7, 0.25];
+const bgDepths = [0.05, 0.1, 0.15, 0.2, 0.25];
 
-  return (
-    <div
-      ref={glowRef}
-      className="absolute pointer-events-none hidden md:block"
-      style={{
-        width: "300px",
-        height: "300px",
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,85,0,0.08) 0%, transparent 70%)",
-        transform: "translate(-50%, -50%)",
-        transition: "left 0.3s ease-out, top 0.3s ease-out",
-        zIndex: 0,
-      }}
-      onMouseMove={(e) => {
-        if (!containerRef.current || !glowRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        glowRef.current.style.left = `${e.clientX - rect.left}px`;
-        glowRef.current.style.top = `${e.clientY - rect.top}px`;
-      }}
-    />
-  );
-}
-
-function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
+function HoverCard({ pillar, index, depth = 0.5 }: { pillar: typeof pillars[0]; index: number; depth: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -76,6 +53,7 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
+      data-parallax-depth={depth.toString()}
       className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden"
       style={{
         backgroundColor: "rgba(255,255,255,0.95)",
@@ -84,6 +62,7 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
         boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
         "--mouse-x": "50%",
         "--mouse-y": "50%",
+        willChange: "transform",
       } as React.CSSProperties}
       initial={{ opacity: 0, y: 50, scale: 0.92 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -91,7 +70,6 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ scale: 1.03, boxShadow: "0 12px 40px rgba(255,85,0,0.08)" }}
     >
-      {/* Mouse spotlight */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
@@ -127,7 +105,6 @@ function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number
         </div>
       </div>
 
-      {/* Accent border on hover */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
         style={{ border: "1px solid rgba(255,85,0,0.3)" }}
       />
@@ -166,28 +143,58 @@ function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: numbe
   );
 }
 
+function BackgroundElements() {
+  return (
+    <>
+      {[
+        { top: "15%", left: "12%", w: "0.5rem", h: "0.5rem", opacity: 10, depth: bgDepths[0] },
+        { top: "35%", right: "15%", w: "0.75rem", h: "0.75rem", opacity: 7, depth: bgDepths[1] },
+        { top: "60%", left: "20%", w: "0.375rem", h: "0.375rem", opacity: 15, depth: bgDepths[2] },
+        { top: "80%", right: "25%", w: "0.625rem", h: "0.625rem", opacity: 5, depth: bgDepths[3] },
+      ].map((dot, i) => (
+        <div
+          key={i}
+          data-parallax-depth={dot.depth.toString()}
+          className="absolute rounded-full bg-[#FF5500] pointer-events-none"
+          style={{
+            top: dot.top,
+            left: dot.left,
+            right: dot.right,
+            width: dot.w,
+            height: dot.h,
+            opacity: dot.opacity / 100,
+            willChange: "transform",
+          }}
+        />
+      ))}
+
+      <svg
+        data-parallax-depth={bgDepths[4].toString()}
+        className="absolute inset-0 w-full h-full opacity-[0.02] pointer-events-none"
+        preserveAspectRatio="none"
+        style={{ willChange: "transform" }}
+      >
+        <line x1="0" y1="0" x2="100%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
+        <line x1="20%" y1="0" x2="100%" y2="80%" stroke="#1C1917" strokeWidth="0.5" />
+        <line x1="0" y1="20%" x2="80%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
+      </svg>
+    </>
+  );
+}
+
 export function Capabilities() {
-  const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
 
   return (
     <section className="relative">
-      {/* Background */}
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#F5F5F4" }}>
-        <div className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-[#FF5500] opacity-10" />
-        <div className="absolute top-[35%] right-[15%] w-3 h-3 rounded-full bg-[#FF5500] opacity-[0.07]" />
-        <div className="absolute top-[60%] left-[20%] w-1.5 h-1.5 rounded-full bg-[#FF5500] opacity-15" />
-        <div className="absolute top-[80%] right-[25%] w-2.5 h-2.5 rounded-full bg-[#FF5500] opacity-[0.05]" />
-        <svg className="absolute inset-0 w-full h-full opacity-[0.02]" preserveAspectRatio="none">
-          <line x1="0" y1="0" x2="100%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
-          <line x1="20%" y1="0" x2="100%" y2="80%" stroke="#1C1917" strokeWidth="0.5" />
-          <line x1="0" y1="20%" x2="80%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
-        </svg>
+        <ParallaxCards enabled={true} className="absolute inset-0">
+          <BackgroundElements />
+        </ParallaxCards>
       </div>
 
       <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
-        {/* Title */}
         <motion.div
           ref={titleRef}
           className="text-center mb-16"
@@ -199,19 +206,18 @@ export function Capabilities() {
             Four Services. One Growth Engine.
           </h2>
           <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
-            Hover to explore each service
+            Move mouse to explore depth · Hover cards to expand
           </p>
         </motion.div>
 
-        {/* ── Desktop: scattered cards with mouse glow ── */}
-        <div ref={containerRef} className="hidden md:block relative" style={{ minHeight: "140vh" }}>
-          <MouseGlow containerRef={containerRef} />
-
+        <ParallaxCards enabled={true} className="hidden md:block relative" style={{ minHeight: "140vh" }}>
           {pillars.map((pillar, i) => {
             const pos = desktopPositions[i];
+            const depth = cardDepths[i];
             return (
               <div
                 key={pillar.title}
+                data-parallax-depth={depth.toString()}
                 className="absolute"
                 style={{
                   top: pos.top,
@@ -219,15 +225,15 @@ export function Capabilities() {
                   right: "right" in pos ? pos.right : undefined,
                   width: "min(360px, 40vw)",
                   zIndex: i + 1,
+                  willChange: "transform",
                 }}
               >
-                <HoverCard pillar={pillar} index={i} />
+                <HoverCard pillar={pillar} index={i} depth={depth} />
               </div>
             );
           })}
-        </div>
+        </ParallaxCards>
 
-        {/* ── Mobile: stacked cards ── */}
         <div className="md:hidden flex flex-col gap-4">
           {pillars.map((pillar, i) => (
             <MobileCard key={pillar.title} pillar={pillar} index={i} />
