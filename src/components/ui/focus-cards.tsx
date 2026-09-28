@@ -36,7 +36,7 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
         alt={card.title}
         className="object-cover absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-black/5 to-transparent" />
       
       {/* Content container - handles the animation */}
       <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500 ease-out">
