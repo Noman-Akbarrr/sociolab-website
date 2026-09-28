@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
-import { WisprFlow } from "./wispr-flow";
 
 const pillars = [
   {
@@ -145,14 +144,6 @@ export function Capabilities() {
 
   return (
     <section className="relative">
-      {/* Wispr Flow background text animation - curved path */}
-      <WisprFlow 
-        speed={28} 
-        fontSize={13} 
-        textOpacity={0.05} 
-        textColor="#1C1917"
-      />
-
       {/* Subtle background decoration */}
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#F5F5F4" }}>
         <div className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-[#FF5500] opacity-10" />
