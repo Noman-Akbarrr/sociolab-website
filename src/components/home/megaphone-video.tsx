@@ -5,46 +5,33 @@ import { useRef, useEffect, useState } from "react";
 export function MegaphoneVideo({ className = "" }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [hasEnded, setHasEnded] = useState(false);
+  const [duration, setDuration] = useState(0);
   const animationRef = useRef<number | null>(null);
   const targetTimeRef = useRef<number>(0);
+  const directionRef = useRef<1 | -1>(1);
 
-  const playForward = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.playbackRate = 1;
-    video.play().catch(() => {});
-  };
-
-  const playReverse = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.playbackRate = -1;
-    video.play().catch(() => {});
-  };
-
-  const scrubTo = (targetTime: number) => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
+  const setTargetTime = (target: number) => {
+    targetTimeRef.current = Math.max(0, Math.min(duration, target));
+    if (animationRef.current) return;
 
     const animate = () => {
       const video = videoRef.current;
       if (!video) return;
 
-      const diff = targetTime - video.currentTime;
-      if (Math.abs(diff) < 0.02) {
-        video.currentTime = targetTime;
-        if (targetTime === 0) {
+      const current = video.currentTime;
+      const target = targetTimeRef.current;
+      const diff = target - current;
+
+      if (Math.abs(diff) < 0.015) {
+        video.currentTime = target;
+        if (target === 0 || target === duration) {
           video.pause();
         }
+        animationRef.current = null;
         return;
       }
 
-      video.currentTime += diff * 0.15;
+      video.currentTime += diff * 0.18;
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -53,51 +40,33 @@ export function MegaphoneVideo({ className = "" }: { className?: string }) {
 
   const handleMouseEnter = () => {
     setIsHovered(true);
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (hasEnded) {
-      playReverse();
-    } else {
-      playForward();
-    }
+    directionRef.current = 1;
+    setTargetTime(duration);
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (hasEnded) {
-      playReverse();
-    } else {
-      scrubTo(0);
-    }
+    directionRef.current = -1;
+    setTargetTime(0);
   };
 
-  const handleEnded = () => {
-    setHasEnded(true);
+  const handleLoadedMetadata = () => {
     const video = videoRef.current;
-    if (video) {
-      video.pause();
-    }
+    if (video) setDuration(video.duration);
   };
 
   const handleTimeUpdate = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (video.currentTime <= 0.1) {
-      setHasEnded(false);
+    if (video.currentTime <= 0.05 && directionRef.current === -1) {
       video.pause();
     }
   };
 
   useEffect(() => {
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, []);
 
@@ -111,9 +80,10 @@ export function MegaphoneVideo({ className = "" }: { className?: string }) {
       preload="auto"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onEnded={handleEnded}
+      onLoadedMetadata={handleLoadedMetadata}
       onTimeUpdate={handleTimeUpdate}
       aria-hidden="true"
+      style={{ background: "transparent" }}
     />
   );
 }
