@@ -64,7 +64,7 @@ export function Navbar() {
           <img
             src="/sociolab-header-logo.png"
             alt="Sociolab"
-            className="h-20 w-auto"
+            className="h-28 w-auto"
           />
         </Link>
 
