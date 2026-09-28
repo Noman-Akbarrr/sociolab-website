@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
-import { ParallaxCards } from "./parallax-cards";
+import { WisprFlow } from "./wispr-flow";
 
 const pillars = [
   {
@@ -27,17 +27,7 @@ const pillars = [
   },
 ];
 
-const desktopPositions = [
-  { top: "4%",  left: "12%" },
-  { top: "24%", right: "8%" },
-  { top: "46%", left: "22%" },
-  { top: "66%", right: "15%" },
-];
-
-const cardDepths = [0.15, 0.4, 0.7, 0.25];
-const bgDepths = [0.05, 0.1, 0.15, 0.2, 0.25];
-
-function HoverCard({ pillar, index, depth = 0.5 }: { pillar: typeof pillars[0]; index: number; depth: number }) {
+function HoverCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
@@ -53,8 +43,7 @@ function HoverCard({ pillar, index, depth = 0.5 }: { pillar: typeof pillars[0]; 
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
-      data-parallax-depth={depth.toString()}
-      className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden"
+      className="group relative p-6 rounded-2xl cursor-pointer overflow-hidden h-full"
       style={{
         backgroundColor: "rgba(255,255,255,0.95)",
         border: "1px solid #E7E5E4",
@@ -62,13 +51,12 @@ function HoverCard({ pillar, index, depth = 0.5 }: { pillar: typeof pillars[0]; 
         boxShadow: "0 4px 30px rgba(0,0,0,0.04)",
         "--mouse-x": "50%",
         "--mouse-y": "50%",
-        willChange: "transform",
       } as React.CSSProperties}
       initial={{ opacity: 0, y: 50, scale: 0.92 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ scale: 1.03, boxShadow: "0 12px 40px rgba(255,85,0,0.08)" }}
+      whileHover={{ scale: 1.03, boxShadow: "0 12px 40px rgba(255,85,0,0.08)", zIndex: 10 }}
     >
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
@@ -115,7 +103,7 @@ function HoverCard({ pillar, index, depth = 0.5 }: { pillar: typeof pillars[0]; 
 function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: number }) {
   return (
     <motion.div
-      className="p-5 rounded-xl"
+      className="p-5 rounded-xl h-full"
       style={{ backgroundColor: "white", border: "1px solid #E7E5E4" }}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -143,104 +131,67 @@ function MobileCard({ pillar, index }: { pillar: typeof pillars[0]; index: numbe
   );
 }
 
-function BackgroundElements() {
-  return (
-    <>
-      {[
-        { top: "15%", left: "12%", w: "0.5rem", h: "0.5rem", opacity: 10, depth: bgDepths[0] },
-        { top: "35%", right: "15%", w: "0.75rem", h: "0.75rem", opacity: 7, depth: bgDepths[1] },
-        { top: "60%", left: "20%", w: "0.375rem", h: "0.375rem", opacity: 15, depth: bgDepths[2] },
-        { top: "80%", right: "25%", w: "0.625rem", h: "0.625rem", opacity: 5, depth: bgDepths[3] },
-      ].map((dot, i) => (
-        <div
-          key={i}
-          data-parallax-depth={dot.depth.toString()}
-          className="absolute rounded-full bg-[#FF5500] pointer-events-none"
-          style={{
-            top: dot.top,
-            left: dot.left,
-            right: dot.right,
-            width: dot.w,
-            height: dot.h,
-            opacity: dot.opacity / 100,
-            willChange: "transform",
-          }}
-        />
-      ))}
-
-      <svg
-        data-parallax-depth={bgDepths[4].toString()}
-        className="absolute inset-0 w-full h-full opacity-[0.02] pointer-events-none"
-        preserveAspectRatio="none"
-        style={{ willChange: "transform" }}
-      >
-        <line x1="0" y1="0" x2="100%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
-        <line x1="20%" y1="0" x2="100%" y2="80%" stroke="#1C1917" strokeWidth="0.5" />
-        <line x1="0" y1="20%" x2="80%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
-      </svg>
-    </>
-  );
-}
-
 export function Capabilities() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-80px" });
 
   return (
     <section className="relative">
+      {/* Wispr Flow background text animation */}
+      <WisprFlow 
+        speed={40} 
+        fontSize={13} 
+        opacity={0.06} 
+        color="#1C1917"
+        rows={4}
+      />
+
+      {/* Subtle background decoration */}
       <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: "#F5F5F4" }}>
-        <ParallaxCards enabled={true} className="absolute inset-0">
-          <BackgroundElements />
-        </ParallaxCards>
+        <div className="absolute top-[15%] left-[12%] w-2 h-2 rounded-full bg-[#FF5500] opacity-10" />
+        <div className="absolute top-[35%] right-[15%] w-3 h-3 rounded-full bg-[#FF5500] opacity-[0.07]" />
+        <div className="absolute top-[60%] left-[20%] w-1.5 h-1.5 rounded-full bg-[#FF5500] opacity-15" />
+        <div className="absolute top-[80%] right-[25%] w-2.5 h-2.5 rounded-full bg-[#FF5500] opacity-[0.05]" />
+        <svg className="absolute inset-0 w-full h-full opacity-[0.02]" preserveAspectRatio="none">
+          <line x1="0" y1="0" x2="100%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
+          <line x1="20%" y1="0" x2="100%" y2="80%" stroke="#1C1917" strokeWidth="0.5" />
+          <line x1="0" y1="20%" x2="80%" y2="100%" stroke="#1C1917" strokeWidth="0.5" />
+        </svg>
       </div>
 
-      <div className="relative">
-        {/* Full-width parallax container for cards */}
-        <ParallaxCards enabled={true} className="hidden md:block relative" style={{ minHeight: "140vh" }}>
-          {pillars.map((pillar, i) => {
-            const pos = desktopPositions[i];
-            const depth = cardDepths[i];
-            return (
-              <div
-                key={pillar.title}
-                data-parallax-depth={depth.toString()}
-                className="absolute"
-                style={{
-                  top: pos.top,
-                  left: "left" in pos ? pos.left : undefined,
-                  right: "right" in pos ? pos.right : undefined,
-                  width: "min(360px, 40vw)",
-                  zIndex: i + 1,
-                  willChange: "transform",
-                }}
-              >
-                <HoverCard pillar={pillar} index={i} depth={depth} />
-              </div>
-            );
-          })}
-        </ParallaxCards>
+      <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
+        {/* Title - ABOVE the cards */}
+        <motion.div
+          ref={titleRef}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          animate={titleInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
+            Four Services. One Growth Engine.
+          </h2>
+          <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
+            Hover a card to expand and explore
+          </p>
+        </motion.div>
 
-        <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
-          <motion.div
-            ref={titleRef}
-            className="text-center mb-16"
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
-              Four Services. One Growth Engine.
-            </h2>
-            <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
-              Move mouse to explore depth · Hover cards to expand
-            </p>
-          </motion.div>
+        {/* Desktop: Grid of cards */}
+        <div className="hidden md:grid grid-cols-1 lg:grid-cols-4 gap-6" style={{ minHeight: "500px" }}>
+          {pillars.map((pillar, i) => (
+            <div key={pillar.title} className="relative" style={{ minHeight: "320px" }}>
+              <HoverCard pillar={pillar} index={i} />
+            </div>
+          ))}
+        </div>
 
-          <div className="md:hidden flex flex-col gap-4">
-            {pillars.map((pillar, i) => (
-              <MobileCard key={pillar.title} pillar={pillar} index={i} />
-            ))}
-          </div>
+        {/* Mobile: stacked cards */}
+        <div className="md:hidden flex flex-col gap-4">
+          {pillars.map((pillar, i) => (
+            <div key={pillar.title} style={{ minHeight: "280px" }}>
+              <MobileCard pillar={pillar} index={i} />
+            </div>
+          ))}
         </div>
       </div>
     </section>
