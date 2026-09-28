@@ -194,22 +194,8 @@ export function Capabilities() {
         </ParallaxCards>
       </div>
 
-      <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
-        <motion.div
-          ref={titleRef}
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 40 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
-            Four Services. One Growth Engine.
-          </h2>
-          <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
-            Move mouse to explore depth · Hover cards to expand
-          </p>
-        </motion.div>
-
+      <div className="relative">
+        {/* Full-width parallax container for cards */}
         <ParallaxCards enabled={true} className="hidden md:block relative" style={{ minHeight: "140vh" }}>
           {pillars.map((pillar, i) => {
             const pos = desktopPositions[i];
@@ -234,10 +220,27 @@ export function Capabilities() {
           })}
         </ParallaxCards>
 
-        <div className="md:hidden flex flex-col gap-4">
-          {pillars.map((pillar, i) => (
-            <MobileCard key={pillar.title} pillar={pillar} index={i} />
-          ))}
+        <div className="py-24 md:py-32 max-w-[1240px] mx-auto px-6 md:px-12 relative">
+          <motion.div
+            ref={titleRef}
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 40 }}
+            animate={titleInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4" style={{ color: "#1C1917" }}>
+              Four Services. One Growth Engine.
+            </h2>
+            <p className="text-center max-w-xl mx-auto text-sm" style={{ color: "#78716C" }}>
+              Move mouse to explore depth · Hover cards to expand
+            </p>
+          </motion.div>
+
+          <div className="md:hidden flex flex-col gap-4">
+            {pillars.map((pillar, i) => (
+              <MobileCard key={pillar.title} pillar={pillar} index={i} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

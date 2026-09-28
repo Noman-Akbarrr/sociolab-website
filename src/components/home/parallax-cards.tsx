@@ -44,8 +44,8 @@ export function ParallaxCards({
     const centerY = containerRect.height / 2;
     
     targetPosRef.current = {
-      x: (e.clientX - containerRect.left - centerX) * 0.08,
-      y: (e.clientY - containerRect.top - centerY) * 0.08,
+      x: (e.clientX - containerRect.left - centerX) * 0.18,
+      y: (e.clientY - containerRect.top - centerY) * 0.18,
     };
   };
 

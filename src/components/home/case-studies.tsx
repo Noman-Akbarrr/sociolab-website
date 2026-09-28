@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { FocusCards } from "@/components/ui/focus-cards";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -19,6 +20,11 @@ const caseStudies = [
     cost: "PKR 22.79",
     summary: "Dynamic creative testing matrix for Independence Day collection driving 314 high-intent buyer conversations.",
     tags: ["Meta Ads", "CAPI", "WhatsApp"],
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1200&auto=format&fit=crop",
+    metrics: [
+      { label: "Chats", value: "314" },
+      { label: "CPL", value: "PKR 22.79" },
+    ],
   },
   {
     slug: "sehgal-motors",
@@ -29,6 +35,11 @@ const caseStudies = [
     cost: "PKR 180",
     summary: "Full-funnel Meta Ads architecture for Pakistan's leading automotive retailer on PKR 50K daily budget.",
     tags: ["Meta Ads", "Retargeting", "Leads"],
+    image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1200&auto=format&fit=crop",
+    metrics: [
+      { label: "ROAS", value: "3.8x" },
+      { label: "Daily Budget", value: "PKR 50K" },
+    ],
   },
   {
     slug: "gcc-startups",
@@ -39,6 +50,11 @@ const caseStudies = [
     cost: "PKR 2.4M",
     summary: "Rebuilt lead generation engine for GCC-based startup consultancy, reducing cost per lead by 47%.",
     tags: ["Google Ads", "Meta", "WhatsApp Bot"],
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",
+    metrics: [
+      { label: "CPL Reduction", value: "47%" },
+      { label: "Total Spend", value: "PKR 2.4M" },
+    ],
   },
   {
     slug: "tanzeem",
@@ -49,6 +65,11 @@ const caseStudies = [
     cost: "PKR 1.8M",
     summary: "First-ever paid acquisition funnel achieving 2.7x ROAS within 30 days through structured creative testing.",
     tags: ["Meta Ads", "DCT", "E-Commerce"],
+    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200&auto=format&fit=crop",
+    metrics: [
+      { label: "ROAS", value: "2.7x" },
+      { label: "Timeframe", value: "30 Days" },
+    ],
   },
 ];
 
@@ -65,18 +86,13 @@ export function CaseStudies() {
         }
       );
 
-      // Compact cards stagger in with clip-path reveal
-      const cards = gsap.utils.toArray<HTMLElement>(".cs-compact");
-      cards.forEach((card, i) => {
-        gsap.fromTo(card,
-          { opacity: 0, y: 40, scale: 0.9 },
-          {
-            opacity: 1, y: 0, scale: 1,
-            duration: 0.6, delay: i * 0.08, ease: "power3.out",
-            scrollTrigger: { trigger: sectionRef.current, start: "top 60%" }
-          }
-        );
-      });
+      gsap.fromTo(".fc-grid",
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1, y: 0, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 70%" }
+        }
+      );
 
       // Decorative line
       const line = sectionRef.current?.querySelector(".cs-line") as SVGLineElement;
@@ -116,51 +132,16 @@ export function CaseStudies() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {caseStudies.map((cs) => (
-            <Link key={cs.slug} href={`/case-studies/${cs.slug}`}>
-              <div className="cs-compact opacity-0 group p-5 rounded-xl border border-stone-200 bg-white transition-all duration-300 hover:shadow-lg hover:shadow-black/[0.04] hover:-translate-y-1 hover:border-[#FF5500]/30 cursor-pointer">
-                {/* Industry tag */}
-                <span className="text-[10px] font-mono font-semibold uppercase tracking-wider" style={{ color: "#FF5500" }}>
-                  {cs.industry}
-                </span>
-
-                {/* Client name */}
-                <h3 className="text-base font-bold mt-2 mb-1 transition-colors group-hover:text-[#FF5500]" style={{ color: "#1C1917" }}>
-                  {cs.client}
-                </h3>
-
-                {/* Metric */}
-                <div className="flex items-baseline gap-2 mb-3">
-                  <span className="text-2xl font-extrabold font-mono" style={{ color: "#1C1917" }}>{cs.metric}</span>
-                  <span className="text-xs" style={{ color: "#78716C" }}>{cs.metricLabel}</span>
-                </div>
-
-                {/* Summary */}
-                <p className="text-xs leading-relaxed mb-4 line-clamp-2" style={{ color: "#78716C" }}>
-                  {cs.summary}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5">
-                  {cs.tags.map((tag) => (
-                    <span key={tag} className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: "#F5F5F4", color: "#57534E" }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Read more arrow */}
-                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-[#FF5500] opacity-0 group-hover:opacity-100 transition-opacity">
-                  Read case study
-                  <svg className="w-3 h-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <FocusCards 
+          cards={caseStudies.map(cs => ({
+            title: cs.client,
+            src: cs.image,
+            description: cs.summary,
+            metrics: cs.metrics,
+          }))}
+          className="fc-grid"
+          columns={4}
+        />
       </div>
     </section>
   );
