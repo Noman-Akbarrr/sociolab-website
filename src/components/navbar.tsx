@@ -61,11 +61,9 @@ export function Navbar() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
         {/* ── Wordmark ─────────────────────────────── */}
         <Link href="/" className="flex items-center" aria-label={`${site.name} — home`}>
-          <img
-            src="/sociolab-header-logo.png"
-            alt="Sociolab"
-            className="h-14 w-auto"
-          />
+          <span className="font-display font-extrabold text-xl tracking-tight" style={{ color: "#FF5500" }}>
+            SOCIOLAB
+          </span>
         </Link>
 
         {/* ── Desktop nav ──────────────────────────── */}
