@@ -36,13 +36,13 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
         alt={card.title}
         className="object-cover absolute inset-0 w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
       
       {/* Content container - handles the animation */}
       <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500 ease-out">
         {/* Brand name - moves up on hover */}
         <motion.h3
-          className="text-base md:text-lg font-bold text-white drop-shadow-lg"
+          className="text-base md:text-lg font-bold text-white/100 drop-shadow-xl"
           initial={false}
           animate={{
             y: hovered === index ? -80 : 0,
@@ -63,7 +63,7 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
           transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
           className="absolute bottom-0 left-0 right-0 px-5"
         >
-          <h3 className="text-base md:text-lg font-bold text-white mb-3 drop-shadow-lg">
+          <h3 className="text-base md:text-lg font-bold text-white/100 mb-3 drop-shadow-xl">
             {card.title}
           </h3>
           {card.description && (
