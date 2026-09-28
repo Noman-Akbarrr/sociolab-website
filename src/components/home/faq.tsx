@@ -17,85 +17,37 @@ const faqs: FAQCategory[] = [
   {
     title: "Performance Marketing",
     questions: [
-      {
-        q: "What platforms do you run ads on?",
-        a: "We run campaigns across Meta (Facebook & Instagram), Google (Search, Shopping, YouTube, Display), TikTok, and LinkedIn. Platform selection depends on your audience and objectives."
-      },
-      {
-        q: "What's your minimum ad spend requirement?",
-        a: "We typically recommend a minimum of PKR 150K/month for meaningful data and optimization. For e-commerce brands, PKR 300K+ allows proper testing matrices."
-      },
-      {
-        q: "How do you track conversions with iOS privacy changes?",
-        a: "We implement server-side Meta CAPI and Google Enhanced Conversions alongside pixel tracking. This restores 60-80% of lost signal from iOS 14+ privacy updates."
-      },
-      {
-        q: "What's your creative testing process?",
-        a: "We use Dynamic Creative Testing (DCT) matrices: 8-12 variations per ad set testing hooks, formats, and angles. Winners get budget reallocated weekly."
-      },
+      { q: "What platforms do you run ads on?", a: "Meta, Google, TikTok, LinkedIn. Platform choice depends on your audience and goals." },
+      { q: "Minimum ad spend?", a: "PKR 150K/month minimum. E-commerce needs PKR 300K+ for proper testing." },
+      { q: "How do you handle iOS tracking?", a: "Server-side CAPI + Enhanced Conversions restores 60-80% lost signal." },
+      { q: "Creative testing process?", a: "DCT matrices: 8-12 variations per ad set. Winners get budget reallocated weekly." },
     ]
   },
   {
     title: "Social Media Management",
     questions: [
-      {
-        q: "Which platforms do you manage?",
-        a: "Instagram, Facebook, LinkedIn, TikTok, and X (Twitter). Platform mix depends on your audience - B2B brands prioritize LinkedIn, D2C brands prioritize Instagram/TikTok."
-      },
-      {
-        q: "Do you create content or just schedule it?",
-        a: "Full creative production: strategy, copywriting, design, Reels/TikTok video production, photography direction, and community management. We handle everything end-to-end."
-      },
-      {
-        q: "How do you measure social ROI?",
-        a: "We track engagement rate, follower growth, referral traffic, lead generation, and attributed revenue via UTM tracking and platform analytics dashboards."
-      },
-      {
-        q: "What's your creator/influencer process?",
-        a: "We run a seeded creator program: identify 50+ micro-creators monthly, ship product, brief on hooks, collect UGC, whitelist top performers for paid amplification."
-      },
+      { q: "Which platforms?", a: "Instagram, Facebook, LinkedIn, TikTok, X. Mix depends on audience." },
+      { q: "Content creation included?", a: "Yes. Strategy, copy, design, Reels/TikTok video, photography, community management." },
+      { q: "How measure ROI?", a: "Engagement, follower growth, referral traffic, leads, attributed revenue via UTMs." },
+      { q: "Creator/influencer process?", a: "50+ micro-creators monthly, product seeding, hook briefs, UGC collection, whitelisting top performers." },
     ]
   },
   {
     title: "Web Development",
     questions: [
-      {
-        q: "What platforms do you build on?",
-        a: "Next.js for custom web apps, Shopify for e-commerce, Framer for marketing sites, WordPress for content-heavy sites. Platform choice depends on your needs."
-      },
-      {
-        q: "Do you handle migrations and redesigns?",
-        a: "Yes. We've migrated 20+ stores to Shopify and rebuilt dozens of sites on Next.js. We preserve SEO equity via proper redirects, schema, and Core Web Vitals optimization."
-      },
-      {
-        q: "What's your typical timeline?",
-        a: "Landing pages: 2-3 weeks. Full marketing sites: 4-6 weeks. E-commerce stores: 6-8 weeks. Includes strategy, design, dev, QA, and launch."
-      },
-      {
-        q: "Do you provide ongoing maintenance?",
-        a: "Yes. Retainer options include security updates, content updates, performance monitoring, A/B testing, and conversion rate optimization."
-      },
+      { q: "What platforms?", a: "Next.js for apps, Shopify for e-commerce, Framer for marketing, WordPress for content." },
+      { q: "Handle migrations?", a: "Yes. 20+ Shopify migrations, Next.js rebuilds. SEO preserved via redirects & schema." },
+      { q: "Typical timeline?", a: "Landing pages: 2-3 weeks. Marketing sites: 4-6 weeks. E-commerce: 6-8 weeks." },
+      { q: "Ongoing maintenance?", a: "Yes. Retainers include updates, monitoring, A/B testing, CRO." },
     ]
   },
   {
     title: "Working With Us",
     questions: [
-      {
-        q: "What's your typical engagement model?",
-        a: "Monthly retainers starting at PKR 200K/month. Project-based work available for web dev and one-off campaigns. No long-term contracts - 30-day notice to pause/cancel."
-      },
-      {
-        q: "How do you communicate and report?",
-        a: "Weekly Slack/email updates, monthly performance calls, real-time dashboard access, and quarterly strategy reviews. Direct access to your account lead."
-      },
-      {
-        q: "What industries do you specialize in?",
-        a: "E-commerce (fashion, beauty, electronics), D2C brands, B2B SaaS, automotive, professional services, and startups. We don't work with gambling, crypto, or adult industries."
-      },
-      {
-        q: "How fast can we start?",
-        a: "Typically 1-2 weeks after signed agreement. We begin with audit & setup week, then move to creative/asset production, then launch."
-      },
+      { q: "Engagement model?", a: "Monthly retainers from PKR 200K. Project-based available. No long-term contracts, 30-day notice." },
+      { q: "Communication & reporting?", a: "Weekly updates, monthly calls, real-time dashboard, quarterly reviews. Direct lead access." },
+      { q: "Industry specialization?", a: "E-commerce, D2C, B2B SaaS, automotive, professional services, startups. No gambling/crypto/adult." },
+      { q: "How fast to start?", a: "1-2 weeks after agreement. Week 1: audit & setup, then creative production, then launch." },
     ]
   },
 ];
@@ -107,17 +59,17 @@ function CategoryItem({ category, index, isOpen, onToggle }: {
   onToggle: () => void;
 }) {
   return (
-    <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
+    <div className="bg-white border border-stone-200 rounded-lg overflow-hidden">
       <button
         onClick={onToggle}
-        className="w-full px-6 py-5 flex items-center justify-between text-left transition-colors"
+        className="w-full px-4 py-3.5 flex items-center justify-between text-left transition-colors"
         style={{ backgroundColor: "#F5F5F4" }}
       >
-        <h3 className="text-lg font-bold" style={{ color: "#1C1917" }}>
+        <h3 className="text-sm font-semibold" style={{ color: "#1C1917" }}>
           {category.title}
         </h3>
         <span 
-          className="text-2xl font-light transition-transform duration-300"
+          className="text-xl font-light transition-transform duration-300"
           style={{ 
             color: "#FF5500",
             transform: isOpen ? "rotate(180deg)" : "rotate(0deg)"
@@ -133,27 +85,27 @@ function CategoryItem({ category, index, isOpen, onToggle }: {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-6 pt-2">
-              <div className="space-y-4">
+            <div className="px-4 pb-4 pt-1">
+              <div className="space-y-2.5">
                 {category.questions.map((q, qIndex) => (
-                  <div key={qIndex} className="border-t border-stone-100 pt-4">
-                    <h4 className="font-semibold text-base mb-2" style={{ color: "#1C1917" }}>
+                  <div key={qIndex} className="border-t border-stone-100 pt-2.5">
+                    <h4 className="font-semibold text-xs mb-1" style={{ color: "#1C1917" }}>
                       {q.q}
                     </h4>
-                    <p className="text-sm leading-relaxed" style={{ color: "#57534E" }}>
+                    <p className="text-xs leading-snug" style={{ color: "#78716C" }}>
                       {q.a}
                     </p>
                   </div>
                 ))}
               </div>
               
-              <div className="mt-6 pt-4 border-t border-stone-100">
+              <div className="mt-4 pt-3 border-t border-stone-100">
                 <a 
                   href="/contact" 
-                  className="inline-flex items-center gap-2 bg-[#FF5500] hover:bg-[#E04B00] text-white font-semibold px-6 py-3 rounded-lg transition-all"
+                  className="inline-flex items-center gap-1.5 bg-[#FF5500] hover:bg-[#E04B00] text-white font-medium px-4 py-2 rounded-lg transition-all text-sm"
                 >
                   Still have questions? Get in Touch →
                 </a>
@@ -170,21 +122,21 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-16 md:py-24" style={{ backgroundColor: "#F5F5F4" }}>
-      <div className="max-w-4xl mx-auto px-6 md:px-12">
-        <div className="text-center mb-12">
+    <section className="py-12 md:py-16" style={{ backgroundColor: "#F5F5F4" }}>
+      <div className="max-w-3xl mx-auto px-6 md:px-12">
+        <div className="text-center mb-8">
           <p className="font-mono text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "#FF5500" }}>
             Frequently Asked Questions
           </p>
-          <h2 className="text-3xl md:text-4xl font-bold mt-2 mb-4" style={{ color: "#1C1917" }}>
+          <h2 className="text-2xl md:text-3xl font-bold mt-1.5 mb-3" style={{ color: "#1C1917" }}>
             Quick Answers
           </h2>
-          <p className="text-base md:text-lg max-w-2xl mx-auto" style={{ color: "#57534E" }}>
-            Everything you need to know about working with Sociolab. Can't find your answer? <a href="/contact" className="text-[#FF5500] font-medium hover:underline">Get in touch →</a>
+          <p className="text-sm max-w-xl mx-auto" style={{ color: "#57534E" }}>
+            Everything about working with Sociolab. <a href="/contact" className="text-[#FF5500] font-medium hover:underline">Get in touch →</a>
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((category, catIndex) => (
             <CategoryItem
               key={category.title}
