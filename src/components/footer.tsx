@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { Container } from "@/components/ui/container";
-import { whatsappHref } from "@/lib/site";
+import { FluidFooterBg } from "@/components/home/fluid-footer-bg";
 
 const capabilities = [
   { label: "Performance Marketing", href: "/services/performance-marketing" },
@@ -21,16 +21,18 @@ const legalLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#1E293B] bg-[#070A10]" style={{ fontFamily: "var(--font-sans)" }}>
-      <Container className="py-16">
+    <footer className="relative border-t border-[#1E293B] bg-[#070A10] overflow-hidden" style={{ fontFamily: "var(--font-sans)" }}>
+      <FluidFooterBg />
+      <Container className="py-16 relative z-10">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* ── Column 1: Brand & Mission ──────────── */}
           <div className="flex flex-col gap-5">
             <Link href="/" className="flex items-center gap-2" aria-label={`${site.name} — home`}>
-              <span className="font-display text-lg font-bold tracking-tight text-white">
-                {site.name}
-                <span className="text-[#FF5500]">.</span>
-              </span>
+              <img
+                src="/sociolab-header-logo.png"
+                alt="Sociolab"
+                className="h-10 w-auto"
+              />
             </Link>
             <p className="max-w-xs text-sm leading-relaxed" style={{ color: "#94A3B8", fontFamily: "var(--font-sans)" }}>
               Full-service digital marketing agency helping brands grow through
@@ -39,15 +41,6 @@ export function Footer() {
             <p className="text-xs" style={{ color: "#94A3B8", fontFamily: "var(--font-sans)" }}>
               Islamabad / Rawalpindi, Pakistan — Serving Regional & Global Clients.
             </p>
-            <div className="flex items-center gap-2">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-              </span>
-              <span className="text-xs font-medium text-emerald-400" style={{ fontFamily: "var(--font-sans)" }}>
-                Accepting Select Q3/Q4 Client Engagements
-              </span>
-            </div>
           </div>
 
           {/* ── Column 2: Capabilities ─────────────── */}
@@ -96,16 +89,14 @@ export function Footer() {
               Direct Contact
             </p>
             <a
-              href={whatsappHref()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#374151] bg-[#1F2937] px-4 py-2.5 text-sm font-semibold text-[#F9FAFB] transition-all hover:border-[#25D366] hover:bg-[rgba(37,211,102,0.08)]"
+              href="tel:+923348366960"
+              className="inline-flex w-fit items-center gap-2 rounded-lg border border-[#374151] bg-[#1F2937] px-4 py-2.5 text-sm font-semibold text-[#F9FAFB] transition-all hover:border-[#FF5500] hover:bg-[rgba(255,85,0,0.08)]"
               style={{ fontFamily: "var(--font-sans)" }}
             >
-              <svg className="size-4 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.25 6.75c0 8.284-6.716 15-15 15-2.12 0-4.107-.577-5.772-1.58-.37-.198-.77-.27-1.178-.158a.75.75 0 01-.524-.931c.455-.455 1.129-.406 1.498-.07a17.079 17.079 0 006.426 6.426c.339.369.389.1002.07-.524a.75.75 0 01-.158-1.178c-.092-.202-.261-.389-.58-.577A14.983 14.983 0 016 8.25c0-8.284 6.716-15 15-15 2.636 0 5.054.77 7.113 2.121a.75.75 0 01.12.532c-.16.28-.23.601-.18.92-.395 2.413-.6 4.88-.6 7.378z" />
+              <svg className="size-4 text-[#FF5500]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13 2.257a1 1 0 011.21.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-3.28a1 1 0 01-.948-.684l-1.498-4.493a1 1 0 01.502-1.21l2.257-1.13a11.042 11.042 0 00-5.516-5.516l-1.13-2.257a1 1 0 01-1.21-.502l-4.493-1.498a1 1 0 01-1.21-.502l-4.493-1.498A1 1 0 013 12V9a2 2 0 012-2h3.28z" />
               </svg>
-              WhatsApp
+              +92 334 8366 960
             </a>
             <a
               href={`mailto:${site.email}`}

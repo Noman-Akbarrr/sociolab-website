@@ -6,7 +6,6 @@ import { CaseStudies } from "@/components/home/case-studies";
 import { Capabilities } from "@/components/home/capabilities";
 import { Onboarding } from "@/components/home/onboarding";
 import { DiagnosticForm } from "@/components/home/diagnostic-form";
-import { B2BFooter } from "@/components/home/b2b-footer";
 
 export const metadata = {
   title: "Sociolab — Digital Marketing Agency Pakistan",
@@ -28,7 +27,6 @@ export default function HomePage() {
       <Capabilities />
       <Onboarding />
       <DiagnosticForm />
-      <B2BFooter />
     </div>
   );
 }
