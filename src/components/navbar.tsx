@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
-import { CloseIcon, MenuIcon, WhatsAppIcon } from "@/components/icons";
-import { WhatsAppLink } from "@/components/whatsapp-link";
+import { CloseIcon, MenuIcon } from "@/components/icons";
 
 const capabilities = [
   {
@@ -141,18 +140,11 @@ export function Navbar() {
 
         {/* ── Desktop CTAs ─────────────────────────── */}
         <div className="hidden items-center gap-4 lg:flex">
-          <WhatsAppLink
-            cta="nav"
-            className="inline-flex items-center gap-2 text-sm font-medium text-[#CBD5E1] transition-colors hover:text-white"
-          >
-            <WhatsAppIcon className="size-4 text-[#25D366]" />
-            Direct Chat
-          </WhatsAppLink>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 rounded-lg bg-[#FF5500] px-5 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00] hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#FF5500]"
           >
-            Request Growth Audit
+            Get in Touch
           </Link>
         </div>
 
@@ -205,18 +197,11 @@ export function Navbar() {
           {/* Bottom action row */}
           <div className="border-t border-[#1E293B] px-5 py-4 sm:px-8">
             <div className="flex flex-col gap-3">
-              <WhatsAppLink
-                cta="nav-mobile"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#374151] bg-[#1F2937] px-5 py-3 text-sm font-semibold text-[#F9FAFB] transition-all hover:border-[#25D366] hover:bg-[rgba(37,211,102,0.08)]"
-              >
-                <WhatsAppIcon className="size-5 text-[#25D366]" />
-                Chat on WhatsApp
-              </WhatsAppLink>
               <Link
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#FF5500] px-5 py-3 text-sm font-semibold text-white transition-all duration-150 hover:bg-[#E04B00]"
               >
-                Request Growth Audit
+                Get in Touch
               </Link>
             </div>
           </div>
