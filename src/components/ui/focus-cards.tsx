@@ -61,7 +61,7 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
             opacity: hovered === index ? 1 : 0,
           }}
           transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute bottom-0 left-0 right-0"
+          className="absolute bottom-0 left-0 right-0 px-5"
         >
           <h3 className="text-base md:text-lg font-bold text-white mb-3 drop-shadow-lg">
             {card.title}
