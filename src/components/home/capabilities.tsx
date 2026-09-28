@@ -151,7 +151,6 @@ export function Capabilities() {
         fontSize={13} 
         textOpacity={0.05} 
         textColor="#1C1917"
-        strokeColor="transparent"
       />
 
       {/* Subtle background decoration */}

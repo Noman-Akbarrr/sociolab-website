@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
-import { motion, useInView } from "motion/react";
+import { useMemo } from "react";
 
 const MARKETING_PHRASES = [
   "Performance Marketing that scales  •  ",
@@ -26,8 +25,8 @@ const MARKETING_PHRASES = [
   "Growth partners · Not vendors  •  ",
 ];
 
-const VIEW_W = 1200;
-const VIEW_H = 800;
+const VIEW_W = 1440;
+const VIEW_H = 900;
 
 type Point = { x: number; y: number };
 type Cubic = { p0: Point; p1: Point; p2: Point; p3: Point };
@@ -41,28 +40,32 @@ const lerp = (a: Point, b: Point, t: number): Point => ({
   y: a.y + (b.y - a.y) * t,
 });
 
+// Curved path: left → up → down through center → up → right
 const ORIGINAL_SEGMENTS: Cubic[] = [
+  // Segment 1: Enter from left, curve up
   {
-    p0: { x: -100, y: VIEW_H * 0.5 },
-    p1: { x: VIEW_W * 0.2, y: VIEW_H * 0.1 },
-    p2: { x: VIEW_W * 0.4, y: VIEW_H * 0.8 },
-    p3: { x: VIEW_W * 0.5, y: VIEW_H * 0.5 },
+    p0: { x: -100, y: VIEW_H * 0.55 },
+    p1: { x: VIEW_W * 0.15, y: VIEW_H * 0.25 },
+    p2: { x: VIEW_W * 0.35, y: VIEW_H * 0.7 },
+    p3: { x: VIEW_W * 0.45, y: VIEW_H * 0.45 },
   },
+  // Segment 2: Curve down through center
   {
-    p0: { x: VIEW_W * 0.5, y: VIEW_H * 0.5 },
-    p1: { x: VIEW_W * 0.6, y: VIEW_H * 0.2 },
-    p2: { x: VIEW_W * 0.8, y: VIEW_H * 0.8 },
-    p3: { x: VIEW_W * 0.9, y: VIEW_H * 0.4 },
+    p0: { x: VIEW_W * 0.45, y: VIEW_H * 0.45 },
+    p1: { x: VIEW_W * 0.55, y: VIEW_H * 0.2 },
+    p2: { x: VIEW_W * 0.75, y: VIEW_H * 0.8 },
+    p3: { x: VIEW_W * 0.85, y: VIEW_H * 0.4 },
   },
+  // Segment 3: Curve up and exit right
   {
-    p0: { x: VIEW_W * 0.9, y: VIEW_H * 0.4 },
-    p1: { x: VIEW_W * 1.0, y: VIEW_H * 0.1 },
-    p2: { x: VIEW_W * 1.1, y: VIEW_H * 0.9 },
+    p0: { x: VIEW_W * 0.85, y: VIEW_H * 0.4 },
+    p1: { x: VIEW_W * 0.9, y: VIEW_H * 0.15 },
+    p2: { x: VIEW_W * 1.05, y: VIEW_H * 0.85 },
     p3: { x: VIEW_W + 100, y: VIEW_H * 0.5 },
   },
 ];
 
-const SPLITS_PER_SEGMENT = 3;
+const SPLITS_PER_SEGMENT = 4;
 
 function splitCubic(b: Cubic, t: number): { left: Cubic; right: Cubic } {
   const a1 = lerp(b.p0, b.p1, t);
@@ -108,30 +111,32 @@ function toPathD({ start, segments }: PathState): string {
 }
 
 export function WisprFlow({ 
-  speed = 25, 
-  fontSize = 14, 
-  textOpacity = 0.06, 
+  speed = 30, 
+  fontSize = 13, 
+  textOpacity = 0.04, 
   textColor = "#1C1917",
-  strokeColor = "transparent"
 }: { 
   speed?: number; 
   fontSize?: number; 
   textOpacity?: number; 
   textColor?: string;
-  strokeColor?: string;
 }) {
-  const [path] = useState<PathState>(DEFAULT_PATH);
-  
-  const d = useMemo(() => toPathD(path), [path]);
-
+  const d = useMemo(() => toPathD(DEFAULT_PATH), []);
   const fullText = MARKETING_PHRASES.join("");
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+    <div 
+      className="fixed inset-0 overflow-hidden pointer-events-none -z-10" 
+      aria-hidden="true"
+      style={{ 
+        zIndex: -1,
+        pointerEvents: "none",
+      }}
+    >
       <svg
         viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
         preserveAspectRatio="none"
-        className="absolute inset-0 w-full h-full"
+        className="fixed inset-0 w-full h-full"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{ display: "block" }}
@@ -139,7 +144,7 @@ export function WisprFlow({
         <path
           id="wispr-curve"
           fill="transparent"
-          stroke={strokeColor}
+          stroke="transparent"
           d={d}
         />
 
@@ -149,13 +154,13 @@ export function WisprFlow({
             href="#wispr-curve"
             startOffset="0%"
             className="font-normal"
-            style={{ fill: textColor, opacity: textOpacity, baselineShift: "-30%" }}
+            style={{ fill: textColor, opacity: textOpacity, baselineShift: "-35%" }}
           >
-            {fullText}{fullText}{fullText}
+            {fullText}{fullText}{fullText}{fullText}
             <animate
               attributeName="startOffset"
-              dur={`${65 - speed}s`}
-              values="100%;-200%"
+              dur={`${speed}s`}
+              values="100%;-300%"
               repeatCount="indefinite"
             />
           </textPath>
