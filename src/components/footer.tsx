@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { Container } from "@/components/ui/container";
-import { FluidFooterBg } from "@/components/home/fluid-footer-bg";
 
 const capabilities = [
   { label: "Performance Marketing", href: "/services/performance-marketing" },
@@ -21,9 +20,8 @@ const legalLinks = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-[#1E293B] bg-[#070A10] overflow-hidden" style={{ fontFamily: "var(--font-sans)" }}>
-      <FluidFooterBg />
-      <Container className="py-16 relative z-10">
+    <footer className="border-t border-[#1E293B] bg-[#070A10]" style={{ fontFamily: "var(--font-sans)" }}>
+      <Container className="py-16">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* ── Column 1: Brand & Mission ──────────── */}
           <div className="flex flex-col gap-5">
