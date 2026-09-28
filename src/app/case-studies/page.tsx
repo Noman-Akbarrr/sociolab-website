@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Container } from "@/components/ui/container";
@@ -46,7 +46,7 @@ export default function CaseStudiesPage() {
 }
 
 function CaseStudyCard({ cs }: { cs: CaseStudy }) {
-  const [hovered, setHovered] = React.useState(false);
+  const [hovered, setHovered] = useState(false);
   const image = getCaseStudyImage(cs.slug);
 
   return (
@@ -66,33 +66,62 @@ function CaseStudyCard({ cs }: { cs: CaseStudy }) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
           
-          {/* Brand name - always visible at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out">
-            <h3 className="text-base font-bold text-white drop-shadow-lg">
+          {/* Content container - handles the animation */}
+          <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500 ease-out">
+            {/* Brand name - always visible at bottom, moves up on hover */}
+            <motion.h3
+              className="text-base font-bold text-white drop-shadow-lg"
+              initial={false}
+              animate={{
+                y: hovered ? -80 : 0,
+                opacity: hovered ? 0 : 1,
+              }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
               {cs.client}
-            </h3>
-          </div>
+            </motion.h3>
 
-          {/* Hover content - description + metrics */}
-          <div
-            className={`absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out ${
-              hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
-            }`}
-          >
-            <h3 className="text-base font-bold text-white mb-3 drop-shadow-lg">
-              {cs.client}
-            </h3>
-            <p className="text-sm text-white/90 mb-4 line-clamp-3">
-              {cs.summary}
-            </p>
-            <div className="flex flex-wrap gap-2 text-xs">
-              {cs.results.slice(0, 2).map((r, i) => (
-                <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
-                  <span className="font-semibold text-white">{r.value}</span>
-                  <span className="text-white/70">{r.label}</span>
-                </span>
-              ))}
-            </div>
+            {/* Hover content - description + metrics - slides up from bottom */}
+            <motion.div
+              initial={false}
+              animate={{
+                y: hovered ? 0 : 60,
+                opacity: hovered ? 1 : 0,
+              }}
+              transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute bottom-0 left-0 right-0"
+            >
+              <h3 className="text-base font-bold text-white mb-3 drop-shadow-lg">
+                {cs.client}
+              </h3>
+              <motion.p
+                initial={false}
+                animate={{
+                  y: hovered ? 0 : 10,
+                  opacity: hovered ? 1 : 0,
+                }}
+                transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="text-sm text-white/90 mb-4 line-clamp-3"
+              >
+                {cs.summary}
+              </motion.p>
+              <motion.div
+                initial={false}
+                animate={{
+                  y: hovered ? 0 : 10,
+                  opacity: hovered ? 1 : 0,
+                }}
+                transition={{ duration: 0.3, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-wrap gap-2 text-xs"
+              >
+                {cs.results.slice(0, 2).map((r, i) => (
+                  <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
+                    <span className="font-semibold text-white">{r.value}</span>
+                    <span className="text-white/70">{r.label}</span>
+                  </span>
+                ))}
+              </motion.div>
+            </motion.div>
           </div>
         </motion.div>
       </Link>

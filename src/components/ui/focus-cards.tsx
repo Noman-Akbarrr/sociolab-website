@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { FollowerPointerCard } from "./following-pointer";
 
 function cn(...classes: (string | undefined | null | false)[]) {
@@ -37,36 +38,66 @@ export const FocusCard = React.memo(({ card, index, hovered, setHovered }: Focus
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
       
-      {/* Brand name - always visible at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out">
-        <h3 className="text-base md:text-lg font-bold text-white drop-shadow-lg">
+      {/* Content container - handles the animation */}
+      <div className="absolute bottom-0 left-0 right-0 p-5 transition-all duration-500 ease-out">
+        {/* Brand name - moves up on hover */}
+        <motion.h3
+          className="text-base md:text-lg font-bold text-white drop-shadow-lg"
+          initial={false}
+          animate={{
+            y: hovered === index ? -80 : 0,
+            opacity: hovered === index ? 0 : 1,
+          }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        >
           {card.title}
-        </h3>
-      </div>
+        </motion.h3>
 
-      {/* Hover content - description + metrics */}
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 right-0 p-5 transition-all duration-300 ease-out",
-          hovered === index ? "opacity-100 translate-y-0" : "opacity-0 translate-y-full"
-        )}
-      >
-        <h3 className="text-base md:text-lg font-bold text-white mb-3 drop-shadow-lg">
-          {card.title}
-        </h3>
-        {card.description && (
-          <p className="text-sm text-white/90 mb-4 line-clamp-3">{card.description}</p>
-        )}
-        {card.metrics && card.metrics.length > 0 && (
-          <div className="flex flex-wrap gap-3 text-xs">
-            {card.metrics.slice(0, 2).map((m, i) => (
-              <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
-                <span className="font-semibold text-white">{m.value}</span>
-                <span className="text-white/70">{m.label}</span>
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Hover content - description + metrics - slides up from bottom */}
+        <motion.div
+          initial={false}
+          animate={{
+            y: hovered === index ? 0 : 60,
+            opacity: hovered === index ? 1 : 0,
+          }}
+          transition={{ duration: 0.35, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute bottom-0 left-0 right-0"
+        >
+          <h3 className="text-base md:text-lg font-bold text-white mb-3 drop-shadow-lg">
+            {card.title}
+          </h3>
+          {card.description && (
+            <motion.p
+              initial={false}
+              animate={{
+                y: hovered === index ? 0 : 10,
+                opacity: hovered === index ? 1 : 0,
+              }}
+              transition={{ duration: 0.3, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="text-sm text-white/90 mb-4 line-clamp-3"
+            >
+              {card.description}
+            </motion.p>
+          )}
+          {card.metrics && card.metrics.length > 0 && (
+            <motion.div
+              initial={false}
+              animate={{
+                y: hovered === index ? 0 : 10,
+                opacity: hovered === index ? 1 : 0,
+              }}
+              transition={{ duration: 0.3, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="flex flex-wrap gap-3 text-xs"
+            >
+              {card.metrics.slice(0, 2).map((m, i) => (
+                <span key={i} className="flex items-center gap-1.5 bg-white/15 backdrop-blur px-3 py-1.5 rounded-full">
+                  <span className="font-semibold text-white">{m.value}</span>
+                  <span className="text-white/70">{m.label}</span>
+                </span>
+              ))}
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </div>
   </FollowerPointerCard>
