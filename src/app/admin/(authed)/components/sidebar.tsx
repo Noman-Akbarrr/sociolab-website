@@ -18,6 +18,7 @@ const navGroups = [
     items: [
       { key: "contacts", label: "Contacts", href: "/admin/contacts", icon: "contacts" },
       { key: "companies", label: "Companies", href: "/admin/companies", icon: "companies" },
+      { key: "contact-submissions", label: "Form Submissions", href: "/admin/contact-submissions", icon: "contacts" },
     ],
   },
   {
