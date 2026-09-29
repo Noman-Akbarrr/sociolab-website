@@ -27,7 +27,7 @@ export function LogoCycle({ className = "", size = "1.1em" }: { className?: stri
         setCurrentIndex((prev) => (prev + 1) % logos.length);
         setIsAnimating(false);
       }, 300);
-    }, 1000);
+    }, 2000);
 
     intervalRef.current = interval;
     return () => {
@@ -49,7 +49,7 @@ export function LogoCycle({ className = "", size = "1.1em" }: { className?: stri
           <img
             src={logos[currentIndex].src}
             alt={logos[currentIndex].name}
-            style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", filter: "grayscale(100%) brightness(0.7)" }}
+            style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
             aria-hidden="true"
           />
         </motion.div>
