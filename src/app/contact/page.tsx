@@ -12,6 +12,7 @@ export default function ContactPage() {
     name: "",
     email: "",
     company: "",
+    whatsapp: "",
     service: "",
     message: "",
   });
@@ -23,7 +24,7 @@ export default function ContactPage() {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
@@ -36,8 +37,24 @@ export default function ContactPage() {
       return;
     }
 
-    setSubmitted(true);
-    setFormData({ name: "", email: "", company: "", service: "", message: "" });
+    try {
+      const response = await fetch("/api/contact/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to submit form");
+      }
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", company: "", whatsapp: "", service: "", message: "" });
+    } catch (error) {
+      setErrors({ form: error instanceof Error ? error.message : "Failed to submit form. Please try again." });
+    }
   };
 
   return (
@@ -88,7 +105,10 @@ export default function ContactPage() {
                     Thanks for reaching out! We&apos;ll review your message and get back within 24 hours with a free audit.
                   </p>
                   <button
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormData({ name: "", email: "", company: "", whatsapp: "", service: "", message: "" });
+                    }}
                     className="inline-flex items-center gap-2 bg-[#FF5500] hover:bg-[#E04B00] text-white font-semibold px-6 py-3 rounded-lg transition-all"
                   >
                     Send Another Message
@@ -96,6 +116,11 @@ export default function ContactPage() {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {errors.form && (
+                    <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm mb-4">
+                      {errors.form}
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: "#1C1917" }}>
@@ -162,25 +187,43 @@ export default function ContactPage() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="service" className="block text-sm font-medium mb-1" style={{ color: "#1C1917" }}>
-                        Service Interested In
+                      <label htmlFor="whatsapp" className="block text-sm font-medium mb-1" style={{ color: "#1C1917" }}>
+                        WhatsApp Number
                       </label>
-                      <select
-                        id="service"
-                        name="service"
-                        value={formData.service}
+                      <input
+                        type="tel"
+                        id="whatsapp"
+                        name="whatsapp"
+                        value={formData.whatsapp}
                         onChange={handleChange}
-                        className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none"
+                        placeholder="+92 300 1234567"
+                        className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors"
                         style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
-                      >
-                        <option value="">Select a service</option>
-                        <option value="performance">Performance Marketing</option>
-                        <option value="social">Social Media Management</option>
-                        <option value="web">Web Development</option>
-                        <option value="all">All of the Above</option>
-                        <option value="other">Other / Not Sure</option>
-                      </select>
+                        onFocus={(e) => e.target.style.borderColor = "#FF5500"}
+                        onBlur={(e) => e.target.style.borderColor = "#E7E5E4"}
+                      />
                     </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="service" className="block text-sm font-medium mb-1" style={{ color: "#1C1917" }}>
+                      Service Interested In
+                    </label>
+                    <select
+                      id="service"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                      className="text-sm rounded-lg px-4 py-3 outline-none w-full transition-colors appearance-none"
+                      style={{ backgroundColor: "#F5F5F4", border: "1px solid #E7E5E4", color: "#1C1917" }}
+                    >
+                      <option value="">Select a service</option>
+                      <option value="performance">Performance Marketing</option>
+                      <option value="social">Social Media Management</option>
+                      <option value="web">Web Development</option>
+                      <option value="all">All of the Above</option>
+                      <option value="other">Other / Not Sure</option>
+                    </select>
                   </div>
 
                   <div>

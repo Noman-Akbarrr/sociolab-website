@@ -75,6 +75,11 @@ export type CaseStudy = Prisma.CaseStudyModel
  */
 export type NewsletterLead = Prisma.NewsletterLeadModel
 /**
+ * Model ContactSubmission
+ * 
+ */
+export type ContactSubmission = Prisma.ContactSubmissionModel
+/**
  * Model Pipeline
  * 
  */

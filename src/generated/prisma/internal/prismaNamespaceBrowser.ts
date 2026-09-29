@@ -55,6 +55,7 @@ export const ModelName = {
   Post: 'Post',
   CaseStudy: 'CaseStudy',
   NewsletterLead: 'NewsletterLead',
+  ContactSubmission: 'ContactSubmission',
   Pipeline: 'Pipeline',
   Company: 'Company',
   Contact: 'Contact',
@@ -179,6 +180,23 @@ export const NewsletterLeadScalarFieldEnum = {
 } as const
 
 export type NewsletterLeadScalarFieldEnum = (typeof NewsletterLeadScalarFieldEnum)[keyof typeof NewsletterLeadScalarFieldEnum]
+
+
+export const ContactSubmissionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  company: 'company',
+  whatsapp: 'whatsapp',
+  service: 'service',
+  message: 'message',
+  status: 'status',
+  source: 'source',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactSubmissionScalarFieldEnum = (typeof ContactSubmissionScalarFieldEnum)[keyof typeof ContactSubmissionScalarFieldEnum]
 
 
 export const PipelineScalarFieldEnum = {
