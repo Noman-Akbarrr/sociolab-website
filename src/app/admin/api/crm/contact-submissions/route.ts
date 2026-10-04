@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
+  const gate = await requireSection("contact-submissions");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search");
@@ -33,6 +37,9 @@ export async function GET(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const gate = await requireSection("contact-submissions");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id, status } = await req.json();
 

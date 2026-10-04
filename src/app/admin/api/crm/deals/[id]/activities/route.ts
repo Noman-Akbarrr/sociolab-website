@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
@@ -8,6 +9,9 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("deals");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const activities = await prisma.activity.findMany({
@@ -25,6 +29,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("deals");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const { type = "note", subject, body } = await req.json();

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
+import { List, Kanban } from "lucide-react";
 import { DashShell } from "../client";
 
 interface Submission {
@@ -24,6 +26,15 @@ const statusColors: Record<string, string> = {
   closed: "bg-gray-100 text-gray-700",
 };
 
+const BOARD_COLUMNS = [
+  { key: "new", label: "New" },
+  { key: "contacted", label: "Contacted" },
+  { key: "qualified", label: "Qualified" },
+  { key: "closed", label: "Closed" },
+] as const;
+
+const VIEW_STORAGE_KEY = "contact-submissions-view";
+
 const serviceLabels: Record<string, string> = {
   performance: "Performance Marketing",
   social: "Social Media Management",
@@ -40,6 +51,31 @@ export default function ContactSubmissionsPage() {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [showDetail, setShowDetail] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [view, setView] = useState<"list" | "kanban">("list");
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const saved = await Promise.resolve(window.localStorage.getItem(VIEW_STORAGE_KEY));
+        if (active && (saved === "list" || saved === "kanban")) setView(saved);
+      } catch {
+        /* storage unavailable — keep default */
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const changeView = (next: "list" | "kanban") => {
+    setView(next);
+    try {
+      window.localStorage.setItem(VIEW_STORAGE_KEY, next);
+    } catch {
+      /* storage unavailable */
+    }
+  };
 
   const fetchSubmissions = useCallback(async () => {
     try {
@@ -59,6 +95,7 @@ export default function ContactSubmissionsPage() {
   }, [fetchSubmissions]);
 
   const handleStatusChange = async (id: string, newStatus: string) => {
+    if (updatingStatus === id) return;
     setUpdatingStatus(id);
     try {
       const res = await fetch("/admin/api/crm/contact-submissions", {
@@ -67,32 +104,23 @@ export default function ContactSubmissionsPage() {
         body: JSON.stringify({ id, status: newStatus }),
       });
       if (res.ok) {
-        setSubmissions(submissions.map((s) => (s.id === id ? { ...s, status: newStatus } : s)));
-        setSelectedSubmission((prev) => (prev && prev.id === id ? { ...prev, status: newStatus } : prev));
+        setSubmissions((prev) =>
+          prev.map((s) => (s.id === id ? { ...s, status: newStatus } : s))
+        );
+        setSelectedSubmission((prev) =>
+          prev && prev.id === id ? { ...prev, status: newStatus } : prev
+        );
       }
     } finally {
       setUpdatingStatus(null);
     }
   };
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "new": return "New";
-      case "contacted": return "Contacted";
-      case "qualified": return "Qualified";
-      case "closed": return "Closed";
-      default: return status;
-    }
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, draggableId } = result;
+    if (!destination) return;
+    if (destination.droppableId === result.source.droppableId) return;
+    handleStatusChange(draggableId, destination.droppableId);
   };
 
   const getServiceLabel = (service: string | null) => {
@@ -130,10 +158,134 @@ export default function ContactSubmissionsPage() {
               <option value="qualified">Qualified</option>
               <option value="closed">Closed</option>
             </select>
+            <div className="flex items-center gap-1 p-1 rounded-lg border border-gray-200 bg-white self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => changeView("list")}
+                title="List view"
+                aria-pressed={view === "list"}
+                className={`p-1.5 rounded transition-colors ${
+                  view === "list"
+                    ? "bg-[#FF5500] text-white"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <List className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => changeView("kanban")}
+                title="Kanban view"
+                aria-pressed={view === "kanban"}
+                className={`p-1.5 rounded transition-colors ${
+                  view === "kanban"
+                    ? "bg-[#FF5500] text-white"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <Kanban className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Table */}
+        {/* Board / Table */}
+        {view === "kanban" ? (
+        <div>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="w-8 h-8 border-2 border-gray-200 border-t-[#FF5500] rounded-full animate-spin" />
+            </div>
+          ) : submissions.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
+              <p className="text-gray-500">No submissions found</p>
+            </div>
+          ) : (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                {BOARD_COLUMNS.filter((c) => statusFilter === "all" || c.key === statusFilter).map((column) => {
+                  const items = submissions.filter((s) => s.status === column.key);
+                  return (
+                    <div
+                      key={column.key}
+                      className="flex flex-col rounded-lg border border-gray-200 bg-gray-50 min-h-[220px]"
+                    >
+                      <div className="flex items-center justify-between px-3 py-2.5 border-b border-gray-200">
+                        <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[column.key]}`}>
+                          {column.label}
+                        </span>
+                        <span className="text-xs text-gray-400">{items.length}</span>
+                      </div>
+                      <Droppable droppableId={column.key}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className={`flex-1 p-2 space-y-2 transition-colors ${snapshot.isDraggingOver ? "bg-orange-50" : ""}`}
+                          >
+                            {items.length === 0 && !snapshot.isDraggingOver && (
+                              <p className="text-xs text-gray-400 text-center py-4">No submissions</p>
+                            )}
+                            {items.map((sub, index) => (
+                              <Draggable key={sub.id} draggableId={sub.id} index={index}>
+                                {(dragProvided, dragSnapshot) => (
+                                  <div
+                                    ref={dragProvided.innerRef}
+                                    {...dragProvided.draggableProps}
+                                    {...dragProvided.dragHandleProps}
+                                    onClick={() => {
+                                      setSelectedSubmission(sub);
+                                      setShowDetail(true);
+                                    }}
+                                    title="View submission"
+                                    className={`bg-white rounded-lg border p-3 cursor-pointer transition-shadow ${
+                                      dragSnapshot.isDragging
+                                        ? "border-[#FF5500] shadow-lg"
+                                        : "border-gray-200 hover:shadow-sm"
+                                    }`}
+                                  >
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div className="min-w-0">
+                                        <p className="text-sm font-medium text-gray-800 truncate">{sub.name}</p>
+                                        <p className="text-xs text-gray-500 truncate">{sub.email}</p>
+                                      </div>
+                                      <select
+                                        value={sub.status}
+                                        onClick={(e) => e.stopPropagation()}
+                                        onChange={(e) => handleStatusChange(sub.id, e.target.value)}
+                                        disabled={updatingStatus === sub.id}
+                                        className="shrink-0 text-[10px] border border-gray-200 rounded px-1 py-0.5 bg-white focus:outline-none focus:border-[#FF5500]"
+                                      >
+                                        {BOARD_COLUMNS.map((c) => (
+                                          <option key={c.key} value={c.key}>{c.label}</option>
+                                        ))}
+                                      </select>
+                                    </div>
+                                    {sub.company && (
+                                      <p className="text-xs text-gray-500 mt-1 truncate">{sub.company}</p>
+                                    )}
+                                    <div className="mt-2 flex items-center justify-between gap-2">
+                                      <span className="text-[11px] text-gray-600 truncate">{getServiceLabel(sub.service)}</span>
+                                      <span className="text-[10px] text-gray-400 shrink-0">
+                                        {new Date(sub.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                                      </span>
+                                    </div>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    </div>
+                  );
+                })}
+              </div>
+            </DragDropContext>
+          )}
+        </div>
+        ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
@@ -213,6 +365,7 @@ export default function ContactSubmissionsPage() {
             </div>
           )}
         </div>
+        )}
 
         {/* Detail Modal */}
         <AnimatePresence>

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { DashShell } from "../client";
+import { useAdminSession } from "@/lib/use-admin-session";
 
 type Company = { id: string; name: string };
 type User = { id: string; name: string; email: string };
@@ -33,12 +34,18 @@ const inputCls =
 
 export default function ProjectsPage() {
   const router = useRouter();
+  const { isFull } = useAdminSession();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [saving, setSaving] = useState(false);
+
+  const [assignProject, setAssignProject] = useState<Project | null>(null);
+  const [memberIds, setMemberIds] = useState<string[]>([]);
+  const [membersLoading, setMembersLoading] = useState(false);
+  const [savingMembers, setSavingMembers] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -117,10 +124,45 @@ export default function ProjectsPage() {
     fetchProjects();
   };
 
+  const openAssignModal = async (p: Project) => {
+    setAssignProject(p);
+    setMemberIds([]);
+    setMembersLoading(true);
+    try {
+      const [uRes, mRes] = await Promise.all([
+        fetch("/admin/api/crm/users"),
+        fetch(`/admin/api/crm/projects/${p.id}/members`),
+      ]);
+      if (uRes.ok) setUsers(await uRes.json());
+      if (mRes.ok) {
+        const members: User[] = await mRes.json();
+        setMemberIds(members.map((m) => m.id));
+      }
+    } finally {
+      setMembersLoading(false);
+    }
+  };
+
+  const handleSaveMembers = async () => {
+    if (!assignProject) return;
+    setSavingMembers(true);
+    try {
+      const res = await fetch(`/admin/api/crm/projects/${assignProject.id}/members`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userIds: memberIds }),
+      });
+      if (res.ok) setAssignProject(null);
+    } finally {
+      setSavingMembers(false);
+    }
+  };
+
   return (
     <DashShell>
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3 mb-6">
+        {isFull && (
         <button
           onClick={openModal}
           className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-md transition-colors"
@@ -131,6 +173,7 @@ export default function ProjectsPage() {
           </svg>
           New Project
         </button>
+        )}
       </div>
 
       <motion.div
@@ -209,6 +252,20 @@ export default function ProjectsPage() {
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1">
+                          {isFull && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openAssignModal(p);
+                            }}
+                            className="text-gray-400 hover:text-[#FF5500] transition-colors"
+                            title="Assign team"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a7 7 0 0114 0" />
+                            </svg>
+                          </button>
+                          )}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -225,6 +282,7 @@ export default function ProjectsPage() {
                               />
                             </svg>
                           </button>
+                          {isFull && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -237,6 +295,7 @@ export default function ProjectsPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                           </svg>
                           </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -373,6 +432,79 @@ export default function ProjectsPage() {
                   style={{ backgroundColor: "#FF5500" }}
                 >
                   {saving ? "Creating..." : "Create Project"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+        {assignProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            onClick={() => setAssignProject(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              className="bg-white rounded-lg border border-gray-200 shadow-xl w-full max-w-md p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-sm font-semibold text-gray-800 mb-1">Assign Team</h3>
+              <p className="text-xs text-gray-500 mb-4">
+                {assignProject.name} — tick the people who should work on this project.
+                Only they can see it (and receive its tasks).
+              </p>
+              <div className="space-y-1 max-h-72 overflow-y-auto">
+                {membersLoading ? (
+                  <p className="text-sm text-gray-400 py-4 text-center">Loading...</p>
+                ) : users.length === 0 ? (
+                  <p className="text-sm text-gray-400 py-4 text-center">No users yet</p>
+                ) : (
+                  users.map((u) => {
+                    const checked = memberIds.includes(u.id);
+                    return (
+                      <label
+                        key={u.id}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-md border text-sm cursor-pointer transition-colors ${
+                          checked
+                            ? "border-[#FF5500] bg-orange-50"
+                            : "border-gray-200 bg-gray-50 hover:border-gray-300"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() =>
+                            setMemberIds((prev) =>
+                              checked ? prev.filter((id) => id !== u.id) : [...prev, u.id]
+                            )
+                          }
+                          className="accent-[#FF5500]"
+                        />
+                        <span className="flex-1 text-gray-800">{u.name}</span>
+                        <span className="text-xs text-gray-400">{u.email}</span>
+                      </label>
+                    );
+                  })
+                )}
+              </div>
+              <div className="flex justify-end gap-2 mt-5">
+                <button
+                  onClick={() => setAssignProject(null)}
+                  className="px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveMembers}
+                  disabled={savingMembers || membersLoading}
+                  className="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors disabled:opacity-50"
+                  style={{ backgroundColor: "#FF5500" }}
+                >
+                  {savingMembers ? "Saving..." : "Save Team"}
                 </button>
               </div>
             </motion.div>

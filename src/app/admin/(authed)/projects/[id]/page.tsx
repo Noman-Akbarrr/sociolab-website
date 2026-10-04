@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { DashShell } from "../../client";
 import { ActivityFeed, type ActivityItem } from "../../components/activity-feed";
+import { useAdminSession } from "@/lib/use-admin-session";
 import { OverviewTab } from "./overview-tab";
 import { TasksTab } from "./tasks-tab";
 import { SubmissionsTab } from "./submissions-tab";
@@ -28,6 +29,7 @@ import {
 export default function ProjectDetailPage() {
   const params = useParams<{ id: string }>();
   const projectId = params.id;
+  const { isFull } = useAdminSession();
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [tasks, setTasks] = useState<ProjectTask[]>([]);
@@ -104,14 +106,36 @@ export default function ProjectDetailPage() {
   const openTaskCount = tasks.filter((t) => t.status !== "done").length;
   const unpaidInvoices = invoices.filter((i) => i.status !== "paid" && i.status !== "void").length;
 
+  // Non-admins only ever get the project team as assignee options.
+  const memberIds = new Set<string>();
+  const memberOptions: UserOption[] = [];
+  if (project) {
+    for (const m of project.members ?? []) {
+      if (!memberIds.has(m.user.id)) {
+        memberIds.add(m.user.id);
+        memberOptions.push(m.user);
+      }
+    }
+    if (project.assignee && !memberIds.has(project.assignee.id)) {
+      memberOptions.push(project.assignee);
+    }
+  }
+  const people = isFull ? users : memberOptions;
+
   const tabs: { key: TabKey; label: string; count?: number }[] = [
     { key: "overview", label: "Overview" },
     { key: "tasks", label: "Tasks", count: tasks.length },
     { key: "submissions", label: "Submissions", count: reviewCount || submissions.length },
-    { key: "invoices", label: "Invoices", count: invoices.length },
-    { key: "reports", label: "Reports" },
+    ...(isFull
+      ? ([
+          { key: "invoices", label: "Invoices", count: invoices.length },
+          { key: "reports", label: "Reports" },
+        ] as { key: TabKey; label: string; count?: number }[])
+      : []),
     { key: "activity", label: "Activity", count: activities.length },
   ];
+
+  const activeTab: TabKey = isFull ? tab : tab === "invoices" || tab === "reports" ? "overview" : tab;
 
   return (
     <DashShell>
@@ -163,10 +187,12 @@ export default function ProjectDetailPage() {
                 <p className="text-[10px] uppercase tracking-wide text-gray-400">In review</p>
                 <p className="text-sm font-semibold text-gray-800">{reviewCount}</p>
               </div>
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-gray-400">Unpaid invoices</p>
-                <p className="text-sm font-semibold text-gray-800">{unpaidInvoices}</p>
-              </div>
+              {isFull && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wide text-gray-400">Unpaid invoices</p>
+                  <p className="text-sm font-semibold text-gray-800">{unpaidInvoices}</p>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -174,7 +200,7 @@ export default function ProjectDetailPage() {
         <div className="mb-6 overflow-x-auto border-b border-gray-200">
           <nav className="flex min-w-max items-end gap-1" aria-label="Project sections">
             {tabs.map((t) => {
-              const active = tab === t.key;
+              const active = activeTab === t.key;
               return (
                 <button
                   key={t.key}
@@ -209,27 +235,27 @@ export default function ProjectDetailPage() {
           </div>
         ) : (
           <>
-            {tab === "overview" && project && (
+            {activeTab === "overview" && project && (
               <OverviewTab
                 project={project}
-                users={users}
+                users={people}
                 companies={companies}
                 onSaved={(updated) => setProject((prev) => (prev ? { ...prev, ...updated } : prev))}
               />
             )}
 
-            {tab === "tasks" && (
+            {activeTab === "tasks" && (
               <TasksTab
                 projectId={projectId}
                 tasks={tasks}
-                users={users}
+                users={people}
                 onTasksChange={setTasks}
                 onSubmissionCreated={(sub) => setSubmissions((prev) => [sub, ...prev])}
                 onActivity={(activity) => setActivities((prev) => [activity, ...prev])}
               />
             )}
 
-            {tab === "submissions" && (
+            {activeTab === "submissions" && (
               <SubmissionsTab
                 projectId={projectId}
                 submissions={submissions}
@@ -239,7 +265,7 @@ export default function ProjectDetailPage() {
               />
             )}
 
-            {tab === "invoices" && (
+            {activeTab === "invoices" && isFull && (
               <InvoicesTab
                 projectId={projectId}
                 invoices={invoices}
@@ -247,11 +273,11 @@ export default function ProjectDetailPage() {
               />
             )}
 
-            {tab === "reports" && project && (
+            {activeTab === "reports" && isFull && project && (
               <ReportsTab project={project} tasks={tasks} submissions={submissions} invoices={invoices} />
             )}
 
-            {tab === "activity" && (
+            {activeTab === "activity" && (
               <div className="max-w-2xl">
                 <ActivityFeed
                   activities={activities}

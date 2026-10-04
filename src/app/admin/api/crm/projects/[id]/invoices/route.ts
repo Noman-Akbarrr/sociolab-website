@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireAdmin } from "@/lib/auth/guard";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
     const invoices = await prisma.invoice.findMany({
       where: { projectId: id },
@@ -24,6 +27,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
     const body = await req.json();
 

@@ -8,6 +8,7 @@ export type AdminUser = {
   email: string;
   passwordHash: string;
   role: string;
+  access: string[];
   isTwoFactorEnabled: boolean;
   twoFactorSecret: string | null;
   recoveryCodes: string[];
@@ -46,6 +47,7 @@ function fromPrisma(user: {
   email: string;
   passwordHash: string;
   role: string;
+  access: string[];
   isTwoFactorEnabled: boolean;
   twoFactorSecret: string | null;
   recoveryCodes: unknown;
@@ -59,6 +61,7 @@ function fromPrisma(user: {
     email: user.email,
     passwordHash: user.passwordHash,
     role: user.role,
+    access: Array.isArray(user.access) ? (user.access as string[]) : [],
     isTwoFactorEnabled: user.isTwoFactorEnabled,
     twoFactorSecret: user.twoFactorSecret,
     recoveryCodes: Array.isArray(user.recoveryCodes) ? (user.recoveryCodes as string[]) : [],
@@ -98,6 +101,7 @@ export async function createUser(input: {
   email: string;
   passwordHash: string;
   role?: string;
+  access?: string[];
 }): Promise<AdminUser> {
   const user: AdminUser = {
     id: crypto.randomUUID(),
@@ -105,6 +109,7 @@ export async function createUser(input: {
     email: input.email.trim().toLowerCase(),
     passwordHash: input.passwordHash,
     role: input.role || "admin",
+    access: input.access ?? [],
     isTwoFactorEnabled: false,
     twoFactorSecret: null,
     recoveryCodes: [],
@@ -120,6 +125,7 @@ export async function createUser(input: {
         email: user.email,
         passwordHash: user.passwordHash,
         role: user.role,
+        access: user.access,
       },
     });
     return fromPrisma(created);
@@ -144,6 +150,7 @@ export async function updateUser(
         ...(patch.name !== undefined && { name: patch.name }),
         ...(patch.passwordHash !== undefined && { passwordHash: patch.passwordHash }),
         ...(patch.role !== undefined && { role: patch.role }),
+        ...(patch.access !== undefined && { access: patch.access }),
         ...(patch.isTwoFactorEnabled !== undefined && {
           isTwoFactorEnabled: patch.isTwoFactorEnabled,
         }),

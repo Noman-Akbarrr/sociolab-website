@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth/guard";
+import { sanitizeAccess } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 
@@ -6,6 +8,9 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const body = await req.json();
@@ -14,6 +19,7 @@ export async function PATCH(
 
     if (body.name !== undefined) data.name = body.name;
     if (body.role !== undefined) data.role = body.role;
+    if (body.access !== undefined) data.access = sanitizeAccess(body.access);
 
     if (body.password) {
       if (body.password.length < 10) {
@@ -39,6 +45,7 @@ export async function PATCH(
         name: true,
         email: true,
         role: true,
+        access: true,
         isTwoFactorEnabled: true,
         createdAt: true,
         updatedAt: true,
@@ -55,6 +62,9 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     await prisma.user.delete({ where: { id } });

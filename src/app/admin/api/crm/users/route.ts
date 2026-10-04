@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { requireUser, requireAdmin } from "@/lib/auth/guard";
+import { sanitizeAccess } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 
 export async function GET() {
+  const gate = await requireUser();
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -10,6 +15,7 @@ export async function GET() {
         name: true,
         email: true,
         role: true,
+        access: true,
         isTwoFactorEnabled: true,
         createdAt: true,
         updatedAt: true,
@@ -24,8 +30,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const gate = await requireAdmin();
+  if (gate instanceof NextResponse) return gate;
+
   try {
-    const { name, email, password, role } = await req.json();
+    const { name, email, password, role, access } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: "name, email, and password are required" }, { status: 400 });
@@ -51,18 +60,22 @@ export async function POST(req: Request) {
 
     const passwordHash = await hash(password, 12);
 
+    // Everyone outside the main account starts as a member with only the
+    // sections the admin ticked.
     const user = await prisma.user.create({
       data: {
         name,
         email,
         passwordHash,
-        role: role || "admin",
+        role: role === "admin" || role === "super_admin" ? role : "member",
+        access: sanitizeAccess(access),
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
+        access: true,
         createdAt: true,
       },
     });

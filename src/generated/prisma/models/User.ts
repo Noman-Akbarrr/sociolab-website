@@ -72,6 +72,7 @@ export type UserCountAggregateOutputType = {
   email: number
   passwordHash: number
   role: number
+  access: number
   isTwoFactorEnabled: number
   twoFactorSecret: number
   recoveryCodes: number
@@ -131,6 +132,7 @@ export type UserCountAggregateInputType = {
   email?: true
   passwordHash?: true
   role?: true
+  access?: true
   isTwoFactorEnabled?: true
   twoFactorSecret?: true
   recoveryCodes?: true
@@ -235,6 +237,7 @@ export type UserGroupByOutputType = {
   email: string
   passwordHash: string
   role: string
+  access: string[]
   isTwoFactorEnabled: boolean
   twoFactorSecret: string | null
   recoveryCodes: runtime.JsonValue | null
@@ -275,6 +278,7 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.StringFilter<"User"> | string
+  access?: Prisma.StringNullableListFilter<"User">
   isTwoFactorEnabled?: Prisma.BoolFilter<"User"> | boolean
   twoFactorSecret?: Prisma.StringNullableFilter<"User"> | string | null
   recoveryCodes?: Prisma.JsonNullableFilter<"User">
@@ -300,6 +304,7 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  access?: Prisma.SortOrder
   isTwoFactorEnabled?: Prisma.SortOrder
   twoFactorSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   recoveryCodes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -329,6 +334,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.StringFilter<"User"> | string
+  access?: Prisma.StringNullableListFilter<"User">
   isTwoFactorEnabled?: Prisma.BoolFilter<"User"> | boolean
   twoFactorSecret?: Prisma.StringNullableFilter<"User"> | string | null
   recoveryCodes?: Prisma.JsonNullableFilter<"User">
@@ -353,6 +359,7 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  access?: Prisma.SortOrder
   isTwoFactorEnabled?: Prisma.SortOrder
   twoFactorSecret?: Prisma.SortOrderInput | Prisma.SortOrder
   recoveryCodes?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -378,6 +385,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
+  access?: Prisma.StringNullableListFilter<"User">
   isTwoFactorEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   twoFactorSecret?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   recoveryCodes?: Prisma.JsonNullableWithAggregatesFilter<"User">
@@ -395,6 +403,7 @@ export type UserCreateInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -420,6 +429,7 @@ export type UserUncheckedCreateInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -445,6 +455,7 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -470,6 +481,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -495,6 +507,7 @@ export type UserCreateManyInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -512,6 +525,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -529,6 +543,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -540,12 +555,21 @@ export type UserUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  access?: Prisma.SortOrder
   isTwoFactorEnabled?: Prisma.SortOrder
   twoFactorSecret?: Prisma.SortOrder
   recoveryCodes?: Prisma.SortOrder
@@ -607,8 +631,17 @@ export type UserNullableScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput | null
 }
 
+export type UserCreateaccessInput = {
+  set: string[]
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type UserUpdateaccessInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -761,6 +794,7 @@ export type UserCreateWithoutSessionsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -785,6 +819,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -825,6 +860,7 @@ export type UserUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -849,6 +885,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -873,6 +910,7 @@ export type UserCreateWithoutOwnedDealsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -897,6 +935,7 @@ export type UserUncheckedCreateWithoutOwnedDealsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -937,6 +976,7 @@ export type UserUpdateWithoutOwnedDealsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -961,6 +1001,7 @@ export type UserUncheckedUpdateWithoutOwnedDealsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -985,6 +1026,7 @@ export type UserCreateWithoutAssignedProjectsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1009,6 +1051,7 @@ export type UserUncheckedCreateWithoutAssignedProjectsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1049,6 +1092,7 @@ export type UserUpdateWithoutAssignedProjectsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1073,6 +1117,7 @@ export type UserUncheckedUpdateWithoutAssignedProjectsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1097,6 +1142,7 @@ export type UserCreateWithoutAssignedTasksInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1121,6 +1167,7 @@ export type UserUncheckedCreateWithoutAssignedTasksInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1161,6 +1208,7 @@ export type UserUpdateWithoutAssignedTasksInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1185,6 +1233,7 @@ export type UserUncheckedUpdateWithoutAssignedTasksInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1209,6 +1258,7 @@ export type UserCreateWithoutAssignedTicketsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1233,6 +1283,7 @@ export type UserUncheckedCreateWithoutAssignedTicketsInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1273,6 +1324,7 @@ export type UserUpdateWithoutAssignedTicketsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1297,6 +1349,7 @@ export type UserUncheckedUpdateWithoutAssignedTicketsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1321,6 +1374,7 @@ export type UserCreateWithoutActivitiesInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1345,6 +1399,7 @@ export type UserUncheckedCreateWithoutActivitiesInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1385,6 +1440,7 @@ export type UserUpdateWithoutActivitiesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1409,6 +1465,7 @@ export type UserUncheckedUpdateWithoutActivitiesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1433,6 +1490,7 @@ export type UserCreateWithoutProjectMembersInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1457,6 +1515,7 @@ export type UserUncheckedCreateWithoutProjectMembersInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1497,6 +1556,7 @@ export type UserUpdateWithoutProjectMembersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1521,6 +1581,7 @@ export type UserUncheckedUpdateWithoutProjectMembersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1545,6 +1606,7 @@ export type UserCreateWithoutPipelineMembersInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1569,6 +1631,7 @@ export type UserUncheckedCreateWithoutPipelineMembersInput = {
   email: string
   passwordHash: string
   role?: string
+  access?: Prisma.UserCreateaccessInput | string[]
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1609,6 +1672,7 @@ export type UserUpdateWithoutPipelineMembersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1633,6 +1697,7 @@ export type UserUncheckedUpdateWithoutPipelineMembersInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.StringFieldUpdateOperationsInput | string
+  access?: Prisma.UserUpdateaccessInput | string[]
   isTwoFactorEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   twoFactorSecret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   recoveryCodes?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1751,6 +1816,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  access?: boolean
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: boolean
   recoveryCodes?: boolean
@@ -1777,6 +1843,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  access?: boolean
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: boolean
   recoveryCodes?: boolean
@@ -1794,6 +1861,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  access?: boolean
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: boolean
   recoveryCodes?: boolean
@@ -1811,6 +1879,7 @@ export type UserSelectScalar = {
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  access?: boolean
   isTwoFactorEnabled?: boolean
   twoFactorSecret?: boolean
   recoveryCodes?: boolean
@@ -1822,7 +1891,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "isTwoFactorEnabled" | "twoFactorSecret" | "recoveryCodes" | "failedLoginAttempts" | "lockedUntil" | "resetTokenHash" | "resetTokenExpires" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "access" | "isTwoFactorEnabled" | "twoFactorSecret" | "recoveryCodes" | "failedLoginAttempts" | "lockedUntil" | "resetTokenHash" | "resetTokenExpires" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   ownedDeals?: boolean | Prisma.User$ownedDealsArgs<ExtArgs>
@@ -1855,6 +1924,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     passwordHash: string
     role: string
+    access: string[]
     isTwoFactorEnabled: boolean
     twoFactorSecret: string | null
     recoveryCodes: runtime.JsonValue | null
@@ -2300,6 +2370,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>
+  readonly access: Prisma.FieldRef<"User", 'String[]'>
   readonly isTwoFactorEnabled: Prisma.FieldRef<"User", 'Boolean'>
   readonly twoFactorSecret: Prisma.FieldRef<"User", 'String'>
   readonly recoveryCodes: Prisma.FieldRef<"User", 'Json'>

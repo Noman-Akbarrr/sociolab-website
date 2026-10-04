@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
+import { useAdminSession } from "@/lib/use-admin-session";
 
 interface Stats {
   totalDeals: number;
@@ -51,35 +53,59 @@ export function DashboardView() {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const { can, loading: sessionLoading } = useAdminSession();
+
+  const showDeals = can("deals");
+  const showProjects = can("projects");
+  const showTickets = can("tickets");
+  const showContacts = can("contacts");
+  const showCompanies = can("companies");
 
   useEffect(() => {
+    if (sessionLoading) return;
+    let active = true;
     async function load() {
       try {
         const [statsRes, dealsRes, contactsRes] = await Promise.all([
           fetch("/admin/api/crm/stats"),
-          fetch("/admin/api/crm/deals"),
-          fetch("/admin/api/crm/contacts"),
+          showDeals ? fetch("/admin/api/crm/deals") : Promise.resolve(null),
+          showContacts ? fetch("/admin/api/crm/contacts") : Promise.resolve(null),
         ]);
         if (statsRes.ok) setStats(await statsRes.json());
-        if (dealsRes.ok) setDeals(await dealsRes.json());
-        if (contactsRes.ok) setContacts(await contactsRes.json());
+        if (dealsRes?.ok) setDeals(await dealsRes.json());
+        if (contactsRes?.ok) setContacts(await contactsRes.json());
       } catch (e) {
         console.error("Failed to load dashboard data", e);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     }
     load();
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [sessionLoading, showDeals, showContacts]);
 
   const statCards = stats
     ? [
-        { label: "Total Deals", value: stats.totalDeals, icon: "deals", color: "#FF5500", bg: "#FFF3E0" },
-        { label: "Pipeline Value", value: `Rs. ${(stats.pipelineValue / 1000).toFixed(0)}K`, icon: "pipeline", color: "#FF5500", bg: "#FFF3E0" },
-        { label: "Active Projects", value: stats.activeProjects, icon: "projects", color: "#FF9800", bg: "#FFF3E0" },
-        { label: "Open Tickets", value: stats.openTickets, icon: "tickets", color: "#F44336", bg: "#FFEBEE" },
-        { label: "Contacts", value: stats.totalContacts, icon: "contacts", color: "#4CAF50", bg: "#E8F5E9" },
-        { label: "Companies", value: stats.totalCompanies, icon: "companies", color: "#9C27B0", bg: "#F3E5F5" },
+        ...(showDeals
+          ? [
+              { label: "Total Deals", value: stats.totalDeals, icon: "deals", color: "#FF5500", bg: "#FFF3E0" },
+              { label: "Pipeline Value", value: `Rs. ${(stats.pipelineValue / 1000).toFixed(0)}K`, icon: "pipeline", color: "#FF5500", bg: "#FFF3E0" },
+            ]
+          : []),
+        ...(showProjects
+          ? [{ label: "Active Projects", value: stats.activeProjects, icon: "projects", color: "#FF9800", bg: "#FFF3E0" }]
+          : []),
+        ...(showTickets
+          ? [{ label: "Open Tickets", value: stats.openTickets, icon: "tickets", color: "#F44336", bg: "#FFEBEE" }]
+          : []),
+        ...(showContacts
+          ? [{ label: "Contacts", value: stats.totalContacts, icon: "contacts", color: "#4CAF50", bg: "#E8F5E9" }]
+          : []),
+        ...(showCompanies
+          ? [{ label: "Companies", value: stats.totalCompanies, icon: "companies", color: "#9C27B0", bg: "#F3E5F5" }]
+          : []),
       ]
     : [];
 
@@ -96,7 +122,7 @@ export function DashboardView() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 mb-6">
         {statCards.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -120,10 +146,11 @@ export function DashboardView() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {showDeals && (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-700">Recent Deals</h3>
-            <a href="/admin/pipeline" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+            <Link href="/admin/pipeline" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</Link>
           </div>
           <ul className="divide-y divide-gray-50">
             {recentDeals.map((deal) => (
@@ -150,11 +177,13 @@ export function DashboardView() {
             )}
           </ul>
         </div>
+        )}
 
+        {showContacts && (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-700">Recent Contacts</h3>
-            <a href="/admin/contacts" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</a>
+            <Link href="/admin/contacts" className="text-xs font-medium hover:underline" style={{ color: "#FF5500" }}>View all</Link>
           </div>
           <ul className="divide-y divide-gray-50">
             {recentContacts.map((contact) => (
@@ -180,6 +209,7 @@ export function DashboardView() {
             )}
           </ul>
         </div>
+        )}
       </div>
     </div>
   );

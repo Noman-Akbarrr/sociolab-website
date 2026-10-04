@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireSection, requireProject, isMemberOfProject } from "@/lib/auth/guard";
 
 const ALLOWED = ["title", "description", "status", "priority", "assigneeId", "dueDate", "completedAt"];
 
@@ -16,8 +17,24 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string; tid: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id, tid } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
     const body = await req.json();
+
+    // Only people on the project team can be given its tasks.
+    if (
+      typeof body.assigneeId === "string" &&
+      body.assigneeId &&
+      !(await isMemberOfProject(id, body.assigneeId))
+    ) {
+      return NextResponse.json(
+        { error: "Assign this person to the project first" },
+        { status: 400 }
+      );
+    }
 
     const before = await prisma.task.findFirst({ where: { id: tid, projectId: id } });
     if (!before) {
@@ -91,7 +108,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; tid: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id, tid } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
     const task = await prisma.task.findFirst({ where: { id: tid, projectId: id } });
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 });

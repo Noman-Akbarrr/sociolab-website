@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireSection, requireAdmin } from "@/lib/auth/guard";
 
 const STATUS_LABELS: Record<string, string> = {
   pending: "Pending",
@@ -21,6 +22,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string; sid: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
+    // Reviewing work (approve / reject / postpone) stays admin-only.
+    const adminGate = await requireAdmin();
+    if (adminGate instanceof NextResponse) return adminGate;
     const { id, sid } = await params;
     const body = await req.json();
 
@@ -88,6 +94,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; sid: string }> }
 ) {
   try {
+    const adminGate = await requireAdmin();
+    if (adminGate instanceof NextResponse) return adminGate;
     const { id, sid } = await params;
     const submission = await prisma.submission.findFirst({ where: { id: sid, projectId: id } });
     if (!submission) {

@@ -2,7 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useAdminSession } from "@/lib/use-admin-session";
+import type { SectionKey } from "@/lib/access";
 
 const navGroups = [
   {
@@ -55,21 +56,26 @@ function NavIcon({ name }: { name: string }) {
 
 export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
-  const [userName, setUserName] = useState("Admin");
-  const [userInitials, setUserInitials] = useState("A");
+  const { user, loading, isFull, can } = useAdminSession();
 
-  useEffect(() => {
-    fetch("/admin/api/auth/status")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.user?.name) {
-          setUserName(d.user.name);
-          const parts = d.user.name.trim().split(" ");
-          setUserInitials(parts.map((p: string) => p[0]).join("").toUpperCase().slice(0, 2));
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const userName = user?.name ?? "Admin";
+  const userInitials = (() => {
+    if (!user?.name) return "A";
+    return user.name
+      .trim()
+      .split(" ")
+      .map((p) => p[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  })();
+
+  // Dashboard is always allowed; everything else follows the account's access.
+  function isVisible(key: string) {
+    if (key === "dashboard") return true;
+    if (loading) return false;
+    return isFull || can(key as SectionKey);
+  }
 
   function isActive(href: string) {
     if (href === "/admin") return pathname === "/admin";
@@ -102,13 +108,16 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-5">
-          {navGroups.map((group) => (
+          {navGroups.map((group) => {
+            const items = group.items.filter((item) => isVisible(item.key));
+            if (items.length === 0) return null;
+            return (
             <div key={group.label}>
               <div className="px-3 mb-1.5 text-[10px] font-semibold text-gray-400 tracking-wider uppercase">
                 {group.label}
               </div>
               <div className="space-y-0.5">
-                {group.items.map((item) => {
+                {items.map((item) => {
                   const active = isActive(item.href);
                   return (
                     <Link
@@ -128,7 +137,8 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
                 })}
               </div>
             </div>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Footer */}

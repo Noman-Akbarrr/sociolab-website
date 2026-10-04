@@ -3,33 +3,59 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { DashShell } from "../client";
+import { SECTION_KEYS, SECTION_LABELS, isFullAccess, type SectionKey } from "@/lib/access";
 
 type User = {
   id: string;
   name: string;
   email: string;
   role: string;
+  access: string[];
   createdAt: string;
-};
-
-const roleColors: Record<string, { bg: string; text: string }> = {
-  super_admin: { bg: "#FFEBEE", text: "#F44336" },
-  admin: { bg: "#E3F2FD", text: "#2196F3" },
-  sales_executive: { bg: "#FFF3E0", text: "#FF9800" },
-  salesperson: { bg: "#E8F5E9", text: "#4CAF50" },
-  freelancer: { bg: "#F3E5F5", text: "#9C27B0" },
-};
-
-const roleLabels: Record<string, string> = {
-  super_admin: "Super Admin",
-  admin: "Admin",
-  sales_executive: "Sales Executive",
-  salesperson: "Salesperson",
-  freelancer: "Freelancer",
 };
 
 const inputCls =
   "w-full px-3 py-2 text-sm rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:border-[#FF5500] focus:bg-white transition-colors text-gray-800";
+
+function SectionCheckboxes({
+  value,
+  onChange,
+}: {
+  value: string[];
+  onChange: (next: string[]) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {SECTION_KEYS.map((key) => {
+        const checked = value.includes(key);
+        return (
+          <label
+            key={key}
+            className={`flex items-center gap-2 px-3 py-2 rounded-md border text-sm cursor-pointer transition-colors ${
+              checked
+                ? "border-[#FF5500] bg-orange-50 text-gray-800"
+                : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300"
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={() =>
+                onChange(
+                  checked
+                    ? value.filter((k) => k !== key)
+                    : [...value, key]
+                )
+              }
+              className="accent-[#FF5500]"
+            />
+            {SECTION_LABELS[key as SectionKey]}
+          </label>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
@@ -44,14 +70,16 @@ export default function UsersPage() {
     name: "",
     email: "",
     password: "",
-    role: "admin",
+    access: [...SECTION_KEYS] as string[],
   });
+
+  const [editAccessUser, setEditAccessUser] = useState<User | null>(null);
+  const [editAccess, setEditAccess] = useState<string[]>([]);
 
   const [newPassword, setNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const fetchUsers = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await fetch("/admin/api/crm/users");
       if (res.ok) setUsers(await res.json());
@@ -89,12 +117,12 @@ export default function UsersPage() {
           name: form.name,
           email: form.email,
           password: form.password,
-          role: form.role,
+          access: form.access,
         }),
       });
       if (res.ok) {
         setShowCreateModal(false);
-        setForm({ name: "", email: "", password: "", role: "admin" });
+        setForm({ name: "", email: "", password: "", access: [...SECTION_KEYS] });
         fetchUsers();
       } else {
         const data = await res.json();
@@ -145,13 +173,36 @@ export default function UsersPage() {
     fetchUsers();
   };
 
+  const openAccessModal = (user: User) => {
+    setEditAccessUser(user);
+    setEditAccess(user.access ?? []);
+  };
+
+  const handleSaveAccess = async () => {
+    if (!editAccessUser) return;
+    setSaving(true);
+    try {
+      const res = await fetch(`/admin/api/crm/users/${editAccessUser.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ access: editAccess }),
+      });
+      if (res.ok) {
+        setEditAccessUser(null);
+        fetchUsers();
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <DashShell>
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3 mb-6">
         <button
           onClick={() => {
-            setForm({ name: "", email: "", password: "", role: "admin" });
+            setForm({ name: "", email: "", password: "", access: [...SECTION_KEYS] });
             setPasswordError("");
             setShowCreateModal(true);
           }}
@@ -176,7 +227,7 @@ export default function UsersPage() {
               <tr className="border-b border-gray-100 bg-gray-50">
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Access</th>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
                 <th className="text-right px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -192,7 +243,7 @@ export default function UsersPage() {
                 </tr>
               ) : (
                 users.map((u) => {
-                  const rc = roleColors[u.role] || roleColors.salesperson;
+                  const full = isFullAccess(u);
                   return (
                     <tr key={u.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3">
@@ -208,18 +259,41 @@ export default function UsersPage() {
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">{u.email}</td>
                       <td className="px-4 py-3">
-                        <span
-                          className="text-[10px] font-medium px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: rc.bg, color: rc.text }}
-                        >
-                          {roleLabels[u.role] || u.role}
-                        </span>
+                        {full ? (
+                          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-orange-50 text-[#FF5500]">
+                            Full access
+                          </span>
+                        ) : (u.access ?? []).length === 0 ? (
+                          <span className="text-[10px] text-gray-400">No sections</span>
+                        ) : (
+                          <div className="flex flex-wrap gap-1">
+                            {u.access.map((key) => (
+                              <span
+                                key={key}
+                                className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-600"
+                              >
+                                {SECTION_LABELS[key as SectionKey] ?? key}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3 text-xs text-gray-500">
                         {new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </td>
                       <td className="px-4 py-3 text-right">
                         <div className="flex items-center justify-end gap-1">
+                          {!full && (
+                            <button
+                              onClick={() => openAccessModal(u)}
+                              className="text-gray-400 hover:text-[#FF5500] transition-colors p-1"
+                              title="Edit Access"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                              </svg>
+                            </button>
+                          )}
                           <button
                             onClick={() => openResetModal(u)}
                             className="text-gray-400 hover:text-[#FF5500] transition-colors p-1"
@@ -298,18 +372,13 @@ export default function UsersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Role</label>
-                  <select
-                    value={form.role}
-                    onChange={(e) => setForm({ ...form, role: e.target.value })}
-                    className={inputCls}
-                  >
-                    <option value="super_admin">Super Admin</option>
-                    <option value="admin">Admin</option>
-                    <option value="sales_executive">Sales Executive</option>
-                    <option value="salesperson">Salesperson</option>
-                    <option value="freelancer">Freelancer</option>
-                  </select>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Access — sections this user can see
+                  </label>
+                  <SectionCheckboxes
+                    value={form.access}
+                    onChange={(access) => setForm({ ...form, access })}
+                  />
                 </div>
                 {passwordError && (
                   <p className="text-xs text-red-500">{passwordError}</p>
@@ -379,6 +448,45 @@ export default function UsersPage() {
                   style={{ backgroundColor: "#FF5500" }}
                 >
                   {saving ? "Saving..." : "Reset Password"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+        {editAccessUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+            onClick={() => setEditAccessUser(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              className="bg-white rounded-lg border border-gray-200 shadow-xl w-full max-w-lg p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-sm font-semibold text-gray-800 mb-1">Edit Access</h3>
+              <p className="text-xs text-gray-500 mb-4">
+                Sections {editAccessUser.name} can open. Projects still require an assignment.
+              </p>
+              <SectionCheckboxes value={editAccess} onChange={setEditAccess} />
+              <div className="flex justify-end gap-2 mt-5">
+                <button
+                  onClick={() => setEditAccessUser(null)}
+                  className="px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveAccess}
+                  disabled={saving}
+                  className="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors disabled:opacity-50"
+                  style={{ backgroundColor: "#FF5500" }}
+                >
+                  {saving ? "Saving..." : "Save Access"}
                 </button>
               </div>
             </motion.div>

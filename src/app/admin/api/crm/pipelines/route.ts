@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const pipelines = await prisma.pipeline.findMany({
       include: {
@@ -28,6 +32,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { name, description, color } = await req.json();
 

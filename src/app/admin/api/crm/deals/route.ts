@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
 export async function GET(req: Request) {
+  const gate = await requireSection("deals");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { searchParams } = new URL(req.url);
     const pipelineId = searchParams.get("pipelineId");
@@ -26,6 +30,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const gate = await requireSection("deals");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const body = await req.json();
     const {

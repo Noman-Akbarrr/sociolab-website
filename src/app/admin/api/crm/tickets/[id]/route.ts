@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 const detailInclude = {
@@ -12,6 +13,9 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("tickets");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const ticket = await prisma.ticket.findUnique({ where: { id }, include: detailInclude });
@@ -28,6 +32,9 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("tickets");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const body = await req.json();
@@ -64,6 +71,9 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("tickets");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     await prisma.ticket.delete({ where: { id } });

@@ -1,15 +1,22 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireSection, requireProject } from "@/lib/auth/guard";
+import { isFullAccess } from "@/lib/access";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
+
     const submissions = await prisma.submission.findMany({
-      where: { projectId: id },
+      where: isFullAccess(gate) ? { projectId: id } : { projectId: id, submitterId: gate.id },
       orderBy: { submittedAt: "desc" },
     });
 
@@ -25,7 +32,12 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
+
     const body = await req.json();
 
     const taskId = body.taskId || null;

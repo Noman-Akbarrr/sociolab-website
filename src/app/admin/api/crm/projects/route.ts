@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireSection, requireAdmin, projectScopeFilter } from "@/lib/auth/guard";
+import { isFullAccess } from "@/lib/access";
 
 export async function GET() {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
+
+    // Non-admin users only ever see the projects assigned to them.
     const projects = await prisma.project.findMany({
+      where: isFullAccess(gate) ? {} : projectScopeFilter(gate.id),
       include: {
         company: true,
         assignee: { select: { id: true, name: true, email: true } },
+        _count: { select: { members: true, tasks: true } },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -19,6 +27,9 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
+
     const { name, companyId, assigneeId, status, startDate, endDate, budget, description } =
       await req.json();
 

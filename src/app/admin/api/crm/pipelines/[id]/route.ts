@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const pipeline = await prisma.pipeline.findUnique({
@@ -35,6 +39,9 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const { name, description, color } = await req.json();
@@ -58,6 +65,9 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     await prisma.pipeline.delete({ where: { id } });

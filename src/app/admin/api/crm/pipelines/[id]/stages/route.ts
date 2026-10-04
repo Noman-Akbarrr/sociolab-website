@@ -1,10 +1,14 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const stages = await prisma.pipelineStage.findMany({
@@ -34,6 +38,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("pipeline");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const { name, color } = await req.json();

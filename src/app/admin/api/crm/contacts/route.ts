@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
+  const gate = await requireSection("contacts");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search");
@@ -29,6 +33,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const gate = await requireSection("contacts");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { firstName, lastName, email, phone, companyId, title, role, source, status } =
       await req.json();

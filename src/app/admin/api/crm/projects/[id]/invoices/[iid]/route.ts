@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireAdmin } from "@/lib/auth/guard";
 
 const STATUS_LABELS: Record<string, string> = {
   draft: "Draft",
@@ -15,6 +16,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string; iid: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
     const { id, iid } = await params;
     const body = await req.json();
 
@@ -74,6 +77,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; iid: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
     const { id, iid } = await params;
     const invoice = await prisma.invoice.findFirst({ where: { id: iid, projectId: id } });
     if (!invoice) {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+import { requireSection, requireAdmin, requireProject } from "@/lib/auth/guard";
+import { isFullAccess } from "@/lib/access";
 
 const ALLOWED = [
   "name",
@@ -23,38 +25,52 @@ function display(value: unknown): string {
   return String(value);
 }
 
-const detailInclude = {
-  company: true,
-  assignee: { select: { id: true, name: true, email: true } },
-  tasks: {
-    include: { assignee: { select: { id: true, name: true, email: true } } },
-    orderBy: { createdAt: "desc" as const },
-  },
-  invoices: { orderBy: { dueDate: "asc" as const } },
-  submissions: { orderBy: { submittedAt: "desc" as const } },
-  activities: {
-    include: { user: { select: { id: true, name: true, email: true } } },
-    orderBy: { createdAt: "desc" as const },
-    take: 200,
-  },
-  tickets: {
-    include: { assignee: { select: { id: true, name: true, email: true } } },
-    orderBy: { createdAt: "desc" as const },
-  },
-  members: {
-    include: { user: { select: { id: true, name: true, email: true } } },
-  },
-};
+function detailInclude(full: boolean, userId: string) {
+  return {
+    company: true,
+    assignee: { select: { id: true, name: true, email: true } },
+    tasks: {
+      include: { assignee: { select: { id: true, name: true, email: true } } },
+      orderBy: { createdAt: "desc" as const },
+    },
+    // Invoices and full reporting stay admin-only.
+    invoices: full ? { orderBy: { dueDate: "asc" as const } } : { take: 0 },
+    // A team member only ever sees the work they submitted themselves.
+    submissions: full
+      ? { orderBy: { submittedAt: "desc" as const } }
+      : {
+          where: { submitterId: userId },
+          orderBy: { submittedAt: "desc" as const },
+        },
+    activities: {
+      include: { user: { select: { id: true, name: true, email: true } } },
+      orderBy: { createdAt: "desc" as const },
+      take: 200,
+    },
+    tickets: {
+      include: { assignee: { select: { id: true, name: true, email: true } } },
+      orderBy: { createdAt: "desc" as const },
+    },
+    members: {
+      include: { user: { select: { id: true, name: true, email: true } } },
+    },
+  };
+}
 
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
+
     const project = await prisma.project.findUnique({
       where: { id },
-      include: detailInclude,
+      include: detailInclude(isFullAccess(gate), gate.id),
     });
 
     if (!project) {
@@ -72,7 +88,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireSection("projects");
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
+    const allowed = await requireProject(gate, id);
+    if (allowed !== true) return allowed;
     const body = await req.json();
 
     const before = await prisma.project.findUnique({ where: { id } });
@@ -92,6 +112,23 @@ export async function PATCH(
         } else {
           data[key] = body[key];
         }
+      }
+    }
+
+    // The project lead grants access to the project, so non-admins can only
+    // pick someone who is already on the team.
+    if (!isFullAccess(gate) && typeof data.assigneeId === "string" && data.assigneeId) {
+      const alreadyTeam =
+        before.assigneeId === data.assigneeId ||
+        (await prisma.projectMember.findUnique({
+          where: { projectId_userId: { projectId: id, userId: data.assigneeId } },
+          select: { userId: true },
+        }));
+      if (!alreadyTeam) {
+        return NextResponse.json(
+          { error: "Assign this person to the project first" },
+          { status: 400 }
+        );
       }
     }
 
@@ -137,6 +174,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (gate instanceof NextResponse) return gate;
     const { id } = await params;
     await prisma.project.delete({ where: { id } });
     return NextResponse.json({ success: true });

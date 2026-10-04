@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
@@ -14,6 +15,9 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("companies");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const company = await prisma.company.findUnique({
@@ -43,6 +47,9 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("companies");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     const body = await req.json();
@@ -93,6 +100,9 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const gate = await requireSection("companies");
+  if (gate instanceof NextResponse) return gate;
+
   try {
     const { id } = await params;
     await prisma.company.delete({ where: { id } });
