@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import {
+  requireSection,
+  requirePipelineManager,
+  requirePipeline,
+  requireAdmin,
+} from "@/lib/auth/guard";
+import { isPipelineManager } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -11,11 +17,16 @@ export async function GET(
 
   try {
     const { id } = await params;
+    const allowed = await requirePipeline(gate, id);
+    if (allowed !== true) return allowed;
+
     const pipeline = await prisma.pipeline.findUnique({
       where: { id },
       include: {
         stages: { orderBy: { order: "asc" } },
         deals: {
+          // A salesman on the board only sees their own deals.
+          ...(isPipelineManager(gate) ? {} : { where: { ownerId: gate.id } }),
           include: {
             company: true,
             stage: true,
@@ -39,7 +50,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -65,7 +76,7 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requireAdmin();
   if (gate instanceof NextResponse) return gate;
 
   try {

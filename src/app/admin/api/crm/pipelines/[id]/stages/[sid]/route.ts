@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requirePipelineManager } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string; sid: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -31,7 +31,7 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string; sid: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {

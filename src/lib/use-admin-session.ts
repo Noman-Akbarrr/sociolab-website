@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { hasSection, isFullAccess, type SectionKey } from "@/lib/access";
+import { hasSection, isFullAccess, isPipelineManager, roleOf, type SectionKey } from "@/lib/access";
 
 export type SessionUser = {
   id: string;
   name: string;
   email: string;
   role: string;
-  access: string[];
 };
 
 export type SessionStatus = {
@@ -48,6 +47,10 @@ export function useAdminSession() {
     user,
     loading,
     isFull: isFullAccess(user),
+    /** Current role (defaults to salesman while logged out / loading). */
+    role: roleOf(user),
+    /** Admins and sales leads manage pipelines, deals, and assignments. */
+    managesSales: isPipelineManager(user),
     can: (section: SectionKey) => hasSection(user, section),
   };
 }

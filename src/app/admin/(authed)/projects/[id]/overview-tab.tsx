@@ -29,11 +29,14 @@ export function OverviewTab({
   users,
   companies,
   onSaved,
+  readOnly = false,
 }: {
   project: ProjectDetail;
   users: UserOption[];
   companies: CompanyOption[];
   onSaved: (project: ProjectDetail) => void;
+  /** Freelancers can look at the business info but never touch it. */
+  readOnly?: boolean;
 }) {
   const [form, setForm] = useState(formFromProject(project));
   const [baseline, setBaseline] = useState(form);
@@ -86,7 +89,7 @@ export function OverviewTab({
       <div className="rounded-lg border border-gray-200 bg-white p-5">
         <h2 className="mb-4 text-sm font-semibold text-gray-800">Project details</h2>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <fieldset disabled={readOnly} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label className="mb-1 block text-xs font-medium text-gray-600">Name *</label>
             <input
@@ -187,16 +190,18 @@ export function OverviewTab({
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-medium text-gray-600">Internal cost (what it costs us, Rs.)</label>
-            <input
-              type="number"
-              className={inputCls}
-              value={form.internalCost}
-              placeholder="0"
-              onChange={(e) => setForm({ ...form, internalCost: e.target.value })}
-            />
-          </div>
+          {!readOnly && (
+            <div>
+              <label className="mb-1 block text-xs font-medium text-gray-600">Internal cost (what it costs us, Rs.)</label>
+              <input
+                type="number"
+                className={inputCls}
+                value={form.internalCost}
+                placeholder="0"
+                onChange={(e) => setForm({ ...form, internalCost: e.target.value })}
+              />
+            </div>
+          )}
 
           <div className="sm:col-span-2">
             <label className="mb-1 block text-xs font-medium text-gray-600">Description</label>
@@ -219,23 +224,25 @@ export function OverviewTab({
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </div>
-        </div>
+        </fieldset>
 
         {error && <p className="mt-3 text-xs text-red-500">{error}</p>}
       </div>
 
-      <div className="mt-4 flex items-center justify-end gap-3">
-        {saved && !dirty && <span className="text-xs text-green-600">Saved</span>}
-        {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
-        <button
-          type="submit"
-          disabled={saving || !dirty}
-          className="rounded-md px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
-          style={{ backgroundColor: "#FF5500" }}
-        >
-          {saving ? "Saving…" : "Save changes"}
-        </button>
-      </div>
+      {!readOnly && (
+        <div className="mt-4 flex items-center justify-end gap-3">
+          {saved && !dirty && <span className="text-xs text-green-600">Saved</span>}
+          {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
+          <button
+            type="submit"
+            disabled={saving || !dirty}
+            className="rounded-md px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
+            style={{ backgroundColor: "#FF5500" }}
+          >
+            {saving ? "Saving…" : "Save changes"}
+          </button>
+        </div>
+      )}
     </form>
   );
 }

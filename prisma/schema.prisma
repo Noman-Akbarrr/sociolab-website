@@ -14,7 +14,6 @@ model User {
   email                  String   @unique
   passwordHash           String
   role                   String   @default("admin")
-  access                 String[] @default([]) // granted dashboard sections for non-admin users
   isTwoFactorEnabled     Boolean  @default(false)
   twoFactorSecret        String?
   recoveryCodes          Json?

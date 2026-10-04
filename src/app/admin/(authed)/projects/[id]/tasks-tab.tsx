@@ -36,6 +36,7 @@ export function TasksTab({
   onTasksChange,
   onSubmissionCreated,
   onActivity,
+  limited = false,
 }: {
   projectId: string;
   tasks: ProjectTask[];
@@ -43,6 +44,8 @@ export function TasksTab({
   onTasksChange: React.Dispatch<React.SetStateAction<ProjectTask[]>>;
   onSubmissionCreated: (submission: ProjectSubmission) => void;
   onActivity: (activity: ActivityItem) => void;
+  /** Freelancers only move their own tasks along — no creating or reassigning. */
+  limited?: boolean;
 }) {
   const [showCreate, setShowCreate] = useState(false);
   const [createForm, setCreateForm] = useState({
@@ -195,17 +198,19 @@ export function TasksTab({
         <p className="text-sm text-gray-500">
           {tasks.filter((t) => t.status === "done").length} of {tasks.length} done
         </p>
-        <button
-          type="button"
-          onClick={() => setShowCreate((v) => !v)}
-          className="flex items-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium text-white transition-colors"
-          style={{ backgroundColor: "#FF5500" }}
-        >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Add task
-        </button>
+        {!limited && (
+          <button
+            type="button"
+            onClick={() => setShowCreate((v) => !v)}
+            className="flex items-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium text-white transition-colors"
+            style={{ backgroundColor: "#FF5500" }}
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add task
+          </button>
+        )}
       </div>
 
       {showCreate && (
@@ -391,20 +396,22 @@ export function TasksTab({
                           </option>
                         ))}
                       </select>
-                      <select
-                        value={task.assigneeId ?? ""}
-                        disabled={busy}
-                        onChange={(e) => patchTask(task, { assigneeId: e.target.value || null })}
-                        className="max-w-36 truncate rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-700 focus:border-[#FF5500] focus:outline-none"
-                        title="Assign"
-                      >
-                        <option value="">Unassigned</option>
-                        {users.map((u) => (
-                          <option key={u.id} value={u.id}>
-                            {u.name}
-                          </option>
-                        ))}
-                      </select>
+                      {!limited && (
+                        <select
+                          value={task.assigneeId ?? ""}
+                          disabled={busy}
+                          onChange={(e) => patchTask(task, { assigneeId: e.target.value || null })}
+                          className="max-w-36 truncate rounded-md border border-gray-200 bg-gray-50 px-2 py-1.5 text-xs text-gray-700 focus:border-[#FF5500] focus:outline-none"
+                          title="Assign"
+                        >
+                          <option value="">Unassigned</option>
+                          {users.map((u) => (
+                            <option key={u.id} value={u.id}>
+                              {u.name}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                       <button
                         type="button"
                         onClick={() => openSubmit(task)}
@@ -413,35 +420,39 @@ export function TasksTab({
                       >
                         Submit work
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => openEdit(task)}
-                        title="Edit task"
-                        className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
-                      >
-                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(task)}
-                        disabled={busy}
-                        title="Delete task"
-                        className="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                      >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
+                      {!limited && (
+                        <button
+                          type="button"
+                          onClick={() => openEdit(task)}
+                          title="Edit task"
+                          className="rounded p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                        >
+                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                            />
+                          </svg>
+                        </button>
+                      )}
+                      {!limited && (
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(task)}
+                          disabled={busy}
+                          title="Delete task"
+                          className="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                        >
+                          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            />
+                          </svg>
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}

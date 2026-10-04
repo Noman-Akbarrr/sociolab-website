@@ -132,10 +132,22 @@ export default function ProjectDetailPage() {
           { key: "reports", label: "Reports" },
         ] as { key: TabKey; label: string; count?: number }[])
       : []),
-    { key: "activity", label: "Activity", count: activities.length },
+    // The full activity stream (and writing to it) stays admin-only.
+    ...(isFull
+      ? ([{ key: "activity", label: "Activity", count: activities.length }] as {
+          key: TabKey;
+          label: string;
+          count?: number;
+        }[])
+      : []),
   ];
 
-  const activeTab: TabKey = isFull ? tab : tab === "invoices" || tab === "reports" ? "overview" : tab;
+  const activeTab: TabKey =
+    isFull
+      ? tab
+      : tab === "invoices" || tab === "reports" || tab === "activity"
+        ? "overview"
+        : tab;
 
   return (
     <DashShell>
@@ -240,6 +252,7 @@ export default function ProjectDetailPage() {
                 project={project}
                 users={people}
                 companies={companies}
+                readOnly={!isFull}
                 onSaved={(updated) => setProject((prev) => (prev ? { ...prev, ...updated } : prev))}
               />
             )}
@@ -249,6 +262,7 @@ export default function ProjectDetailPage() {
                 projectId={projectId}
                 tasks={tasks}
                 users={people}
+                limited={!isFull}
                 onTasksChange={setTasks}
                 onSubmissionCreated={(sub) => setSubmissions((prev) => [sub, ...prev])}
                 onActivity={(activity) => setActivities((prev) => [activity, ...prev])}
@@ -260,6 +274,7 @@ export default function ProjectDetailPage() {
                 projectId={projectId}
                 submissions={submissions}
                 tasks={tasks}
+                canReview={isFull}
                 onSubmissionsChange={setSubmissions}
                 onTasksChange={setTasks}
               />

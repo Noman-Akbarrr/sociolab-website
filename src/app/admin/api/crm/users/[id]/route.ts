@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/guard";
-import { sanitizeAccess } from "@/lib/access";
+import { ROLES } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 
@@ -18,8 +18,9 @@ export async function PATCH(
     const data: Record<string, unknown> = {};
 
     if (body.name !== undefined) data.name = body.name;
-    if (body.role !== undefined) data.role = body.role;
-    if (body.access !== undefined) data.access = sanitizeAccess(body.access);
+    if (body.role !== undefined && (ROLES as readonly string[]).includes(body.role)) {
+      data.role = body.role;
+    }
 
     if (body.password) {
       if (body.password.length < 10) {
@@ -45,7 +46,6 @@ export async function PATCH(
         name: true,
         email: true,
         role: true,
-        access: true,
         isTwoFactorEnabled: true,
         createdAt: true,
         updatedAt: true,

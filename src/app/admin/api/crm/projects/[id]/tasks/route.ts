@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
-import { requireSection, requireProject, isMemberOfProject } from "@/lib/auth/guard";
+import { requireAdmin, requireSection, requireProject, isMemberOfProject } from "@/lib/auth/guard";
+import { isFullAccess } from "@/lib/access";
 
 export async function GET(
   _req: Request,
@@ -15,7 +16,8 @@ export async function GET(
     if (allowed !== true) return allowed;
 
     const tasks = await prisma.task.findMany({
-      where: { projectId: id },
+      // A freelancer only ever gets their own tasks.
+      where: { projectId: id, ...(isFullAccess(gate) ? {} : { assigneeId: gate.id }) },
       include: { assignee: { select: { id: true, name: true, email: true } } },
       orderBy: { createdAt: "desc" },
     });
@@ -31,7 +33,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const gate = await requireSection("projects");
+    const gate = await requireAdmin();
     if (gate instanceof NextResponse) return gate;
     const { id } = await params;
     const allowed = await requireProject(gate, id);

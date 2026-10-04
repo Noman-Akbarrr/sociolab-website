@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { DashShell } from "../../client";
 import { DealPanel, type PanelDeal } from "./deal-panel";
+import { useAdminSession } from "@/lib/use-admin-session";
+import { roleOf } from "@/lib/access";
 
 interface PipelineOwner {
   id: string;
@@ -180,6 +182,7 @@ function DealCard({
 export default function PipelineDetailPage() {
   const params = useParams();
   const pipelineId = params.id as string;
+  const { isFull, managesSales } = useAdminSession();
 
   const [pipeline, setPipeline] = useState<PipelineData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -188,6 +191,12 @@ export default function PipelineDetailPage() {
   const [showPipelineModal, setShowPipelineModal] = useState(false);
   const [pipeForm, setPipeForm] = useState({ name: "", description: "", color: "#FF5500" });
   const [pipeSaving, setPipeSaving] = useState(false);
+
+  // Team (pipeline members) modal
+  const [showMembersModal, setShowMembersModal] = useState(false);
+  const [teamUsers, setTeamUsers] = useState<{ id: string; name: string; role: string }[]>([]);
+  const [memberIds, setMemberIds] = useState<string[]>([]);
+  const [membersSaving, setMembersSaving] = useState(false);
 
   // Modals
   const [showStageModal, setShowStageModal] = useState(false);
@@ -342,6 +351,42 @@ export default function PipelineDetailPage() {
     setShowPipelineModal(true);
   }
 
+  // Team modal: who can see and work this pipeline
+  async function openMembersModal() {
+    setShowMembersModal(true);
+    try {
+      const [membersRes, usersRes] = await Promise.all([
+        fetch(`/admin/api/crm/pipelines/${pipelineId}/members`),
+        fetch("/admin/api/crm/users"),
+      ]);
+      if (membersRes.ok) setMemberIds((await membersRes.json()).map((m: { id: string }) => m.id));
+      if (usersRes.ok) setTeamUsers(await usersRes.json());
+    } catch (e) {
+      console.error("Failed to load pipeline team", e);
+    }
+  }
+
+  async function handleSaveMembers(e: React.FormEvent) {
+    e.preventDefault();
+    setMembersSaving(true);
+    try {
+      const res = await fetch(`/admin/api/crm/pipelines/${pipelineId}/members`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userIds: memberIds }),
+      });
+      if (res.ok) setShowMembersModal(false);
+    } catch (e) {
+      console.error("Failed to save pipeline team", e);
+    } finally {
+      setMembersSaving(false);
+    }
+  }
+
+  function toggleMember(id: string) {
+    setMemberIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
   async function handleEditPipeline(e: React.FormEvent) {
     e.preventDefault();
     if (!pipeForm.name.trim()) return;
@@ -463,20 +508,22 @@ export default function PipelineDetailPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-gray-900">{pipeline.name}</h1>
-              <button
-                type="button"
-                onClick={openPipelineModal}
-                className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-[#FF5500]"
-                title="Edit pipeline"
-              >
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
-                  />
-                </svg>
-              </button>
+              {managesSales && (
+                <button
+                  type="button"
+                  onClick={openPipelineModal}
+                  className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-[#FF5500]"
+                  title="Edit pipeline"
+                >
+                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                    />
+                  </svg>
+                </button>
+              )}
             </div>
             <p className="mt-0.5 text-sm text-gray-500">
               {pipeline.description ? `${pipeline.description} · ` : ""}
@@ -486,25 +533,40 @@ export default function PipelineDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => setShowStageModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Stage
-          </button>
-          <button
-            onClick={openDealModal}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-md transition-colors"
-            style={{ backgroundColor: "#FF5500" }}
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            Add Deal
-          </button>
+          {managesSales && (
+            <button
+              onClick={openMembersModal}
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+              Team
+            </button>
+          )}
+          {managesSales && (
+            <button
+              onClick={() => setShowStageModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Stage
+            </button>
+          )}
+          {managesSales && (
+            <button
+              onClick={openDealModal}
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white rounded-md transition-colors"
+              style={{ backgroundColor: "#FF5500" }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Add Deal
+            </button>
+          )}
         </div>
       </div>
 
@@ -545,7 +607,7 @@ export default function PipelineDetailPage() {
                     <span className="text-xs font-medium mr-1 opacity-80">
                       Rs. {stageValue.toLocaleString()}
                     </span>
-                    {stageIdx > 0 && (
+                    {managesSales && stageIdx > 0 && (
                       <StageIconButton
                         title="Move left"
                         onClick={() => moveStage(stage.id, "left")}
@@ -557,7 +619,7 @@ export default function PipelineDetailPage() {
                         </svg>
                       </StageIconButton>
                     )}
-                    {stageIdx < pipeline.stages.length - 1 && (
+                    {managesSales && stageIdx < pipeline.stages.length - 1 && (
                       <StageIconButton
                         title="Move right"
                         onClick={() => moveStage(stage.id, "right")}
@@ -569,16 +631,18 @@ export default function PipelineDetailPage() {
                         </svg>
                       </StageIconButton>
                     )}
-                    <StageIconButton
-                      title="Delete stage"
-                      onClick={() => handleDeleteStage(stage.id)}
-                      color={txt}
-                      hoverBg={hoverBg}
-                    >
-                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </StageIconButton>
+                    {managesSales && (
+                      <StageIconButton
+                        title="Delete stage"
+                        onClick={() => handleDeleteStage(stage.id)}
+                        color={txt}
+                        hoverBg={hoverBg}
+                      >
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </StageIconButton>
+                    )}
                   </div>
                 </div>
 
@@ -815,6 +879,71 @@ export default function PipelineDetailPage() {
                   style={{ backgroundColor: "#FF5500" }}
                 >
                   {dealSaving ? "Creating..." : "Create Deal"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Pipeline Team Modal */}
+      {showMembersModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowMembersModal(false)} />
+          <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">Pipeline Team</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              {isFull
+                ? "Everyone you tick can open this board."
+                : "Salesmen you tick can open this board and work the deals on it."}
+            </p>
+            <form onSubmit={handleSaveMembers} className="space-y-4">
+              <div className="max-h-72 overflow-y-auto space-y-1.5">
+                {teamUsers
+                  .filter((u) => isFull || roleOf(u) === "salesman" || memberIds.includes(u.id))
+                  .map((u) => {
+                    const checked = memberIds.includes(u.id);
+                    return (
+                      <label
+                        key={u.id}
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-md border text-sm cursor-pointer transition-colors ${
+                          checked
+                            ? "border-[#FF5500] bg-orange-50 text-gray-800"
+                            : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleMember(u.id)}
+                          className="accent-[#FF5500]"
+                        />
+                        <span className="flex-1">{u.name}</span>
+                        <span className="text-[10px] uppercase tracking-wide text-gray-400">
+                          {roleOf(u)}
+                        </span>
+                      </label>
+                    );
+                  })}
+                {teamUsers.length === 0 && (
+                  <p className="text-sm text-gray-400 py-4 text-center">Loading people...</p>
+                )}
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowMembersModal(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={membersSaving}
+                  className="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors disabled:opacity-50"
+                  style={{ backgroundColor: "#FF5500" }}
+                >
+                  {membersSaving ? "Saving..." : "Save Team"}
                 </button>
               </div>
             </form>

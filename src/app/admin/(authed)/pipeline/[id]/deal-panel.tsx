@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { useAdminSession } from "@/lib/use-admin-session";
+import { roleOf } from "@/lib/access";
 
 export interface PanelActivity {
   id: string;
@@ -107,6 +109,11 @@ function Field({ label, children, className = "" }: { label: string; children: R
 }
 
 export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealPanelProps) {
+  const { isFull, managesSales } = useAdminSession();
+  // A salesman can nudge their own deal (stage, priority, probability,
+  // notes) but nothing else — the rest of the panel is read-only.
+  const readOnly = !managesSales;
+  const canDelete = managesSales;
   const [deal, setDeal] = useState<PanelDeal | null>(null);
   const [loadState, setLoadState] = useState<{ id: string; state: "ready" | "error" } | null>(null);
   const [companies, setCompanies] = useState<Option[]>([]);
@@ -181,11 +188,20 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
       .then((r) => (r.ok ? r.json() : []))
       .then((rows: Option[]) => setCompanies(rows.map((c) => ({ id: c.id, name: c.name }))))
       .catch(() => {});
-    fetch("/admin/api/crm/users")
-      .then((r) => (r.ok ? r.json() : []))
-      .then((rows: { id: string; name: string }[]) => setOwners(rows.map((u) => ({ id: u.id, name: u.name }))))
-      .catch(() => {});
-  }, [dealId]);
+    // Only sales leads/admins pick an owner (and may open the users list).
+    if (managesSales) {
+      fetch("/admin/api/crm/users")
+        .then((r) => (r.ok ? r.json() : []))
+        .then((rows: { id: string; name: string; role: string }[]) =>
+          setOwners(
+            rows
+              .filter((u) => isFull || roleOf(u) === "salesman")
+              .map((u) => ({ id: u.id, name: u.name }))
+          )
+        )
+        .catch(() => {});
+    }
+  }, [dealId, managesSales, isFull]);
 
   useEffect(() => {
     if (!dealId) return;
@@ -358,6 +374,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                             className={inputCls}
                             value={form.title}
                             onChange={(e) => setForm({ ...form, title: e.target.value })}
+                            disabled={readOnly}
                             required
                           />
                         </Field>
@@ -368,6 +385,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                               className={inputCls}
                               value={form.companyId}
                               onChange={(e) => setForm({ ...form, companyId: e.target.value })}
+                              disabled={readOnly}
                             >
                               {!form.companyId && <option value="">Select company</option>}
                               {companyOptions.map((c) => (
@@ -396,6 +414,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                               className={inputCls}
                               value={form.value}
                               onChange={(e) => setForm({ ...form, value: e.target.value })}
+                              disabled={readOnly}
                             />
                           </Field>
                           <Field label="Priority">
@@ -412,18 +431,26 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
-                          <Field label="Owner">
-                            <select
-                              className={inputCls}
-                              value={form.ownerId}
-                              onChange={(e) => setForm({ ...form, ownerId: e.target.value })}
-                            >
-                              {!form.ownerId && <option value="">Select owner</option>}
-                              {ownerOptions.map((o) => (
-                                <option key={o.id} value={o.id}>{o.name}</option>
-                              ))}
-                            </select>
-                          </Field>
+                          {managesSales ? (
+                            <Field label="Owner">
+                              <select
+                                className={inputCls}
+                                value={form.ownerId}
+                                onChange={(e) => setForm({ ...form, ownerId: e.target.value })}
+                              >
+                                {!form.ownerId && <option value="">Select owner</option>}
+                                {ownerOptions.map((o) => (
+                                  <option key={o.id} value={o.id}>{o.name}</option>
+                                ))}
+                              </select>
+                            </Field>
+                          ) : (
+                            <Field label="Owner">
+                              <p className="pt-1.5 text-sm text-gray-700">
+                                {deal?.owner?.name ?? "Unassigned"}
+                              </p>
+                            </Field>
+                          )}
                           <Field label="Probability (%)">
                             <input
                               type="number"
@@ -444,6 +471,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                               placeholder="Referral, Website…"
                               value={form.source}
                               onChange={(e) => setForm({ ...form, source: e.target.value })}
+                              disabled={readOnly}
                             />
                           </Field>
                           <Field label="Expected close">
@@ -452,6 +480,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                               className={inputCls}
                               value={form.expectedClose}
                               onChange={(e) => setForm({ ...form, expectedClose: e.target.value })}
+                              disabled={readOnly}
                             />
                           </Field>
                         </div>
@@ -467,6 +496,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                                 className={inputCls}
                                 value={form.contactName}
                                 onChange={(e) => setForm({ ...form, contactName: e.target.value })}
+                                disabled={readOnly}
                               />
                             </Field>
                             <div className="grid grid-cols-2 gap-3">
@@ -476,6 +506,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                                   className={inputCls}
                                   value={form.contactEmail}
                                   onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
+                                  disabled={readOnly}
                                 />
                               </Field>
                               <Field label="Phone">
@@ -484,6 +515,7 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
                                   className={inputCls}
                                   value={form.contactPhone}
                                   onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+                                  disabled={readOnly}
                                 />
                               </Field>
                             </div>
@@ -581,13 +613,17 @@ export function DealPanel({ dealId, stages, onClose, onSaved, onDeleted }: DealP
             {/* Footer */}
             <div className="border-t border-gray-200 bg-white px-5 py-3">
               <div className="flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="rounded-md px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
-                >
-                  Delete deal
-                </button>
+                {canDelete ? (
+                  <button
+                    type="button"
+                    onClick={handleDelete}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
+                  >
+                    Delete deal
+                  </button>
+                ) : (
+                  <span />
+                )}
                 <div className="flex items-center gap-2">
                   {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
                   <button

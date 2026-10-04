@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requireRole, requireSection } from "@/lib/auth/guard";
+import { contactScopeFilter, isPipelineManager } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
@@ -37,6 +38,17 @@ export async function GET(
       return NextResponse.json({ error: "Contact not found" }, { status: 404 });
     }
 
+    // Salesmen only open contacts on their own deals.
+    if (!isPipelineManager(gate)) {
+      const mine = await prisma.contact.findFirst({
+        where: { id, ...contactScopeFilter(gate.id) },
+        select: { id: true },
+      });
+      if (!mine) {
+        return NextResponse.json({ error: "This contact is not on one of your deals" }, { status: 403 });
+      }
+    }
+
     return NextResponse.json(contact);
   } catch {
     return NextResponse.json({ error: "Failed to fetch contact" }, { status: 500 });
@@ -47,7 +59,7 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("contacts");
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -104,7 +116,7 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("contacts");
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {

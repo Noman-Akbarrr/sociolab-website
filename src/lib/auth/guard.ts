@@ -4,7 +4,9 @@ import { prisma } from "@/lib/prisma";
 import {
   hasSection,
   isFullAccess,
+  isPipelineManager,
   projectScopeFilter,
+  roleOf,
   type SectionKey,
 } from "@/lib/access";
 import type { AdminUser } from "@/lib/auth/users";
@@ -27,12 +29,59 @@ export async function requireSection(section: SectionKey): Promise<AdminUser | N
   return user;
 }
 
+/** Logged in + one of these roles (admins always pass). */
+export async function requireRole(
+  ...roles: string[]
+): Promise<AdminUser | NextResponse> {
+  const user = await requireUser();
+  if (user instanceof NextResponse) return user;
+  if (!isFullAccess(user) && !roles.includes(roleOf(user))) {
+    return denied("You do not have access to this", 403);
+  }
+  return user;
+}
+
 /** Logged in + full (admin) access. */
 export async function requireAdmin(): Promise<AdminUser | NextResponse> {
   const user = await requireUser();
   if (user instanceof NextResponse) return user;
   if (!isFullAccess(user)) return denied("Admin access required", 403);
   return user;
+}
+
+/** Can this user build pipelines and assign people to them? */
+export async function requirePipelineManager(): Promise<AdminUser | NextResponse> {
+  const user = await requireUser();
+  if (user instanceof NextResponse) return user;
+  if (!isPipelineManager(user)) return denied("Only a sales lead can manage pipelines", 403);
+  return user;
+}
+
+/** May this user open this pipeline's board? */
+export async function canAccessPipeline(user: AdminUser, pipelineId: string): Promise<boolean> {
+  if (isPipelineManager(user)) return true;
+  const member = await prisma.pipelineMember.findUnique({
+    where: { pipelineId_userId: { pipelineId, userId: user.id } },
+    select: { id: true },
+  });
+  return Boolean(member);
+}
+
+export async function requirePipeline(
+  user: AdminUser,
+  pipelineId: string
+): Promise<true | NextResponse> {
+  if (await canAccessPipeline(user, pipelineId)) return true;
+  return denied("This pipeline is not assigned to you", 403);
+}
+
+/** Salesmen may only touch deals they own; leads and admins touch any. */
+export function canTouchDeal(
+  user: AdminUser,
+  deal: { ownerId: string }
+): boolean {
+  if (isPipelineManager(user)) return true;
+  return deal.ownerId === user.id;
 }
 
 /** Is this user on the project team (member or project assignee)? */
@@ -49,8 +98,8 @@ export async function isMemberOfProject(projectId: string, userId: string): Prom
 }
 
 /**
- * A non-admin user may only touch a project they were assigned to
- * (as a member or as the project assignee).
+ * Only admins work on projects outside their team; everyone else must be
+ * on the project team (as a member or as the project assignee).
  */
 export async function canAccessProject(user: AdminUser, projectId: string): Promise<boolean> {
   if (isFullAccess(user)) return true;

@@ -17,12 +17,15 @@ export function SubmissionsTab({
   tasks,
   onSubmissionsChange,
   onTasksChange,
+  canReview = true,
 }: {
   projectId: string;
   submissions: ProjectSubmission[];
   tasks: ProjectTask[];
   onSubmissionsChange: React.Dispatch<React.SetStateAction<ProjectSubmission[]>>;
   onTasksChange: React.Dispatch<React.SetStateAction<ProjectTask[]>>;
+  /** Only admins approve, reject, or delete submissions. */
+  canReview?: boolean;
 }) {
   const [showCreate, setShowCreate] = useState(false);
   const [createForm, setCreateForm] = useState({ title: "", description: "", taskId: "", files: "" });
@@ -245,7 +248,7 @@ export function SubmissionsTab({
         <ul className="space-y-3">
           {submissions.map((sub) => {
             const busy = busyId === sub.id;
-            const canReview = sub.status === "review" || sub.status === "pending";
+            const reviewable = sub.status === "review" || sub.status === "pending";
             const draft = feedbackDrafts[sub.id] ?? sub.feedback ?? "";
             return (
               <li key={sub.id} className="rounded-lg border border-gray-200 bg-white p-4">
@@ -282,25 +285,28 @@ export function SubmissionsTab({
                     )}
                   </div>
 
-                  <div className="flex shrink-0 items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(sub)}
-                      disabled={busy}
-                      title="Delete submission"
-                      className="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                    >
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+                  {canReview && (
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(sub)}
+                        disabled={busy}
+                        title="Delete submission"
+                        className="rounded p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500"
+                      >
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
+                {canReview && (
                 <div className="mt-3 border-t border-gray-100 pt-3">
                   <label className="mb-1 block text-xs font-medium text-gray-500">Reviewer feedback</label>
                   <textarea
@@ -321,7 +327,7 @@ export function SubmissionsTab({
                       Save feedback
                     </button>
 
-                    {canReview && (
+                    {reviewable && (
                       <div className="flex flex-wrap items-center gap-2">
                         <button
                           type="button"
@@ -363,6 +369,7 @@ export function SubmissionsTab({
                     )}
                   </div>
                 </div>
+                )}
 
                 {sub.taskId && taskTitle(sub.taskId) && (
                   <p className="mt-2 text-[11px] text-gray-400">

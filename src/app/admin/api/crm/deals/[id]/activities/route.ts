@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { canTouchDeal, requireSection } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
 const activityTypes = ["note", "call", "email", "meeting", "task", "stage-changed", "updated", "created"];
+
+async function ownedDeal(gate: Awaited<ReturnType<typeof requireSection>>, id: string) {
+  if (gate instanceof NextResponse) return gate;
+  const deal = await prisma.deal.findUnique({
+    where: { id },
+    select: { id: true, ownerId: true },
+  });
+  if (!deal) return NextResponse.json({ error: "Deal not found" }, { status: 404 });
+  if (!canTouchDeal(gate, deal)) {
+    return NextResponse.json({ error: "This deal is not yours" }, { status: 403 });
+  }
+  return deal;
+}
 
 export async function GET(
   _req: Request,
@@ -14,6 +27,9 @@ export async function GET(
 
   try {
     const { id } = await params;
+    const deal = await ownedDeal(gate, id);
+    if (deal instanceof NextResponse) return deal;
+
     const activities = await prisma.activity.findMany({
       where: { dealId: id },
       orderBy: { createdAt: "desc" },
@@ -43,10 +59,8 @@ export async function POST(
       return NextResponse.json({ error: "Invalid activity type" }, { status: 400 });
     }
 
-    const deal = await prisma.deal.findUnique({ where: { id }, select: { id: true } });
-    if (!deal) {
-      return NextResponse.json({ error: "Deal not found" }, { status: 404 });
-    }
+    const deal = await ownedDeal(gate, id);
+    if (deal instanceof NextResponse) return deal;
 
     const user = await getServerUser();
     const activity = await prisma.activity.create({

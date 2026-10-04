@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { canTouchDeal, requireRole, requireSection } from "@/lib/auth/guard";
+import { isPipelineManager, roleOf } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
+
+// What a salesman may touch on their own deal while dragging it around.
+const SALESMAN_FIELDS = ["stageId", "notes", "probability", "closedAt", "lostReason", "priority"];
 
 type DealRecord = {
   title: string;
@@ -94,6 +98,11 @@ export async function GET(
       return NextResponse.json({ error: "Deal not found" }, { status: 404 });
     }
 
+    // Salesmen only open their own deals.
+    if (!canTouchDeal(gate, deal)) {
+      return NextResponse.json({ error: "This deal is not yours" }, { status: 403 });
+    }
+
     return NextResponse.json(deal);
   } catch {
     return NextResponse.json({ error: "Failed to fetch deal" }, { status: 500 });
@@ -118,27 +127,32 @@ export async function PATCH(
     if (!before) {
       return NextResponse.json({ error: "Deal not found" }, { status: 404 });
     }
+    if (!canTouchDeal(gate, before)) {
+      return NextResponse.json({ error: "This deal is not yours" }, { status: 403 });
+    }
 
     const data: Record<string, unknown> = {};
-    const allowed = [
-      "title",
-      "companyId",
-      "pipelineId",
-      "stageId",
-      "value",
-      "ownerId",
-      "priority",
-      "source",
-      "contactName",
-      "contactEmail",
-      "contactPhone",
-      "notes",
-      "probability",
-      "dealType",
-      "expectedClose",
-      "closedAt",
-      "lostReason",
-    ];
+    const allowed = isPipelineManager(gate)
+      ? [
+          "title",
+          "companyId",
+          "pipelineId",
+          "stageId",
+          "value",
+          "ownerId",
+          "priority",
+          "source",
+          "contactName",
+          "contactEmail",
+          "contactPhone",
+          "notes",
+          "probability",
+          "dealType",
+          "expectedClose",
+          "closedAt",
+          "lostReason",
+        ]
+      : SALESMAN_FIELDS;
 
     for (const key of allowed) {
       if (body[key] !== undefined) {
@@ -148,6 +162,20 @@ export async function PATCH(
               ? new Date(body[key])
               : null
             : body[key];
+      }
+    }
+
+    // A sales lead may only hand the deal to a salesman.
+    if (data.ownerId !== undefined && !isPipelineManager(gate)) {
+      const owner = await prisma.user.findUnique({
+        where: { id: String(data.ownerId) },
+        select: { id: true, role: true },
+      });
+      if (!owner || (roleOf(owner) !== "salesman" && owner.id !== gate.id)) {
+        return NextResponse.json(
+          { error: "A deal can only be assigned to a sales lead or salesman" },
+          { status: 400 }
+        );
       }
     }
 
@@ -163,6 +191,14 @@ export async function PATCH(
           include: { user: { select: { id: true, name: true, email: true } } },
         },
       },
+    });
+
+    // Whoever owns it now must sit on the pipeline's team to see it.
+    const newPipelineId = String(data.pipelineId ?? before.pipelineId);
+    await prisma.pipelineMember.upsert({
+      where: { pipelineId_userId: { pipelineId: newPipelineId, userId: deal.ownerId } },
+      update: {},
+      create: { pipelineId: newPipelineId, userId: deal.ownerId },
     });
 
     const user = await getServerUser();
@@ -222,7 +258,7 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("deals");
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {

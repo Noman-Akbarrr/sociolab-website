@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ActivityFeed, type ActivityItem } from "../components/activity-feed";
+import { useAdminSession } from "@/lib/use-admin-session";
 
 export interface PanelContact {
   id: string;
@@ -63,6 +64,9 @@ function Field({ label, children, className = "" }: { label: string; children: R
 }
 
 export function ContactPanel({ contactId, companies, onClose, onSaved, onDeleted }: ContactPanelProps) {
+  const { managesSales } = useAdminSession();
+  // Salesmen can look at contacts on their deals but never edit them.
+  const readOnly = !managesSales;
   const [contact, setContact] = useState<PanelContact | null>(null);
   const [loadState, setLoadState] = useState<{ id: string; state: "ready" | "error" } | null>(null);
   const [activities, setActivities] = useState<ActivityItem[]>([]);
@@ -250,6 +254,7 @@ export function ContactPanel({ contactId, companies, onClose, onSaved, onDeleted
               {contact && !loading && (
                 <>
                   <form id="contact-details-form" onSubmit={handleSave} className="space-y-4">
+                    <fieldset disabled={readOnly} className="space-y-4">
                     <div className="grid grid-cols-2 gap-3">
                       <Field label="First name *">
                         <input className={inputCls} value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
@@ -313,6 +318,7 @@ export function ContactPanel({ contactId, companies, onClose, onSaved, onDeleted
                         <textarea rows={3} className={`${inputCls} resize-none`} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
                       </Field>
                     </div>
+                    </fieldset>
                     {error && <p className="text-xs text-red-500">{error}</p>}
                   </form>
 
@@ -330,27 +336,33 @@ export function ContactPanel({ contactId, companies, onClose, onSaved, onDeleted
 
             <div className="border-t border-gray-200 bg-white px-5 py-3">
               <div className="flex items-center justify-between gap-3">
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="rounded-md px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
-                >
-                  Delete contact
-                </button>
-                <div className="flex items-center gap-2">
-                  {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
+                {readOnly ? (
+                  <span className="text-xs text-gray-400">View only</span>
+                ) : (
                   <button
                     type="button"
-                    onClick={() => {
-                      const formEl = document.getElementById("contact-details-form");
-                      if (formEl instanceof HTMLFormElement) formEl.requestSubmit();
-                    }}
-                    disabled={saving || !dirty || loading || loadFailed}
-                    className="rounded-md px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
-                    style={{ backgroundColor: "#FF5500" }}
+                    onClick={handleDelete}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
                   >
-                    {saving ? "Saving…" : "Save changes"}
+                    Delete contact
                   </button>
+                )}
+                <div className="flex items-center gap-2">
+                  {dirty && <span className="text-xs text-amber-600">Unsaved changes</span>}
+                  {!readOnly && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const formEl = document.getElementById("contact-details-form");
+                        if (formEl instanceof HTMLFormElement) formEl.requestSubmit();
+                      }}
+                      disabled={saving || !dirty || loading || loadFailed}
+                      className="rounded-md px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50"
+                      style={{ backgroundColor: "#FF5500" }}
+                    >
+                      {saving ? "Saving…" : "Save changes"}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

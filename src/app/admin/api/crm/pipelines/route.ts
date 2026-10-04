@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requireSection, requirePipelineManager } from "@/lib/auth/guard";
+import { isPipelineManager, pipelineScopeFilter } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -8,6 +9,8 @@ export async function GET() {
 
   try {
     const pipelines = await prisma.pipeline.findMany({
+      // Salesmen only ever see the pipelines they were placed on.
+      where: isPipelineManager(gate) ? {} : pipelineScopeFilter(gate.id),
       include: {
         _count: { select: { stages: true, deals: true } },
       },
@@ -32,7 +35,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -55,6 +58,8 @@ export async function POST(req: Request) {
             { name: "Lost", label: "Lost", order: 3, color: "#F44336", isClosed: true },
           ],
         },
+        // The creator leads the pipeline.
+        members: { create: { userId: gate.id } },
       },
       include: { stages: { orderBy: { order: "asc" } } },
     });

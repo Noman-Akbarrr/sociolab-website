@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requireRole, requireSection } from "@/lib/auth/guard";
+import { dealScopeFilter, isPipelineManager, roleOf } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
 
@@ -11,7 +12,11 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const pipelineId = searchParams.get("pipelineId");
 
-    const where = pipelineId ? { pipelineId } : {};
+    // Salesmen only ever see the deals they own.
+    const where = {
+      ...(pipelineId ? { pipelineId } : {}),
+      ...(!isPipelineManager(gate) ? dealScopeFilter(gate.id) : {}),
+    };
 
     const deals = await prisma.deal.findMany({
       where,
@@ -30,7 +35,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const gate = await requireSection("deals");
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -57,8 +62,21 @@ export async function POST(req: Request) {
       );
     }
 
-    let finalOwnerId = ownerId;
-    if (!finalOwnerId) {
+    // Sales leads can only hand deals to salesmen (admins pick anyone);
+    // with no owner named, the deal lands on the caller's own desk.
+    let finalOwnerId: string = ownerId || gate.id;
+    if (!isPipelineManager(gate)) {
+      const owner = await prisma.user.findUnique({
+        where: { id: finalOwnerId },
+        select: { id: true, role: true },
+      });
+      if (!owner || (roleOf(owner) !== "salesman" && owner.id !== gate.id)) {
+        return NextResponse.json(
+          { error: "A deal can only be assigned to a sales lead or salesman" },
+          { status: 400 }
+        );
+      }
+    } else if (!ownerId) {
       const firstUser = await prisma.user.findFirst({ orderBy: { createdAt: "asc" } });
       if (!firstUser) {
         return NextResponse.json({ error: "No users found to assign deal" }, { status: 400 });
@@ -87,6 +105,13 @@ export async function POST(req: Request) {
         stage: true,
         owner: { select: { id: true, name: true, email: true } },
       },
+    });
+
+    // The owner needs to be on the pipeline's team to see this deal.
+    await prisma.pipelineMember.upsert({
+      where: { pipelineId_userId: { pipelineId, userId: finalOwnerId } },
+      update: {},
+      create: { pipelineId, userId: finalOwnerId },
     });
 
     const user = await getServerUser();

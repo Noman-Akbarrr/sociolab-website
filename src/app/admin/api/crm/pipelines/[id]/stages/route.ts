@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requireSection, requirePipeline, requirePipelineManager } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -11,6 +11,8 @@ export async function GET(
 
   try {
     const { id } = await params;
+    const allowed = await requirePipeline(gate, id);
+    if (allowed !== true) return allowed;
     const stages = await prisma.pipelineStage.findMany({
       where: { pipelineId: id },
       orderBy: { order: "asc" },
@@ -38,7 +40,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {

@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { requireUser, requireAdmin } from "@/lib/auth/guard";
-import { sanitizeAccess } from "@/lib/access";
+import { requireRole, requireAdmin } from "@/lib/auth/guard";
+import { ROLES } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 
+// Sales leads need the user list to assign deals and pipeline members;
+// admins need it for the Users page. Everyone else gets a 403.
 export async function GET() {
-  const gate = await requireUser();
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {
@@ -15,7 +17,6 @@ export async function GET() {
         name: true,
         email: true,
         role: true,
-        access: true,
         isTwoFactorEnabled: true,
         createdAt: true,
         updatedAt: true,
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   if (gate instanceof NextResponse) return gate;
 
   try {
-    const { name, email, password, role, access } = await req.json();
+    const { name, email, password, role } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: "name, email, and password are required" }, { status: 400 });
@@ -60,22 +61,18 @@ export async function POST(req: Request) {
 
     const passwordHash = await hash(password, 12);
 
-    // Everyone outside the main account starts as a member with only the
-    // sections the admin ticked.
     const user = await prisma.user.create({
       data: {
         name,
         email,
         passwordHash,
-        role: role === "admin" || role === "super_admin" ? role : "member",
-        access: sanitizeAccess(access),
+        role: (ROLES as readonly string[]).includes(role) ? role : "salesman",
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
-        access: true,
         createdAt: true,
       },
     });

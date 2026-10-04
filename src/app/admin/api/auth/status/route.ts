@@ -8,7 +8,7 @@ export async function GET() {
   return NextResponse.json({
     hasUsers: users.length > 0,
     user: user
-      ? { id: user.id, name: user.name, email: user.email, role: user.role, access: user.access ?? [] }
+      ? { id: user.id, name: user.name, email: user.email, role: user.role }
       : null,
   });
 }

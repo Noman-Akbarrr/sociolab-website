@@ -30,6 +30,8 @@ function detailInclude(full: boolean, userId: string) {
     company: true,
     assignee: { select: { id: true, name: true, email: true } },
     tasks: {
+      // A freelancer only sees the tasks assigned to them.
+      ...(full ? {} : { where: { assigneeId: userId } }),
       include: { assignee: { select: { id: true, name: true, email: true } } },
       orderBy: { createdAt: "desc" as const },
     },
@@ -42,15 +44,19 @@ function detailInclude(full: boolean, userId: string) {
           where: { submitterId: userId },
           orderBy: { submittedAt: "desc" as const },
         },
-    activities: {
-      include: { user: { select: { id: true, name: true, email: true } } },
-      orderBy: { createdAt: "desc" as const },
-      take: 200,
-    },
-    tickets: {
-      include: { assignee: { select: { id: true, name: true, email: true } } },
-      orderBy: { createdAt: "desc" as const },
-    },
+    activities: full
+      ? {
+          include: { user: { select: { id: true, name: true, email: true } } },
+          orderBy: { createdAt: "desc" as const },
+          take: 200,
+        }
+      : { take: 0 },
+    tickets: full
+      ? {
+          include: { assignee: { select: { id: true, name: true, email: true } } },
+          orderBy: { createdAt: "desc" as const },
+        }
+      : { take: 0 },
     members: {
       include: { user: { select: { id: true, name: true, email: true } } },
     },
@@ -88,7 +94,8 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const gate = await requireSection("projects");
+    // Business info stays admin-only — freelancers can only read it.
+    const gate = await requireAdmin();
     if (gate instanceof NextResponse) return gate;
     const { id } = await params;
     const allowed = await requireProject(gate, id);

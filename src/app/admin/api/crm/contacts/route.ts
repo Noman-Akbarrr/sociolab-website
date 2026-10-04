@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requireRole, requireSection } from "@/lib/auth/guard";
+import { contactScopeFilter, isPipelineManager } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
@@ -10,7 +11,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const search = searchParams.get("search");
 
-    const where = search
+    const searchWhere = search
       ? {
           OR: [
             { firstName: { contains: search, mode: "insensitive" as const } },
@@ -18,7 +19,15 @@ export async function GET(req: Request) {
             { email: { contains: search, mode: "insensitive" as const } },
           ],
         }
-      : {};
+      : null;
+
+    // Salesmen only reach contacts sitting on their own deals.
+    const where = {
+      AND: [
+        ...(searchWhere ? [searchWhere] : []),
+        ...(!isPipelineManager(gate) ? [contactScopeFilter(gate.id)] : []),
+      ],
+    };
 
     const contacts = await prisma.contact.findMany({
       where,
@@ -33,7 +42,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const gate = await requireSection("contacts");
+  const gate = await requireRole("sales_lead");
   if (gate instanceof NextResponse) return gate;
 
   try {

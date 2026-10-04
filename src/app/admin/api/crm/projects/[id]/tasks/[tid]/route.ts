@@ -1,9 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerUser } from "@/lib/auth/current";
-import { requireSection, requireProject, isMemberOfProject } from "@/lib/auth/guard";
+import { requireAdmin, requireSection, requireProject, isMemberOfProject } from "@/lib/auth/guard";
+import { isFullAccess } from "@/lib/access";
 
 const ALLOWED = ["title", "description", "status", "priority", "assigneeId", "dueDate", "completedAt"];
+
+// A freelancer can only move their own task along the board.
+const FREELANCER_FIELDS = ["status"];
 
 const STATUS_LABELS: Record<string, string> = {
   todo: "To do",
@@ -41,8 +45,14 @@ export async function PATCH(
       return NextResponse.json({ error: "Task not found" }, { status: 404 });
     }
 
+    // A freelancer may only move their own tasks, and only the status.
+    const keys = isFullAccess(gate) ? ALLOWED : FREELANCER_FIELDS;
+    if (!isFullAccess(gate) && before.assigneeId !== gate.id) {
+      return NextResponse.json({ error: "This task is not assigned to you" }, { status: 403 });
+    }
+
     const data: Record<string, unknown> = {};
-    for (const key of ALLOWED) {
+    for (const key of keys) {
       if (body[key] !== undefined) {
         if (key === "dueDate") {
           data[key] = body[key] ? new Date(body[key]) : null;
@@ -108,7 +118,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; tid: string }> }
 ) {
   try {
-    const gate = await requireSection("projects");
+    const gate = await requireAdmin();
     if (gate instanceof NextResponse) return gate;
     const { id, tid } = await params;
     const allowed = await requireProject(gate, id);

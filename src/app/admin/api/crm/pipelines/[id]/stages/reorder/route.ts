@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { requireSection } from "@/lib/auth/guard";
+import { requirePipelineManager } from "@/lib/auth/guard";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const gate = await requireSection("pipeline");
+  const gate = await requirePipelineManager();
   if (gate instanceof NextResponse) return gate;
 
   try {
