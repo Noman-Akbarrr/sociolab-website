@@ -1,6 +1,29 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const detailInclude = {
+  company: true,
+  assignee: { select: { id: true, name: true, email: true } },
+  contact: { select: { id: true, firstName: true, lastName: true, email: true } },
+  project: { select: { id: true, name: true } },
+};
+
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const ticket = await prisma.ticket.findUnique({ where: { id }, include: detailInclude });
+    if (!ticket) {
+      return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
+    }
+    return NextResponse.json(ticket);
+  } catch {
+    return NextResponse.json({ error: "Failed to fetch ticket" }, { status: 500 });
+  }
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -10,7 +33,7 @@ export async function PATCH(
     const body = await req.json();
 
     const data: Record<string, unknown> = {};
-    const allowed = ["status", "priority", "assigneeId", "subject", "description"];
+    const allowed = ["status", "priority", "assigneeId", "subject", "description", "companyId", "projectId", "contactId"];
 
     for (const key of allowed) {
       if (body[key] !== undefined) {
@@ -28,10 +51,7 @@ export async function PATCH(
     const ticket = await prisma.ticket.update({
       where: { id },
       data,
-      include: {
-        company: true,
-        assignee: { select: { id: true, name: true, email: true } },
-      },
+      include: detailInclude,
     });
 
     return NextResponse.json(ticket);

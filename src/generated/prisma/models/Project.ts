@@ -28,10 +28,12 @@ export type AggregateProject = {
 
 export type ProjectAvgAggregateOutputType = {
   budget: number | null
+  internalCost: number | null
 }
 
 export type ProjectSumAggregateOutputType = {
   budget: number | null
+  internalCost: number | null
 }
 
 export type ProjectMinAggregateOutputType = {
@@ -44,9 +46,11 @@ export type ProjectMinAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   budget: number | null
+  internalCost: number | null
   currency: string | null
   billingType: string | null
   description: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -61,9 +65,11 @@ export type ProjectMaxAggregateOutputType = {
   startDate: Date | null
   endDate: Date | null
   budget: number | null
+  internalCost: number | null
   currency: string | null
   billingType: string | null
   description: string | null
+  notes: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -78,9 +84,11 @@ export type ProjectCountAggregateOutputType = {
   startDate: number
   endDate: number
   budget: number
+  internalCost: number
   currency: number
   billingType: number
   description: number
+  notes: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -89,10 +97,12 @@ export type ProjectCountAggregateOutputType = {
 
 export type ProjectAvgAggregateInputType = {
   budget?: true
+  internalCost?: true
 }
 
 export type ProjectSumAggregateInputType = {
   budget?: true
+  internalCost?: true
 }
 
 export type ProjectMinAggregateInputType = {
@@ -105,9 +115,11 @@ export type ProjectMinAggregateInputType = {
   startDate?: true
   endDate?: true
   budget?: true
+  internalCost?: true
   currency?: true
   billingType?: true
   description?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -122,9 +134,11 @@ export type ProjectMaxAggregateInputType = {
   startDate?: true
   endDate?: true
   budget?: true
+  internalCost?: true
   currency?: true
   billingType?: true
   description?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -139,9 +153,11 @@ export type ProjectCountAggregateInputType = {
   startDate?: true
   endDate?: true
   budget?: true
+  internalCost?: true
   currency?: true
   billingType?: true
   description?: true
+  notes?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -243,9 +259,11 @@ export type ProjectGroupByOutputType = {
   startDate: Date | null
   endDate: Date | null
   budget: number | null
+  internalCost: number | null
   currency: string
   billingType: string
   description: string | null
+  notes: string | null
   createdAt: Date
   updatedAt: Date
   _count: ProjectCountAggregateOutputType | null
@@ -283,9 +301,11 @@ export type ProjectWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   budget?: Prisma.IntNullableFilter<"Project"> | number | null
+  internalCost?: Prisma.IntNullableFilter<"Project"> | number | null
   currency?: Prisma.StringFilter<"Project"> | string
   billingType?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
+  notes?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -310,9 +330,11 @@ export type ProjectOrderByWithRelationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
+  internalCost?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -340,9 +362,11 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   budget?: Prisma.IntNullableFilter<"Project"> | number | null
+  internalCost?: Prisma.IntNullableFilter<"Project"> | number | null
   currency?: Prisma.StringFilter<"Project"> | string
   billingType?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
+  notes?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -367,9 +391,11 @@ export type ProjectOrderByWithAggregationInput = {
   startDate?: Prisma.SortOrderInput | Prisma.SortOrder
   endDate?: Prisma.SortOrderInput | Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
+  internalCost?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ProjectCountOrderByAggregateInput
@@ -392,9 +418,11 @@ export type ProjectScalarWhereWithAggregatesInput = {
   startDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   endDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
   budget?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
+  internalCost?: Prisma.IntNullableWithAggregatesFilter<"Project"> | number | null
   currency?: Prisma.StringWithAggregatesFilter<"Project"> | string
   billingType?: Prisma.StringWithAggregatesFilter<"Project"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
+  notes?: Prisma.StringNullableWithAggregatesFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Project"> | Date | string
 }
@@ -406,9 +434,11 @@ export type ProjectCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -433,9 +463,11 @@ export type ProjectUncheckedCreateInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -454,9 +486,11 @@ export type ProjectUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -481,9 +515,11 @@ export type ProjectUncheckedUpdateInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -505,9 +541,11 @@ export type ProjectCreateManyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -519,9 +557,11 @@ export type ProjectUpdateManyMutationInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -536,9 +576,11 @@ export type ProjectUncheckedUpdateManyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -563,15 +605,18 @@ export type ProjectCountOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  internalCost?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProjectAvgOrderByAggregateInput = {
   budget?: Prisma.SortOrder
+  internalCost?: Prisma.SortOrder
 }
 
 export type ProjectMaxOrderByAggregateInput = {
@@ -584,9 +629,11 @@ export type ProjectMaxOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  internalCost?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -601,15 +648,18 @@ export type ProjectMinOrderByAggregateInput = {
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   budget?: Prisma.SortOrder
+  internalCost?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   billingType?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  notes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ProjectSumOrderByAggregateInput = {
   budget?: Prisma.SortOrder
+  internalCost?: Prisma.SortOrder
 }
 
 export type ProjectScalarRelationFilter = {
@@ -867,9 +917,11 @@ export type ProjectCreateWithoutAssigneeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -892,9 +944,11 @@ export type ProjectUncheckedCreateWithoutAssigneeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -945,9 +999,11 @@ export type ProjectScalarWhereInput = {
   startDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   endDate?: Prisma.DateTimeNullableFilter<"Project"> | Date | string | null
   budget?: Prisma.IntNullableFilter<"Project"> | number | null
+  internalCost?: Prisma.IntNullableFilter<"Project"> | number | null
   currency?: Prisma.StringFilter<"Project"> | string
   billingType?: Prisma.StringFilter<"Project"> | string
   description?: Prisma.StringNullableFilter<"Project"> | string | null
+  notes?: Prisma.StringNullableFilter<"Project"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Project"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Project"> | Date | string
 }
@@ -959,9 +1015,11 @@ export type ProjectCreateWithoutCompanyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   deal?: Prisma.DealCreateNestedOneWithoutProjectsInput
@@ -984,9 +1042,11 @@ export type ProjectUncheckedCreateWithoutCompanyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1031,9 +1091,11 @@ export type ProjectCreateWithoutDealInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1056,9 +1118,11 @@ export type ProjectUncheckedCreateWithoutDealInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1103,9 +1167,11 @@ export type ProjectCreateWithoutTasksInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1129,9 +1195,11 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutProjectInput
@@ -1165,9 +1233,11 @@ export type ProjectUpdateWithoutTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1191,9 +1261,11 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutProjectNestedInput
@@ -1211,9 +1283,11 @@ export type ProjectCreateWithoutTicketsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1237,9 +1311,11 @@ export type ProjectUncheckedCreateWithoutTicketsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1273,9 +1349,11 @@ export type ProjectUpdateWithoutTicketsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1299,9 +1377,11 @@ export type ProjectUncheckedUpdateWithoutTicketsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1319,9 +1399,11 @@ export type ProjectCreateWithoutActivitiesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1345,9 +1427,11 @@ export type ProjectUncheckedCreateWithoutActivitiesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1381,9 +1465,11 @@ export type ProjectUpdateWithoutActivitiesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1407,9 +1493,11 @@ export type ProjectUncheckedUpdateWithoutActivitiesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1427,9 +1515,11 @@ export type ProjectCreateWithoutInvoicesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1453,9 +1543,11 @@ export type ProjectUncheckedCreateWithoutInvoicesInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1489,9 +1581,11 @@ export type ProjectUpdateWithoutInvoicesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1515,9 +1609,11 @@ export type ProjectUncheckedUpdateWithoutInvoicesInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1535,9 +1631,11 @@ export type ProjectCreateWithoutTestimonialInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1561,9 +1659,11 @@ export type ProjectUncheckedCreateWithoutTestimonialInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1597,9 +1697,11 @@ export type ProjectUpdateWithoutTestimonialInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1623,9 +1725,11 @@ export type ProjectUncheckedUpdateWithoutTestimonialInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1643,9 +1747,11 @@ export type ProjectCreateWithoutSubmissionsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1669,9 +1775,11 @@ export type ProjectUncheckedCreateWithoutSubmissionsInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1705,9 +1813,11 @@ export type ProjectUpdateWithoutSubmissionsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1731,9 +1841,11 @@ export type ProjectUncheckedUpdateWithoutSubmissionsInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1751,9 +1863,11 @@ export type ProjectCreateWithoutMembersInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutProjectsInput
@@ -1777,9 +1891,11 @@ export type ProjectUncheckedCreateWithoutMembersInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tasks?: Prisma.TaskUncheckedCreateNestedManyWithoutProjectInput
@@ -1813,9 +1929,11 @@ export type ProjectUpdateWithoutMembersInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1839,9 +1957,11 @@ export type ProjectUncheckedUpdateWithoutMembersInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1861,9 +1981,11 @@ export type ProjectCreateManyAssigneeInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1875,9 +1997,11 @@ export type ProjectUpdateWithoutAssigneeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -1900,9 +2024,11 @@ export type ProjectUncheckedUpdateWithoutAssigneeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -1923,9 +2049,11 @@ export type ProjectUncheckedUpdateManyWithoutAssigneeInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1939,9 +2067,11 @@ export type ProjectCreateManyCompanyInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1953,9 +2083,11 @@ export type ProjectUpdateWithoutCompanyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deal?: Prisma.DealUpdateOneWithoutProjectsNestedInput
@@ -1978,9 +2110,11 @@ export type ProjectUncheckedUpdateWithoutCompanyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -2001,9 +2135,11 @@ export type ProjectUncheckedUpdateManyWithoutCompanyInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2017,9 +2153,11 @@ export type ProjectCreateManyDealInput = {
   startDate?: Date | string | null
   endDate?: Date | string | null
   budget?: number | null
+  internalCost?: number | null
   currency?: string
   billingType?: string
   description?: string | null
+  notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2031,9 +2169,11 @@ export type ProjectUpdateWithoutDealInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutProjectsNestedInput
@@ -2056,9 +2196,11 @@ export type ProjectUncheckedUpdateWithoutDealInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tasks?: Prisma.TaskUncheckedUpdateManyWithoutProjectNestedInput
@@ -2079,9 +2221,11 @@ export type ProjectUncheckedUpdateManyWithoutDealInput = {
   startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   budget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  internalCost?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   billingType?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2172,9 +2316,11 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   startDate?: boolean
   endDate?: boolean
   budget?: boolean
+  internalCost?: boolean
   currency?: boolean
   billingType?: boolean
   description?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2200,9 +2346,11 @@ export type ProjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   startDate?: boolean
   endDate?: boolean
   budget?: boolean
+  internalCost?: boolean
   currency?: boolean
   billingType?: boolean
   description?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2220,9 +2368,11 @@ export type ProjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   startDate?: boolean
   endDate?: boolean
   budget?: boolean
+  internalCost?: boolean
   currency?: boolean
   billingType?: boolean
   description?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2240,14 +2390,16 @@ export type ProjectSelectScalar = {
   startDate?: boolean
   endDate?: boolean
   budget?: boolean
+  internalCost?: boolean
   currency?: boolean
   billingType?: boolean
   description?: boolean
+  notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "companyId" | "dealId" | "assigneeId" | "status" | "startDate" | "endDate" | "budget" | "currency" | "billingType" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
+export type ProjectOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "companyId" | "dealId" | "assigneeId" | "status" | "startDate" | "endDate" | "budget" | "internalCost" | "currency" | "billingType" | "description" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
 export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   deal?: boolean | Prisma.Project$dealArgs<ExtArgs>
@@ -2296,9 +2448,11 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     startDate: Date | null
     endDate: Date | null
     budget: number | null
+    internalCost: number | null
     currency: string
     billingType: string
     description: string | null
+    notes: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["project"]>
@@ -2743,9 +2897,11 @@ export interface ProjectFieldRefs {
   readonly startDate: Prisma.FieldRef<"Project", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Project", 'DateTime'>
   readonly budget: Prisma.FieldRef<"Project", 'Int'>
+  readonly internalCost: Prisma.FieldRef<"Project", 'Int'>
   readonly currency: Prisma.FieldRef<"Project", 'String'>
   readonly billingType: Prisma.FieldRef<"Project", 'String'>
   readonly description: Prisma.FieldRef<"Project", 'String'>
+  readonly notes: Prisma.FieldRef<"Project", 'String'>
   readonly createdAt: Prisma.FieldRef<"Project", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Project", 'DateTime'>
 }

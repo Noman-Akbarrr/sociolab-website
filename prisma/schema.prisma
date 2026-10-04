@@ -239,10 +239,12 @@ model Project {
   status      String   @default("kickoff") // "kickoff", "active", "paused", "done", "archived"
   startDate   DateTime?
   endDate     DateTime?
-  budget      Int?
-  currency    String   @default("USD")
-  billingType String   @default("fixed") // "fixed", "retainer", "time-materials"
-  description String?
+  budget       Int?   // what we charge the client for this project
+  internalCost Int?   // what the work costs us (internal hours, freelancers, tools)
+  currency     String @default("USD")
+  billingType  String @default("fixed") // "fixed", "retainer", "time-materials"
+  description  String?
+  notes        String? // free-form: ideas, branding direction, references, links
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tasks       Task[]

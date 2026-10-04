@@ -68,6 +68,7 @@ export default function ContactSubmissionsPage() {
       });
       if (res.ok) {
         setSubmissions(submissions.map((s) => (s.id === id ? { ...s, status: newStatus } : s)));
+        setSelectedSubmission((prev) => (prev && prev.id === id ? { ...prev, status: newStatus } : prev));
       }
     } finally {
       setUpdatingStatus(null);
@@ -158,7 +159,15 @@ export default function ContactSubmissionsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {submissions.map((sub) => (
-                    <tr key={sub.id} className="hover:bg-gray-50 transition-colors">
+                    <tr
+                      key={sub.id}
+                      onClick={() => {
+                        setSelectedSubmission(sub);
+                        setShowDetail(true);
+                      }}
+                      title="View submission"
+                      className="hover:bg-gray-50 transition-colors cursor-pointer"
+                    >
                       <td className="px-4 py-3">
                         <div className="font-medium text-gray-800">{sub.name}</div>
                         {sub.company && <div className="text-xs text-gray-500">{sub.company}</div>}
@@ -171,7 +180,7 @@ export default function ContactSubmissionsPage() {
                         {sub.company ? <span className="text-sm text-gray-600">{sub.company}</span> : <span className="text-sm text-gray-400">—</span>}
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm text-gray-600">{sub.service ? "Service" : "—"}</span>
+                        <span className="text-sm text-gray-600">{getServiceLabel(sub.service)}</span>
                       </td>
                       <td className="px-4 py-3">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${statusColors[sub.status] || "bg-gray-100 text-gray-700"}`}>
@@ -183,7 +192,11 @@ export default function ContactSubmissionsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <button
-                          onClick={() => setSelectedSubmission(sub)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedSubmission(sub);
+                            setShowDetail(true);
+                          }}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-[#FF5500] hover:bg-orange-50 rounded-lg transition-colors"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -245,7 +258,7 @@ export default function ContactSubmissionsPage() {
                     </div>
                     <div>
                       <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Service</label>
-                      <p className="font-medium text-gray-800">{selectedSubmission.service ? "Service" : "—"}</p>
+                      <p className="font-medium text-gray-800">{getServiceLabel(selectedSubmission.service)}</p>
                     </div>
                     <div>
                       <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">Source</label>

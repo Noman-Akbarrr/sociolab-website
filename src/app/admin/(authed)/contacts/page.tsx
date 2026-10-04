@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
 import { DashShell } from "../client";
+import { ContactPanel } from "./contact-panel";
+import type { PanelContact } from "./contact-panel";
 
 interface Company {
   id: string;
@@ -29,6 +31,7 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [companies, setCompanies] = useState<Company[]>([]);
+  const [openContactId, setOpenContactId] = useState<string | null>(null);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -83,6 +86,20 @@ export default function ContactsPage() {
     fetchContacts();
   };
 
+  const handlePanelSaved = (updated: PanelContact) => {
+    setContacts((prev) =>
+      prev.map((c) =>
+        c.id === updated.id
+          ? { ...c, ...updated, company: updated.company ?? c.company }
+          : c
+      )
+    );
+  };
+
+  const handlePanelDeleted = (id: string) => {
+    setContacts((prev) => prev.filter((c) => c.id !== id));
+  };
+
   const filtered = contacts.filter((c) => {
     if (!search) return true;
     const q = search.toLowerCase();
@@ -132,7 +149,12 @@ export default function ContactsPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.map((c) => (
-                <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={c.id}
+                  onClick={() => setOpenContactId(c.id)}
+                  title="Open contact"
+                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-medium text-white" style={{ backgroundColor: "#FF5500" }}>
@@ -156,11 +178,36 @@ export default function ContactsPage() {
                     }`}>{c.status ?? "active"}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <button onClick={() => handleDelete(c.id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenContactId(c.id);
+                        }}
+                        title="Edit contact"
+                        className="p-1.5 rounded text-gray-400 hover:text-[#FF5500] hover:bg-orange-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(c.id);
+                        }}
+                        title="Delete contact"
+                        className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -267,6 +314,13 @@ export default function ContactsPage() {
           </div>
         </div>
       )}
+      <ContactPanel
+        contactId={openContactId}
+        companies={companies}
+        onClose={() => setOpenContactId(null)}
+        onSaved={handlePanelSaved}
+        onDeleted={handlePanelDeleted}
+      />
     </div>
     </DashShell>
   );

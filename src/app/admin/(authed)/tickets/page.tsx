@@ -10,6 +10,7 @@ type Ticket = {
   id: string;
   number: string;
   subject: string;
+  description?: string | null;
   status: string;
   priority: string;
   createdAt: string;
@@ -42,6 +43,9 @@ export default function TicketsPage() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [saving, setSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const [form, setForm] = useState({
     subject: "",
@@ -49,10 +53,10 @@ export default function TicketsPage() {
     companyId: "",
     priority: "medium",
     assigneeId: "",
+    status: "open",
   });
 
   const fetchTickets = useCallback(async () => {
-    setLoading(true);
     try {
       const res = await fetch("/admin/api/crm/tickets");
       if (res.ok) setTickets(await res.json());
@@ -65,9 +69,7 @@ export default function TicketsPage() {
     fetchTickets();
   }, [fetchTickets]);
 
-  const openModal = async () => {
-    setForm({ subject: "", description: "", companyId: "", priority: "medium", assigneeId: "" });
-    setShowModal(true);
+  const loadOptions = async () => {
     const [coRes, uRes] = await Promise.all([
       fetch("/admin/api/crm/companies"),
       fetch("/admin/api/crm/users"),
@@ -76,24 +78,76 @@ export default function TicketsPage() {
     if (uRes.ok) setUsers(await uRes.json());
   };
 
-  const handleCreate = async () => {
+  const openModal = async () => {
+    setForm({ subject: "", description: "", companyId: "", priority: "medium", assigneeId: "", status: "open" });
+    setEditingId(null);
+    setFormError("");
+    setShowModal(true);
+    await loadOptions();
+  };
+
+  const openEdit = async (ticket: Ticket) => {
+    setEditingId(ticket.id);
+    setFormError("");
+    setShowModal(true);
+    setLoadingEdit(true);
+    try {
+      const res = await fetch(`/admin/api/crm/tickets/${ticket.id}`);
+      if (!res.ok) throw new Error("failed");
+      const full = await res.json();
+      setForm({
+        subject: full.subject ?? "",
+        description: full.description ?? "",
+        companyId: full.companyId ?? "",
+        priority: full.priority ?? "medium",
+        assigneeId: full.assigneeId ?? "",
+        status: full.status ?? "open",
+      });
+      await loadOptions();
+    } catch {
+      setFormError("Could not load the ticket.");
+    } finally {
+      setLoadingEdit(false);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingId(null);
+    setFormError("");
+  };
+
+  const handleSave = async () => {
     if (!form.subject || !form.description || !form.companyId) return;
     setSaving(true);
+    setFormError("");
     try {
-      const res = await fetch("/admin/api/crm/tickets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          subject: form.subject,
-          description: form.description,
-          companyId: form.companyId,
-          priority: form.priority,
-          assigneeId: form.assigneeId || null,
-        }),
-      });
+      const res = await fetch(
+        editingId ? `/admin/api/crm/tickets/${editingId}` : "/admin/api/crm/tickets",
+        {
+          method: editingId ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subject: form.subject,
+            description: form.description,
+            companyId: form.companyId,
+            priority: form.priority,
+            assigneeId: form.assigneeId || null,
+            ...(editingId ? { status: form.status } : {}),
+          }),
+        }
+      );
       if (res.ok) {
-        setShowModal(false);
+        const saved = await res.json();
+        if (editingId) {
+          setTickets((prev) => prev.map((t) => (t.id === saved.id ? { ...t, ...saved } : t)));
+          closeModal();
+        } else {
+          setShowModal(false);
+        }
         fetchTickets();
+      } else {
+        setFormError("Could not save the ticket.");
       }
     } finally {
       setSaving(false);
@@ -196,15 +250,30 @@ export default function TicketsPage() {
                         {new Date(t.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => handleDelete(t.id)}
-                          className="text-gray-400 hover:text-red-500 transition-colors"
-                          title="Delete"
-                        >
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => openEdit(t)}
+                            className="text-gray-400 hover:text-[#FF5500] transition-colors"
+                            title="Edit ticket"
+                          >
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                              />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(t.id)}
+                            className="text-gray-400 hover:text-red-500 transition-colors"
+                            title="Delete"
+                          >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                           </svg>
-                        </button>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -222,7 +291,7 @@ export default function TicketsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-            onClick={() => setShowModal(false)}
+            onClick={closeModal}
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -231,7 +300,14 @@ export default function TicketsPage() {
               className="bg-white rounded-lg border border-gray-200 shadow-xl w-full max-w-lg p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-sm font-semibold text-gray-800 mb-4">New Ticket</h3>
+              <h3 className="text-sm font-semibold text-gray-800 mb-4">
+                {editingId ? "Edit Ticket" : "New Ticket"}
+              </h3>
+              {loadingEdit ? (
+                <div className="flex justify-center py-10">
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-[#FF5500] rounded-full animate-spin" />
+                </div>
+              ) : (
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Subject *</label>
@@ -294,21 +370,39 @@ export default function TicketsPage() {
                     ))}
                   </select>
                 </div>
+                {editingId && (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Status</label>
+                    <select
+                      value={form.status}
+                      onChange={(e) => setForm({ ...form, status: e.target.value })}
+                      className={inputCls}
+                    >
+                      <option value="open">Open</option>
+                      <option value="waiting-client">Waiting client</option>
+                      <option value="in-progress">In progress</option>
+                      <option value="resolved">Resolved</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                )}
+                {formError && <p className="text-xs text-red-500">{formError}</p>}
               </div>
+              )}
               <div className="flex justify-end gap-2 mt-5">
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={closeModal}
                   className="px-4 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleCreate}
-                  disabled={saving || !form.subject || !form.description || !form.companyId}
+                  onClick={handleSave}
+                  disabled={saving || loadingEdit || !form.subject || !form.description || !form.companyId}
                   className="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors disabled:opacity-50"
                   style={{ backgroundColor: "#FF5500" }}
                 >
-                  {saving ? "Creating..." : "Create Ticket"}
+                  {saving ? "Saving..." : editingId ? "Save Changes" : "Create Ticket"}
                 </button>
               </div>
             </motion.div>

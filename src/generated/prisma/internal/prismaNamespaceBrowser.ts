@@ -314,9 +314,11 @@ export const ProjectScalarFieldEnum = {
   startDate: 'startDate',
   endDate: 'endDate',
   budget: 'budget',
+  internalCost: 'internalCost',
   currency: 'currency',
   billingType: 'billingType',
   description: 'description',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
