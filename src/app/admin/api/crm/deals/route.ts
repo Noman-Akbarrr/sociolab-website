@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getServerUser } from "@/lib/auth/current";
 
 export async function GET(req: Request) {
   try {
@@ -19,7 +20,7 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json(deals);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch deals" }, { status: 500 });
   }
 }
@@ -81,8 +82,19 @@ export async function POST(req: Request) {
       },
     });
 
+    const user = await getServerUser();
+    await prisma.activity.create({
+      data: {
+        type: "created",
+        subject: "Deal created",
+        body: `Added to ${deal.stage.label || deal.stage.name}`,
+        dealId: deal.id,
+        userId: user?.id ?? null,
+      },
+    });
+
     return NextResponse.json(deal, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create deal" }, { status: 500 });
   }
 }

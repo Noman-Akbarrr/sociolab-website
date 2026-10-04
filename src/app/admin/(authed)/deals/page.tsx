@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { DashShell } from "../client";
 
@@ -13,6 +14,7 @@ interface Owner {
 interface Deal {
   id: string;
   title: string;
+  pipelineId: string;
   value: number;
   priority: string;
   source: string | null;
@@ -56,6 +58,7 @@ const priorityColors: Record<string, string> = {
 };
 
 export default function DealsPage() {
+  const router = useRouter();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [search, setSearch] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
@@ -92,10 +95,16 @@ export default function DealsPage() {
   }, [fetchDeals]);
 
   useEffect(() => {
-    if (!form.pipelineId) { setStages([]); return; }
+    if (!form.pipelineId) return;
+    let active = true;
     fetch(`/admin/api/crm/pipelines/${form.pipelineId}/stages`)
-      .then((r) => r.ok && r.json())
-      .then((s) => { setStages(s); setForm((f) => ({ ...f, stageId: "" })); });
+      .then((r) => (r.ok ? r.json() : []))
+      .then((s) => {
+        if (active) setStages(s);
+      });
+    return () => {
+      active = false;
+    };
   }, [form.pipelineId]);
 
   const handleCreate = async () => {
@@ -191,7 +200,12 @@ export default function DealsPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filtered.map((deal) => (
-                <tr key={deal.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={deal.id}
+                  onClick={() => router.push(`/admin/pipeline/${deal.pipelineId}?deal=${deal.id}`)}
+                  title="Open deal details"
+                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                >
                   <td className="px-4 py-3">
                     <span className="text-sm font-medium text-gray-800">{deal.title}</span>
                   </td>
@@ -226,11 +240,36 @@ export default function DealsPage() {
                     {new Date(deal.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </td>
                   <td className="px-4 py-3">
-                    <button onClick={() => handleDelete(deal.id)} className="text-gray-400 hover:text-red-500 transition-colors">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/admin/pipeline/${deal.pipelineId}?deal=${deal.id}`);
+                        }}
+                        title="Open deal details"
+                        className="p-1.5 rounded text-gray-400 hover:text-[#FF5500] hover:bg-orange-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(deal.id);
+                        }}
+                        title="Delete deal"
+                        className="p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -270,7 +309,11 @@ export default function DealsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Pipeline *</label>
-                  <select value={form.pipelineId} onChange={(e) => setForm({ ...form, pipelineId: e.target.value })}
+                  <select value={form.pipelineId}
+                    onChange={(e) => {
+                      setForm({ ...form, pipelineId: e.target.value, stageId: "" });
+                      setStages([]);
+                    }}
                     className="w-full px-3 py-2 text-sm rounded-md border border-gray-200 focus:outline-none focus:border-[#FF5500]">
                     <option value="">Select pipeline</option>
                     {pipelines.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}

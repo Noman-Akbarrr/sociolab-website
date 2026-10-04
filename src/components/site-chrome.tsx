@@ -15,7 +15,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 site-root">
         {children}
       </main>
       <Footer />

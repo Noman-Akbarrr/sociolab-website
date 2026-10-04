@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd";
 import { DashShell } from "../../client";
+import { DealPanel, type PanelDeal } from "./deal-panel";
 
 interface PipelineOwner {
   id: string;
@@ -42,6 +43,7 @@ interface PipelineDeal {
 interface PipelineData {
   id: string;
   name: string;
+  description: string | null;
   color: string;
   stages: PipelineStage[];
   deals: PipelineDeal[];
@@ -58,7 +60,56 @@ const priorityColors: Record<string, string> = {
   low: "#4CAF50",
 };
 
-function DealCard({ deal, index }: { deal: PipelineDeal; index: number }) {
+/** Pick black/white text that stays readable on any stage color. */
+function readableText(hex: string | null | undefined): string {
+  if (!hex) return "#FFFFFF";
+  let c = hex.replace("#", "").trim();
+  if (c.length === 3) c = c.split("").map((x) => x + x).join("");
+  if (c.length !== 6) return "#FFFFFF";
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
+  const luma = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luma > 0.62 ? "#111827" : "#FFFFFF";
+}
+
+function StageIconButton({
+  title,
+  onClick,
+  color,
+  hoverBg,
+  children,
+}: {
+  title: string;
+  onClick: () => void;
+  color: string;
+  hoverBg: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className="rounded p-0.5 opacity-70 transition-opacity hover:opacity-100"
+      style={{ color }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = hoverBg)}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+    >
+      {children}
+    </button>
+  );
+}
+
+function DealCard({
+  deal,
+  index,
+  onOpen,
+}: {
+  deal: PipelineDeal;
+  index: number;
+  onOpen: (id: string) => void;
+}) {
   return (
     <Draggable draggableId={`deal-${deal.id}`} index={index}>
       {(provided, snapshot) => (
@@ -66,20 +117,55 @@ function DealCard({ deal, index }: { deal: PipelineDeal; index: number }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`bg-white rounded-lg border border-gray-200 p-3 mb-2 cursor-grab active:cursor-grabbing transition-shadow ${
-            snapshot.isDragging ? "shadow-lg ring-2 ring-[#FF5500]/20 opacity-90" : "hover:shadow-sm"
+          role="button"
+          tabIndex={0}
+          onClick={() => {
+            if (snapshot.isDragging) return;
+            onOpen(deal.id);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onOpen(deal.id);
+          }}
+          title="Open deal"
+          className={`mb-2 cursor-grab rounded-lg border bg-white p-3 transition-shadow active:cursor-grabbing ${
+            snapshot.isDragging
+              ? "shadow-lg ring-2 ring-[#FF5500]/20 opacity-90"
+              : "border-gray-200 hover:border-[#FF5500]/40 hover:shadow-sm"
           }`}
         >
-          <div className="flex items-start justify-between mb-2">
-            <h4 className="text-sm font-medium text-gray-800 leading-tight">{deal.title}</h4>
-            <div className="w-2 h-2 rounded-full shrink-0 mt-1" style={{ backgroundColor: priorityColors[deal.priority] ?? "#9CA3AF" }} />
+          <div className="mb-2 flex items-start justify-between">
+            <h4 className="text-sm font-medium leading-tight text-gray-800">{deal.title}</h4>
+            <div className="flex items-center gap-1.5">
+              <div
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: priorityColors[deal.priority] ?? "#9CA3AF" }}
+              />
+              <button
+                type="button"
+                title="Open deal details"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (snapshot.isDragging) return;
+                  onOpen(deal.id);
+                }}
+                className="shrink-0 rounded p-1 text-gray-400 transition-colors hover:bg-orange-50 hover:text-[#FF5500]"
+              >
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-          <div className="text-xs text-gray-500 mb-2">{deal.company?.name ?? "—"}</div>
+          <div className="mb-2 text-xs text-gray-500">{deal.company?.name ?? "—"}</div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-gray-800">Rs. {deal.value.toLocaleString()}</span>
             <div className="flex items-center gap-1.5">
               {deal.owner && (
-                <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center text-[8px] font-medium text-gray-600">
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 text-[8px] font-medium text-gray-600">
                   {deal.owner.name.split(" ").map((n) => n[0]).join("")}
                 </div>
               )}
@@ -98,6 +184,11 @@ export default function PipelineDetailPage() {
   const [pipeline, setPipeline] = useState<PipelineData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Pipeline edit modal
+  const [showPipelineModal, setShowPipelineModal] = useState(false);
+  const [pipeForm, setPipeForm] = useState({ name: "", description: "", color: "#FF5500" });
+  const [pipeSaving, setPipeSaving] = useState(false);
+
   // Modals
   const [showStageModal, setShowStageModal] = useState(false);
   const [stageFormName, setStageFormName] = useState("");
@@ -108,6 +199,10 @@ export default function PipelineDetailPage() {
   const [dealForm, setDealForm] = useState({ title: "", companyId: "", value: "", priority: "medium", source: "", expectedClose: "" });
   const [companies, setCompanies] = useState<Company[]>([]);
   const [dealSaving, setDealSaving] = useState(false);
+
+  // Deal side panel
+  const [openDealId, setOpenDealId] = useState<string | null>(null);
+  const suppressClickRef = useRef(false);
 
   const loadData = useCallback(async () => {
     try {
@@ -124,8 +219,27 @@ export default function PipelineDetailPage() {
   }, [pipelineId]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    let active = true;
+    (async () => {
+      // Deep link from the Deals list: /admin/pipeline/:id?deal=<dealId>
+      const dealParam = new URLSearchParams(window.location.search).get("deal");
+      if (active && dealParam) setOpenDealId(dealParam);
+      try {
+        const res = await fetch(`/admin/api/crm/pipelines/${pipelineId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (active) setPipeline(data);
+        }
+      } catch (e) {
+        console.error("Failed to load pipeline", e);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [pipelineId]);
 
   async function loadCompanies() {
     try {
@@ -142,10 +256,28 @@ export default function PipelineDetailPage() {
     setShowDealModal(true);
   }
 
+  function openDealPanel(id: string) {
+    if (suppressClickRef.current) return;
+    setOpenDealId(id);
+  }
+
+  function handleDealSaved(updated: PanelDeal) {
+    setPipeline((prev) =>
+      prev ? { ...prev, deals: prev.deals.map((d) => (d.id === updated.id ? updated : d)) } : prev
+    );
+  }
+
+  function handleDealDeleted(dealId: string) {
+    setPipeline((prev) => (prev ? { ...prev, deals: prev.deals.filter((d) => d.id !== dealId) } : prev));
+  }
+
   // Deal DnD between stages only
   async function onDragEnd(result: DropResult) {
     if (!pipeline) return;
     const { source, destination, draggableId } = result;
+    window.setTimeout(() => {
+      suppressClickRef.current = false;
+    }, 250);
     if (!destination) return;
 
     if (!draggableId.startsWith("deal-")) return;
@@ -196,6 +328,42 @@ export default function PipelineDetailPage() {
     } catch (e) {
       console.error("Failed to reorder stages", e);
       loadData();
+    }
+  }
+
+  // Edit pipeline
+  function openPipelineModal() {
+    if (!pipeline) return;
+    setPipeForm({
+      name: pipeline.name,
+      description: pipeline.description ?? "",
+      color: pipeline.color,
+    });
+    setShowPipelineModal(true);
+  }
+
+  async function handleEditPipeline(e: React.FormEvent) {
+    e.preventDefault();
+    if (!pipeForm.name.trim()) return;
+    setPipeSaving(true);
+    try {
+      const res = await fetch(`/admin/api/crm/pipelines/${pipelineId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: pipeForm.name.trim(),
+          description: pipeForm.description.trim() || null,
+          color: pipeForm.color,
+        }),
+      });
+      if (res.ok) {
+        setShowPipelineModal(false);
+        loadData();
+      }
+    } catch (e) {
+      console.error("Failed to update pipeline", e);
+    } finally {
+      setPipeSaving(false);
     }
   }
 
@@ -289,11 +457,32 @@ export default function PipelineDetailPage() {
 
   return (
     <DashShell>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="text-sm text-gray-500">
-            <span className="font-semibold text-gray-800">{pipeline.deals.length}</span> deals &middot;{" "}
-            <span className="font-semibold text-gray-800">Rs. {totalValue.toLocaleString()}</span> total
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="mt-1 h-10 w-1.5 rounded-full" style={{ backgroundColor: pipeline.color }} />
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold text-gray-900">{pipeline.name}</h1>
+              <button
+                type="button"
+                onClick={openPipelineModal}
+                className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-[#FF5500]"
+                title="Edit pipeline"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.863 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897l12.683-12.68z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <p className="mt-0.5 text-sm text-gray-500">
+              {pipeline.description ? `${pipeline.description} · ` : ""}
+              <span className="font-semibold text-gray-800">{pipeline.deals.length}</span> deals ·{" "}
+              <span className="font-semibold text-gray-800">Rs. {totalValue.toLocaleString()}</span> total
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -319,11 +508,20 @@ export default function PipelineDetailPage() {
         </div>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext
+        onDragStart={() => {
+          suppressClickRef.current = true;
+        }}
+        onDragEnd={onDragEnd}
+      >
         <div className="flex gap-4 overflow-x-auto pb-4">
           {pipeline.stages.map((stage, stageIdx) => {
             const stageDeals = pipeline.deals.filter((d) => d.stageId === stage.id);
             const stageValue = stageDeals.reduce((sum, d) => sum + d.value, 0);
+            const txt = readableText(stage.color);
+            const light = txt === "#111827";
+            const hoverBg = light ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.20)";
+            const badgeBg = light ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.20)";
             return (
               <div
                 key={stage.id}
@@ -332,49 +530,55 @@ export default function PipelineDetailPage() {
                 {/* Stage header */}
                 <div
                   className="rounded-t-lg px-3 py-2 flex items-center justify-between"
-                  style={{ backgroundColor: stage.color }}
+                  style={{ backgroundColor: stage.color, color: txt }}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-white">{stage.name}</span>
-                    <span className="text-xs text-white/70 bg-white/20 px-1.5 py-0.5 rounded">
+                    <span className="text-sm font-medium">{stage.name}</span>
+                    <span
+                      className="text-xs px-1.5 py-0.5 rounded"
+                      style={{ backgroundColor: badgeBg }}
+                    >
                       {stageDeals.length}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs text-white/80 font-medium mr-1">
+                    <span className="text-xs font-medium mr-1 opacity-80">
                       Rs. {stageValue.toLocaleString()}
                     </span>
                     {stageIdx > 0 && (
-                      <button
-                        onClick={() => moveStage(stage.id, "left")}
-                        className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                      <StageIconButton
                         title="Move left"
+                        onClick={() => moveStage(stage.id, "left")}
+                        color={txt}
+                        hoverBg={hoverBg}
                       >
                         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
-                      </button>
+                      </StageIconButton>
                     )}
                     {stageIdx < pipeline.stages.length - 1 && (
-                      <button
-                        onClick={() => moveStage(stage.id, "right")}
-                        className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                      <StageIconButton
                         title="Move right"
+                        onClick={() => moveStage(stage.id, "right")}
+                        color={txt}
+                        hoverBg={hoverBg}
                       >
                         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
-                      </button>
+                      </StageIconButton>
                     )}
-                    <button
-                      onClick={() => handleDeleteStage(stage.id)}
-                      className="p-0.5 rounded text-white/50 hover:text-white hover:bg-white/20 transition-colors"
+                    <StageIconButton
                       title="Delete stage"
+                      onClick={() => handleDeleteStage(stage.id)}
+                      color={txt}
+                      hoverBg={hoverBg}
                     >
                       <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
-                    </button>
+                    </StageIconButton>
                   </div>
                 </div>
 
@@ -389,7 +593,7 @@ export default function PipelineDetailPage() {
                       }`}
                     >
                       {stageDeals.map((deal, index) => (
-                        <DealCard key={deal.id} deal={deal} index={index} />
+                        <DealCard key={deal.id} deal={deal} index={index} onOpen={openDealPanel} />
                       ))}
                       {provided.placeholder}
                     </div>
@@ -400,6 +604,77 @@ export default function PipelineDetailPage() {
           })}
         </div>
       </DragDropContext>
+
+      {/* Deal side panel */}
+      <DealPanel
+        dealId={openDealId}
+        stages={pipeline.stages}
+        onClose={() => setOpenDealId(null)}
+        onSaved={handleDealSaved}
+        onDeleted={handleDealDeleted}
+      />
+
+      {/* Edit Pipeline Modal */}
+      {showPipelineModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setShowPipelineModal(false)} />
+          <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Edit Pipeline</h3>
+            <form onSubmit={handleEditPipeline} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  type="text"
+                  value={pipeForm.name}
+                  onChange={(e) => setPipeForm({ ...pipeForm, name: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#FF5500]/30 focus:border-[#FF5500]"
+                  placeholder="e.g. Sales Pipeline"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <input
+                  type="text"
+                  value={pipeForm.description}
+                  onChange={(e) => setPipeForm({ ...pipeForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#FF5500]/30 focus:border-[#FF5500]"
+                  placeholder="Optional"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={pipeForm.color}
+                    onChange={(e) => setPipeForm({ ...pipeForm, color: e.target.value })}
+                    className="w-10 h-10 rounded border border-gray-300 cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-500">{pipeForm.color}</span>
+                </div>
+              </div>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPipelineModal(false)}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={pipeSaving || !pipeForm.name.trim()}
+                  className="px-4 py-2 text-sm font-medium text-white rounded-md transition-colors disabled:opacity-50"
+                  style={{ backgroundColor: "#FF5500" }}
+                >
+                  {pipeSaving ? "Saving…" : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Add Stage Modal */}
       {showStageModal && (
