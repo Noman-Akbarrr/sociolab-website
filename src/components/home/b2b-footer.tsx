@@ -8,8 +8,8 @@ export function B2BFooter() {
           &copy; 2026 Sociolab. All rights reserved. Digital Marketing Agency.
         </span>
         <div className="flex gap-6">
-          <a href="#" className="transition-colors" style={{ color: "#A8A29E" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1917")} onMouseLeave={(e) => (e.currentTarget.style.color = "#A8A29E")}>Privacy Policy</a>
-          <a href="#" className="transition-colors" style={{ color: "#A8A29E" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1917")} onMouseLeave={(e) => (e.currentTarget.style.color = "#A8A29E")}>Terms of Service</a>
+          <a href="/legal/privacy" className="transition-colors" style={{ color: "#A8A29E" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1917")} onMouseLeave={(e) => (e.currentTarget.style.color = "#A8A29E")}>Privacy Policy</a>
+          <a href="/legal/terms" className="transition-colors" style={{ color: "#A8A29E" }} onMouseEnter={(e) => (e.currentTarget.style.color = "#1C1917")} onMouseLeave={(e) => (e.currentTarget.style.color = "#A8A29E")}>Terms of Service</a>
         </div>
       </div>
     </footer>
